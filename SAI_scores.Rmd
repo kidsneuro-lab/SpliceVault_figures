@@ -1,0 +1,31 @@
+---
+title: "R Notebook"
+output: 
+---
+
+```{r echo = F}
+library(data.table)
+library(tidyverse)
+fg_vars_events <- fread('src/fg_vars_events.tsv', sep = '\t')
+```
+
+# export scores for manual annotation
+```{r}
+scores_df <- fread('ref/FG_variants_spliceAI_5000nt_plusindels.tsv')
+# position for plotting
+scores_df[, spos := dist_from_variant + 5001]
+
+# get strand
+scores_df[, chrom := gsub('chr', '', chrom)]
+scores_df <- unique(fg_vars_events[, .(chrom, pos, ref, alt, strand, 
+                                       curated_record_id, variant_type, 
+                                       dist_from_ess, tx_id)])[scores_df, on = .(chrom, pos, ref, alt)][!is.na(strand)]
+
+# translate dist_from_variant to gpos
+scores_df[, gpos := pos + dist_from_variant]
+
+sai_preds <- scores_df[(abs(donor) >= 0.05 ) | (abs(acceptor) >= 0.05 )]
+
+sai_preds <- sai_preds[, c(6, 1:5, 8:9, 7, 10:16, 18)]
+write.xlsx(sai_preds, 'ref/sai_preds.xlsx')
+```

@@ -1,0 +1,148 @@
+curated_record_id	gene_name	tx_id	strand	variant_id	variant_type	chrom	pos	ref	alt	dist_from_ess	splice_conseq	pseudo_exon_site	splice_site_pos	name	value	cryptic_pos	partial	skipped_exons_id	cryptic_modified_variant_flag	cryptic_modified_event_flag	event_count	event_count_crypskip	splicing_event_class
+1	METTL23	ENST00000615984	+	17-76733216-G-GT	donor	17	76733216	G	GT	2	splice_altering	""	76733216	exon_skip	1		0	3			2	2	exon skipping
+1	METTL23	ENST00000615984	+	17-76733216-G-GT	donor	17	76733216	G	GT	2	splice_altering	""	76733216	exon_skip	1		0	2-3			2	2	exon skipping
+1041	CTNNB1	ENST00000643541	+	3-41224951-C-A	acceptor	3	41224951	C	A	-3	splice_altering	""	41224953	exon_skip	1		1	5			2	2	exon skipping
+1041	CTNNB1	ENST00000643541	+	3-41224951-C-A	acceptor	3	41224951	C	A	-3	splice_altering	""	41224953	cryptic	1	41225102	1				2	2	cryptic acceptor
+1042	CC2D2A	ENST00000503292	+	4-15596210-A-G	donor	4	15596210	A	G	3	splice_altering	""	15596208	exon_skip	1		0	35			1	1	exon skipping
+1044	TSC1	ENST00000298552	-	9-132921360-T-C	donor	9	132921360	T	C	3	splice_altering	""	132921362	exon_skip	1		0	8			1	1	exon skipping
+1045	DNAH11	ENST00000409508	+	7-21600934-A-C	donor	7	21600934	A	C	4	splice_altering	""	21600931	exon_skip	1		0	16			2	1	exon skipping
+1045	DNAH11	ENST00000409508	+	7-21600934-A-C	donor	7	21600934	A	C	4	splice_altering	""	21600931	intron_retention	1		0				2	1	intron retention
+1046	NADSYN1	ENST00000319023	+	11-71497476-T-A	acceptor	11	71497476	T	A	-7	splice_altering	""	71497482	exon_skip	1		0	19			3	2	exon skipping
+1046	NADSYN1	ENST00000319023	+	11-71497476-T-A	acceptor	11	71497476	T	A	-7	splice_altering	""	71497482	intron_retention	1		0				3	2	intron retention
+1046	NADSYN1	ENST00000319023	+	11-71497476-T-A	acceptor	11	71497476	T	A	-7	splice_altering	""	71497482	cryptic	1	71497465	0				3	2	cryptic acceptor
+2	MTHFR	ENST00000376592	-	1-11794724-C-G	donor	1	11794724	C	G	5	splice_altering	""	11794728	exon_skip	1		1	7			2	1	exon skipping
+2	MTHFR	ENST00000376592	-	1-11794724-C-G	donor	1	11794724	C	G	5	splice_altering	""	11794728	intron_retention	1		1				2	1	intron retention
+206	COL6A3	ENST00000295550	-	2-237359089-C-T	acceptor	2	237359089	C	T	-1	splice_altering	""	237359089	exon_skip	1		0	20			1	1	exon skipping
+207	ASNS	ENST00000394309	-	7-97853059-C-T	donor	7	97853059	C	T	1	splice_altering	""	97853059	exon_skip	1		0	12			3	2	exon skipping
+207	ASNS	ENST00000394309	-	7-97853059-C-T	donor	7	97853059	C	T	1	splice_altering	""	97853059	intron_retention	1		0				3	2	intron retention
+207	ASNS	ENST00000394309	-	7-97853059-C-T	donor	7	97853059	C	T	1	splice_altering	""	97853059	cryptic	1	97853107	0				3	2	cryptic donor
+228	CLN5	ENST00000636183	+	13-76992276-G-A	donor	13	76992276	G	A	5	splice_altering	""	76992272	cryptic	1	76992853	0				1	1	cryptic donor
+229	ABCB4	ENST00000649586	-	7-87426747-T-A	donor	7	87426747	T	A	3	splice_altering	""	87426749	exon_skip	1		0	16			1	1	exon skipping
+231	SPG11	ENST00000684235	-	15-44622360-G-C	acceptor	15	44622360	G	C	-13	splice_altering	""	44622348	exon_skip	1		0	13			2	2	exon skipping
+231	SPG11	ENST00000684235	-	15-44622360-G-C	acceptor	15	44622360	G	C	-13	splice_altering	""	44622348	cryptic	1	44622308	0				2	2	cryptic acceptor
+232	AHI1	ENST00000681488	-	6-135429877-C-T	donor	6	135429877	C	T	5	splice_altering	""	135429881	exon_skip	1		0	15			2	2	exon skipping
+232	AHI1	ENST00000681488	-	6-135429877-C-T	donor	6	135429877	C	T	5	splice_altering	""	135429881	cryptic	1	135429841	0				2	2	cryptic donor
+233	DMD	ENST00000357033	-	X-32595757-C-T	donor	X	32595757	C	T	-1	splice_altering	""	32595756	exon_skip	1		0	13			1	1	exon skipping
+234	TAZ	ENST00000613634	+	X-154412214-G-C	donor	X	154412214	G	C	-1	splice_altering	""	154412215	exon_skip	1		0	2			2	2	exon skipping
+234	TAZ	ENST00000613634	+	X-154412214-G-C	donor	X	154412214	G	C	-1	splice_altering	""	154412215	cryptic	1	154412251	0				2	2	cryptic donor
+235	DMD	ENST00000357033	-	X-32386309-C-T	donor	X	32386309	C	T	1	splice_altering	""	32386309	exon_skip	1		0	33			3	2	exon skipping
+235	DMD	ENST00000357033	-	X-32386309-C-T	donor	X	32386309	C	T	1	splice_altering	""	32386309	intron_retention	1		0				3	2	intron retention
+235	DMD	ENST00000357033	-	X-32386309-C-T	donor	X	32386309	C	T	1	splice_altering	""	32386309	cryptic	1	32386351	0				3	2	cryptic donor
+236	OPHN1	ENST00000680612	-	X-68212104-T-C	donor	X	68212104	T	C	4	splice_altering	""	68212107	exon_skip	1		0	8			1	1	exon skipping
+241	ABCB4	ENST00000649586	-	7-87454532-T-TAA	donor	7	87454532	T	TAA	2	splice_altering	""	87454534	exon_skip	1		0	5			1	1	exon skipping
+246	GAA	ENST00000570803	+	17-80104542-T-G	acceptor	17	80104542	T	G	-13	splice_altering	""	80104554	exon_skip	1		0	2			3	3	exon skipping
+246	GAA	ENST00000570803	+	17-80104542-T-G	acceptor	17	80104542	T	G	-13	splice_altering	""	80104554	cryptic	1	80104400	0				3	3	cryptic acceptor
+246	GAA	ENST00000570803	+	17-80104542-T-G	acceptor	17	80104542	T	G	-13	splice_altering	""	80104554	cryptic	1	80105072	0				3	3	cryptic acceptor
+250	NEB	ENST00000397345	-	2-151688291-C-T	donor	2	151688291	C	T	1	splice_altering	""	151688291	exon_skip	1		0	25			4	4	exon skipping
+250	NEB	ENST00000397345	-	2-151688291-C-T	donor	2	151688291	C	T	1	splice_altering	""	151688291	cryptic	1	151688371	0				4	4	cryptic donor
+250	NEB	ENST00000397345	-	2-151688291-C-T	donor	2	151688291	C	T	1	splice_altering	""	151688291	cryptic	1	151688174	0				4	4	cryptic donor
+250	NEB	ENST00000397345	-	2-151688291-C-T	donor	2	151688291	C	T	1	splice_altering	""	151688291	cryptic	1	151688006	0				4	4	cryptic donor
+251	NEB	ENST00000397345	-	2-151663543-C-T	donor	2	151663543	C	T	5	splice_altering	""	151663547	intron_retention	1		0				2	1	intron retention
+251	NEB	ENST00000397345	-	2-151663543-C-T	donor	2	151663543	C	T	5	splice_altering	""	151663547	cryptic	1	151663204	0				2	1	cryptic donor
+252	TTN	ENST00000342992	-	2-178581491-ATACT-A	donor	2	178581491	ATACT	A	4	splice_altering	""	178581498	exon_skip	1		0	265			1	1	exon skipping
+253	NEB	ENST00000397345	-	2-151682661-C-T	donor	2	151682661	C	T	1	splice_altering	""	151682661	exon_skip	1		0	29			1	1	exon skipping
+254	NEB	ENST00000397345	-	2-151610515-C-T	donor	2	151610515	C	T	1	splice_altering	""	151610515	intron_retention	1		0		1		4	3	intron retention
+254	NEB	ENST00000397345	-	2-151610515-C-T	donor	2	151610515	C	T	1	splice_altering	""	151610515	cryptic	1	151610511	0		1	1	4	3	cryptic donor
+254	NEB	ENST00000397345	-	2-151610515-C-T	donor	2	151610515	C	T	1	splice_altering	""	151610515	cryptic	1	151610452	0		1		4	3	cryptic donor
+254	NEB	ENST00000397345	-	2-151610515-C-T	donor	2	151610515	C	T	1	splice_altering	""	151610515	cryptic	1	151610420	0		1		4	3	cryptic donor
+255	NEB	ENST00000397345	-	2-151533439-T-C	donor	2	151533439	T	C	3	splice_altering	""	151533441	cryptic	1	151533382	0				2	2	cryptic donor
+255	NEB	ENST00000397345	-	2-151533439-T-C	donor	2	151533439	T	C	3	splice_altering	""	151533441	cryptic	1	151533329	0				2	2	cryptic donor
+257	NEB	ENST00000397345	-	2-151674586-T-C	acceptor	2	151674586	T	C	-2	splice_altering	""	151674585	exon_skip	1		0	36			1	1	exon skipping
+259	RYR1	ENST00000355481	+	19-38442455-T-C	donor	19	38442455	T	C	2	splice_altering	""	38442454	exon_skip	1		0	3			1	1	exon skipping
+262	TTN	ENST00000342992	-	2-178529958-A-T	donor	2	178529958	A	T	2	splice_altering	""	178529959	exon_skip	1		0	308			1	1	exon skipping
+265	PIGN	ENST00000589339	-	18-62143352-A-C	acceptor	18	62143352	A	C	-6	splice_altering	""	62143347	exon_skip	1		0	11			3	3	exon skipping
+265	PIGN	ENST00000589339	-	18-62143352-A-C	acceptor	18	62143352	A	C	-6	splice_altering	""	62143347	cryptic	1	62143373	0				3	3	cryptic acceptor
+265	PIGN	ENST00000589339	-	18-62143352-A-C	acceptor	18	62143352	A	C	-6	splice_altering	""	62143347	exon_skip	1		0	11-12			3	3	exon skipping
+268	COL6A2	ENST00000300527	+	21-46126476-T-TGGCCCAGCCCGGCCC	acceptor	21	46126476	T	TGGCCCAGCCCGGCCC	-21	splice_altering	""	46126502	exon_skip	1		1	27			2	1	exon skipping
+268	COL6A2	ENST00000300527	+	21-46126476-T-TGGCCCAGCCCGGCCC	acceptor	21	46126476	T	TGGCCCAGCCCGGCCC	-21	splice_altering	""	46126502	intron_retention	1		1				2	1	intron retention
+277	TTN	ENST00000342992	-	2-178622768-C-T	acceptor	2	178622768	C	T	-1	splice_altering	""	178622768	exon_skip	1		0	192			1	1	exon skipping
+278	TTN	ENST00000342992	-	2-178642237-C-G	donor	2	178642237	C	G	-1	splice_altering	""	178642236	exon_skip	1		0	168-169			1	1	exon skipping
+282	POMGNT1	ENST00000475642	-	1-46189457-C-A	donor	1	46189457	C	A	1	splice_altering	""	46189457	intron_retention	1		0				2	1	intron retention
+282	POMGNT1	ENST00000475642	-	1-46189457-C-A	donor	1	46189457	C	A	1	splice_altering	""	46189457	cryptic	1	46189483	0				2	1	cryptic donor
+4	NEU1	ENST00000375631	-	6-31861188-C-T	donor	6	31861188	C	T	-1	splice_altering	""	31861187	exon_skip	1		0	3	1		3	2	exon skipping
+4	NEU1	ENST00000375631	-	6-31861188-C-T	donor	6	31861188	C	T	-1	splice_altering	""	31861187	intron_retention	1		0		1		3	2	intron retention
+4	NEU1	ENST00000375631	-	6-31861188-C-T	donor	6	31861188	C	T	-1	splice_altering	""	31861187	cryptic	1	31861195	0		1	1	3	2	cryptic donor
+491	VPS13D	ENST00000620676	+	1-12362848-C-T	donor	1	12362848	C	T	-3	splice_altering	""	12362851	exon_skip	1		1	51			2	1	exon skipping
+491	VPS13D	ENST00000620676	+	1-12362848-C-T	donor	1	12362848	C	T	-3	splice_altering	""	12362851	intron_retention	1		1				2	1	intron retention
+492	ACE	ENST00000582678	+	17-63483976-G-C	donor	17	63483976	G	C	5	splice_altering	""	63483972	exon_skip	1		0	10			2	2	exon skipping
+492	ACE	ENST00000582678	+	17-63483976-G-C	donor	17	63483976	G	C	5	splice_altering	""	63483972	cryptic	1	63483955	0				2	2	cryptic donor
+494	HSD17B4	ENST00000683936	+	5-119506890-G-C	donor	5	119506890	G	C	1	splice_altering	""	119506890	exon_skip	1		0	15			1	1	exon skipping
+496	VPS13D	ENST00000620676	+	1-12257090-A-G	donor	1	12257090	A	G	3	splice_altering	""	12257088	exon_skip	1		1	9			2	1	exon skipping
+496	VPS13D	ENST00000620676	+	1-12257090-A-G	donor	1	12257090	A	G	3	splice_altering	""	12257088	intron_retention	1		1				2	1	intron retention
+5	MECOM	ENST00000464456	-	3-169112783-T-A	donor	3	169112783	T	A	4	splice_altering	""	169112786	exon_skip	1		0	8			2	2	exon skipping
+5	MECOM	ENST00000464456	-	3-169112783-T-A	donor	3	169112783	T	A	4	splice_altering	""	169112786	exon_skip	1		0	8-9			2	2	exon skipping
+530	GSDME	ENST00000645220	-	7-24706179-C-T	donor	7	24706179	C	T	5	splice_altering	""	24706183	exon_skip	1		0	8			1	1	exon skipping
+531	GYS1	ENST00000323798	-	19-48970707-TACC-T	acceptor	19	48970707	TACC	T	-1	splice_altering	""	48970710	intron_retention	1		0				2	1	intron retention
+531	GYS1	ENST00000323798	-	19-48970707-TACC-T	acceptor	19	48970707	TACC	T	-1	splice_altering	""	48970710	cryptic	1	48970637	0				2	1	cryptic acceptor
+532	IL11RA	ENST00000555003	+	9-34658683-G-A	donor	9	34658683	G	A	-1	splice_altering	""	34658684	exon_skip	1		1	8			2	2	exon skipping
+532	IL11RA	ENST00000555003	+	9-34658683-G-A	donor	9	34658683	G	A	-1	splice_altering	""	34658684	cryptic	1	34658696	1				2	2	cryptic donor
+534	ABCA12	ENST00000272895	-	2-214955362-C-G	acceptor	2	214955362	C	G	-1	splice_altering	""	214955362	exon_skip	1		0	43			1	1	exon skipping
+535	LAMP2	ENST00000200639	-	X-120442596-T-A	donor	X	120442596	T	A	3	splice_altering	""	120442598	exon_skip	1		0	7			1	1	exon skipping
+569	ODAD2	ENST00000673384	-	10-27944217-C-G	donor	10	27944217	C	G	5	splice_altering	""	27944221	exon_skip	1		0	7			1	1	exon skipping
+571	TRPM6	ENST00000360774	-	9-74816662-A-C	donor	9	74816662	A	C	7	splice_altering	""	74816668	exon_skip	1		0	11			1	1	exon skipping
+572	CC2D2A	ENST00000503292	+	4-15502924-G-T	donor	4	15502924	G	T	1	splice_altering	""	15502924	exon_skip	1		0	7			1	1	exon skipping
+853	IBA57	ENST00000366711	+	1-228175032-A-G	donor	1	228175032	A	G	3	splice_altering	""	228175030	intron_retention	1		0				1	0	intron retention
+854	SETD5	ENST00000402198	+	3-9442123-C-G	acceptor	3	9442123	C	G	-5	splice_altering	""	9442127	exon_skip	1		0	10			1	1	exon skipping
+855	ATP1A3	ENST00000648268	-	19-41968916-C-A	acceptor	19	41968916	C	A	-1	splice_altering	""	41968916	intron_retention	1		0				2	1	intron retention
+855	ATP1A3	ENST00000648268	-	19-41968916-C-A	acceptor	19	41968916	C	A	-1	splice_altering	""	41968916	cryptic	1	41968904	0				2	1	cryptic acceptor
+856	CHD8	ENST00000430710	-	14-21403664-C-G	acceptor	14	21403664	C	G	-1	splice_altering	""	21403664	cryptic	1	21403730	0				2	2	cryptic acceptor
+856	CHD8	ENST00000430710	-	14-21403664-C-G	acceptor	14	21403664	C	G	-1	splice_altering	""	21403664	cryptic	1	21403593	0				2	2	cryptic acceptor
+857	TUBA1A	ENST00000679733	-	12-49188973-TC-T	donor	12	49188973	TC	T	3	splice_altering	""	49188976	cryptic	1	49188888	1				1	1	cryptic donor
+858	ATP2B1	ENST00000261173	-	12-89603041-A-C	donor	12	89603041	A	C	2	splice_altering	""	89603042	exon_skip	1		0	17			3	2	exon skipping
+858	ATP2B1	ENST00000261173	-	12-89603041-A-C	donor	12	89603041	A	C	2	splice_altering	""	89603042	intron_retention	1		0				3	2	intron retention
+858	ATP2B1	ENST00000261173	-	12-89603041-A-C	donor	12	89603041	A	C	2	splice_altering	""	89603042	exon_skip	1		0	16-17			3	2	exon skipping
+859	GLI3	ENST00000677288	-	7-42076747-C-T	donor	7	42076747	C	T	5	splice_altering	""	42076751	exon_skip	1		0	3			1	1	exon skipping
+861	UBE3A	ENST00000638011	-	15-25356056-C-G	acceptor	15	25356056	C	G	1	splice_altering	""	25356057	cryptic	1	25356095	0				1	1	cryptic acceptor
+863	B9D1	ENST00000461069	-	17-19347784-C-T	donor	17	19347784	C	T	-1	splice_altering	""	19347783	exon_skip	1		0	4			1	1	exon skipping
+866	COL4A1	ENST00000375820	-	13-110170546-C-T	donor	13	110170546	C	T	1	splice_altering	""	110170546	exon_skip	1		0	42			1	1	exon skipping
+867	APC	ENST00000507379	+	5-112775743-T-A	donor	5	112775743	T	A	6	splice_altering	""	112775738	exon_skip	1		0	4			1	1	exon skipping
+870	CDH23	ENST00000224721	+	10-71646458-G-A	acceptor	10	71646458	G	A	-1	splice_altering	""	71646458	exon_skip	1		0	14			4	3	exon skipping
+870	CDH23	ENST00000224721	+	10-71646458-G-A	acceptor	10	71646458	G	A	-1	splice_altering	""	71646458	intron_retention	1		0				4	3	intron retention
+870	CDH23	ENST00000224721	+	10-71646458-G-A	acceptor	10	71646458	G	A	-1	splice_altering	""	71646458	cryptic	1	71646503	0				4	3	cryptic acceptor
+870	CDH23	ENST00000224721	+	10-71646458-G-A	acceptor	10	71646458	G	A	-1	splice_altering	""	71646458	cryptic	1	71646550	0				4	3	cryptic acceptor
+871	MSH6	ENST00000652107	+	2-47805032-GTTT-CATTATTGTCAGG	donor	2	47805032	GTTT	CATTATTGTCAGG	5	splice_altering	""	47805028	exon_skip	1		0	8			2	1	exon skipping
+871	MSH6	ENST00000652107	+	2-47805032-GTTT-CATTATTGTCAGG	donor	2	47805032	GTTT	CATTATTGTCAGG	5	splice_altering	""	47805028	intron_retention	1		0				2	1	intron retention
+872	STXBP1	ENST00000637521	+	9-127675942-G-C	donor	9	127675942	G	C	-1	splice_altering	""	127675943	exon_skip	1		0	14			3	2	exon skipping
+872	STXBP1	ENST00000637521	+	9-127675942-G-C	donor	9	127675942	G	C	-1	splice_altering	""	127675943	intron_retention	1		0				3	2	intron retention
+872	STXBP1	ENST00000637521	+	9-127675942-G-C	donor	9	127675942	G	C	-1	splice_altering	""	127675943	cryptic	1	127675888	0				3	2	cryptic donor
+873	ABCA1	ENST00000374736	-	9-104796306-T-G	donor	9	104796306	T	G	3	splice_altering	""	104796308	exon_skip	1		0	38			1	1	exon skipping
+875	WDR45	ENST00000376372	-	X-49075359-C-G	donor	X	49075359	C	G	5	splice_altering	""	49075363	intron_retention	1		0				2	1	intron retention
+875	WDR45	ENST00000376372	-	X-49075359-C-G	donor	X	49075359	C	G	5	splice_altering	""	49075363	cryptic	1	49075415	0				2	1	cryptic donor
+876	TUSC3	ENST00000382020	+	8-15650814-G-A	donor	8	15650814	G	A	-1	splice_altering	""	15650815	exon_skip	1		1	3			1	1	exon skipping
+878	CD96	ENST00000283285	+	3-111577548-AGGTATGTAAATTGCTGCAG-A	donor	3	111577548	AGGTATGTAAATTGCTGCAG	A	1	splice_altering	""	111577550	exon_skip	1		0	4			1	1	exon skipping
+881	EMC1	ENST00000477853	-	1-19243708-C-T	acceptor	1	19243708	C	T	-1	splice_altering	""	19243708	exon_skip	1		0	4			4	3	exon skipping
+881	EMC1	ENST00000477853	-	1-19243708-C-T	acceptor	1	19243708	C	T	-1	splice_altering	""	19243708	intron_retention	1		0				4	3	intron retention
+881	EMC1	ENST00000477853	-	1-19243708-C-T	acceptor	1	19243708	C	T	-1	splice_altering	""	19243708	cryptic	1	19243799	0				4	3	cryptic acceptor
+881	EMC1	ENST00000477853	-	1-19243708-C-T	acceptor	1	19243708	C	T	-1	splice_altering	""	19243708	cryptic	1	19243684	0				4	3	cryptic acceptor
+884	SRPK3	ENST00000489426	+	X-153783256-G-C	donor	X	153783256	G	C	5	splice_altering	""	153783252	exon_skip	1		0	14			2	1	exon skipping
+884	SRPK3	ENST00000489426	+	X-153783256-G-C	donor	X	153783256	G	C	5	splice_altering	""	153783252	intron_retention	1		0				2	1	intron retention
+885	MYH7	ENST00000355349	-	14-23414003-T-A	donor	14	23414003	T	A	4	splice_altering	""	23414006	exon_skip	1		0	38			2	1	exon skipping
+885	MYH7	ENST00000355349	-	14-23414003-T-A	donor	14	23414003	T	A	4	splice_altering	""	23414006	intron_retention	1		0				2	1	intron retention
+915	COL4A3	ENST00000396578	+	2-227284346-G-A	donor	2	227284346	G	A	1	splice_altering	""	227284346	exon_skip	1		0	34			1	1	exon skipping
+916	PYGM	ENST00000164139	-	11-64757779-C-T	donor	11	64757779	C	T	-1	splice_altering	""	64757778	exon_skip	1		1	5			2	2	exon skipping
+916	PYGM	ENST00000164139	-	11-64757779-C-T	donor	11	64757779	C	T	-1	splice_altering	""	64757778	exon_skip	1		1	4-5			2	2	exon skipping
+917	CIC	ENST00000572681	+	19-42287241-G-T	donor	19	42287241	G	T	1	splice_altering	""	42287241	cryptic	1	42287147	0				1	1	cryptic donor
+920	EPG5	ENST00000282041	-	18-45876346-TAAAGA-T	acceptor	18	45876346	TAAAGA	T	option_not_aval	splice_altering	""	45876343	exon_skip	1		0	35			1	1	exon skipping
+923	EMD	ENST00000369835	+	X-154380231-A-G	acceptor	X	154380231	A	G	-3	splice_altering	""	154380233	intron_retention	1		1				2	1	intron retention
+923	EMD	ENST00000369835	+	X-154380231-A-G	acceptor	X	154380231	A	G	-3	splice_altering	""	154380233	cryptic	1	154380276	1				2	1	cryptic acceptor
+924	FXN	ENST00000484259	+	9-69046380-T-G	acceptor	9	69046380	T	G	-5	splice_altering	""	69046384	exon_skip	1		0	2			3	2	exon skipping
+924	FXN	ENST00000484259	+	9-69046380-T-G	acceptor	9	69046380	T	G	-5	splice_altering	""	69046384	intron_retention	1		0				3	2	intron retention
+924	FXN	ENST00000484259	+	9-69046380-T-G	acceptor	9	69046380	T	G	-5	splice_altering	""	69046384	exon_skip	1		0	2-3			3	2	exon skipping
+925	FANCA	ENST00000389301	-	16-89779855-GCAGCCCAGCCT-G	donor	16	89779855	GCAGCCCAGCCT	G	option_not_aval	splice_altering	""	89779868	exon_skip	1		0	18			2	2	exon skipping
+925	FANCA	ENST00000389301	-	16-89779855-GCAGCCCAGCCT-G	donor	16	89779855	GCAGCCCAGCCT	G	option_not_aval	splice_altering	""	89779868	cryptic	1	89779610	0				2	2	cryptic donor
+927	KCNH2	ENST00000684241	-	7-150957276-CCGCTGGGCGC-GT	donor	7	150957276	CCGCTGGGCGC	GT	option_not_aval	splice_altering	""	150957290	exon_skip	1		0	3			1	1	exon skipping
+930	HSPG2	ENST00000374695	-	1-21861754-T-A	donor	1	21861754	T	A	3	splice_altering	""	21861756	exon_skip	1		0	39			2	2	exon skipping
+930	HSPG2	ENST00000374695	-	1-21861754-T-A	donor	1	21861754	T	A	3	splice_altering	""	21861756	cryptic	1	21861763	0				2	2	cryptic donor
+941	MANBA	ENST00000647097	-	4-102722870-C-T	donor	4	102722870	C	T	1	splice_altering	""	102722870	exon_skip	1		0	4			1	1	exon skipping
+942	KIF7	ENST00000394412	-	15-89642204-T-C	donor	15	89642204	T	C	-2	splice_altering	""	89642202	cryptic	1	89642208	0		1	1	1	1	cryptic donor
+943	DMD	ENST00000357033	-	X-32573525-C-T	donor	X	32573525	C	T	5	splice_altering	""	32573529	exon_skip	1		0	15			2	1	exon skipping
+943	DMD	ENST00000357033	-	X-32573525-C-T	donor	X	32573525	C	T	5	splice_altering	""	32573529	intron_retention	1		0				2	1	intron retention
+945	SLC5A6	ENST00000310574	-	2-27207256-A-G	donor	2	27207256	A	G	2	splice_altering	""	27207257	intron_retention	1		0				2	1	intron retention
+945	SLC5A6	ENST00000310574	-	2-27207256-A-G	donor	2	27207256	A	G	2	splice_altering	""	27207257	cryptic	1	27207638	0				2	1	cryptic donor
+947	ABCB4	ENST00000649586	-	7-87449963-C-T	donor	7	87449963	C	T	5	splice_altering	""	87449967	cryptic	1	87449900	0				1	1	cryptic donor
+948	CREBBP	ENST00000262367	-	16-3739724-C-A	acceptor	16	3739724	C	A	1	splice_altering	""	3739725	exon_skip	1		1	25			2	1	exon skipping
+948	CREBBP	ENST00000262367	-	16-3739724-C-A	acceptor	16	3739724	C	A	1	splice_altering	""	3739725	intron_retention	1		1				2	1	intron retention
+954	NF1	ENST00000487476	+	17-31214586-G-GT	donor	17	31214586	G	GT	2	splice_altering	""	31214586	exon_skip	1		0	13			2	1	exon skipping
+954	NF1	ENST00000487476	+	17-31214586-G-GT	donor	17	31214586	G	GT	2	splice_altering	""	31214586	intron_retention	1		0				2	1	intron retention
+955	RPL11	ENST00000374550	+	1-23694793-T-A	donor	1	23694793	T	A	2	splice_altering	""	23694792	cryptic	1	23694858	0				1	1	cryptic donor
+957	SPG21	ENST00000204566	-	15-64976556-C-T	acceptor	15	64976556	C	T	-1	splice_altering	""	64976556	cryptic	1	64976550	0		1	1	1	1	cryptic acceptor
