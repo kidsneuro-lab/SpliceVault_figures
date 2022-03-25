@@ -15,7 +15,7 @@ To use 300K-RNA see [SpliceVault](https://kidsneuro.shinyapps.io/splicevault/)
 `ref/` contains extra files required to create figures. 
 
 # Processing
-`1.SAI_scores.Rmd` retrieves SpliceVault predictions for variants analysed in the paper.
+`1.splicevault_predictions.Rmd` retrieves SpliceVault predictions for variants analysed in the paper.
 
 `2.SAI_scores.Rmd` is the script we used to retrieve SpliceAI deltas +/-5000 nt of each variant using a custom API. An identical result can be easily achieved using code from the [SpliceAI github](https://github.com/Illumina/SpliceAI), but code is included here for completeness.
 
