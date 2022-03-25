@@ -7,3 +7,7 @@
 *.sqlite
 *.Rproj
 */300KRNA.tsv.gz
+src/source_variants.xlsx
+src/multiExonSkippingInfo.xlsx
+src/Supplementary Table S1.xlsx
+src/300KRNA_refseq.tsv.gz

@@ -1,0 +1,50 @@
+---
+title: "R Notebook"
+output: 
+---
+
+
+```{r}
+library(data.table)
+library(tidyverse)
+theme_set(theme_classic())
+library(ggsci)
+library(ggpubr)
+library(xlsx)
+library(PRROC)
+```
+
+```{r}
+merged_data <- fread('../ref/vars_events_prediction.tsv')
+
+```
+
+```{r}
+dict <- data.frame(category = c('exon skipping', 'cryptic', 'intron retention', 'multi exon skipping'),
+                   label = c('Exon Skipping', 'Cryptic', 'IR', 'Multi-Exon Skipping'))
+
+events <- merged_data[in_rna_studies == 1 & variant_category == 'ours']  %>%
+  mutate(category = ifelse(!is.na(skipped_exons_count) & skipped_exons_count > 1 , 
+                           'multi exon skipping', splicing_event_class)) %>%
+  mutate(category = ifelse(grepl('cryptic', splicing_event_class), 'cryptic', category)) %>%
+  group_by(category) %>% tally()  %>% 
+  mutate(perc = n / sum(n)) %>%
+  arrange(-n) %>%
+  left_join(dict, by = c('category'))  %>%
+  mutate(plot_category = 'mis-splicing events', fill = 1:4)
+
+eventcounts <- merged_data[in_rna_studies == 1 & variant_category == 'ours'] %>% group_by(curated_record_id) %>%
+  tally(name = 'category') %>% group_by(category) %>% tally()%>%
+  mutate(perc = n / sum(n),
+         plot_category = '# events per variant', label = paste(category, ' events'), fill = 1:4)
+
+rbind(events, eventcounts) %>%
+  ggplot(aes(x = perc, y = plot_category, fill = factor(fill))) + 
+  geom_bar(stat = 'identity', position = position_stack(reverse=TRUE), width = 0.5) + 
+  theme(axis.title.y = element_blank(), axis.title.x = element_blank(), legend.position = 'none') +
+  scale_x_continuous(labels = scales::percent, expand = c(0,0)) +
+  geom_text(aes(label = paste0(label, ' \n(' ,  n, ')')),
+            position = position_stack(reverse = TRUE, vjust = 0.5), color = "white", size = 3) +
+  scale_fill_grey(start = 0)
+ggsave('../figs/1C.pdf', width = 6, height = 2)
+```

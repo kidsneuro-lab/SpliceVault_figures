@@ -1,0 +1,94 @@
+---
+title: "R Notebook"
+output: 
+---
+
+```{r echo = F}
+library(data.table)
+library(plyr)
+library(tidyverse)
+library(httr)
+library(BSgenome.Hsapiens.UCSC.hg38)
+seqlevelsStyle(BSgenome.Hsapiens.UCSC.hg38) <- "NCBI"
+library(stringi)
+```
+
+
+```{r}
+# # making custom gene annotations file because a few genes are missing in spliceAIs one
+# exons <- fread('ref/refseq_introns_exons.tsv.gz')
+# #NAME	CHROM	STRAND	TX_START	TX_END	EXON_START	EXON_END
+# # OR4F5	1	+	69090	70008	69090,	70008,
+# # OR4F16	1	-	685715	686654	685715,	686654,
+# 
+# exons <- exons[region_type == 'exon' & canonical == 1]
+# tx_starts <- exons[, .(tx_start = min(region_start)), by = .(gene_name, chrom, strand, tx_id, tx_len, nexon)]
+# tx_ends <- exons[, .(tx_end = max(region_end)), by = .(gene_name, chrom, strand, tx_id, tx_len, nexon)]
+# exons <- exons[tx_starts, on = .(gene_name, chrom, strand, tx_id, tx_len, nexon)]
+# exons <- exons[tx_ends, on = .(gene_name, chrom, strand, tx_id, tx_len, nexon)]
+# 
+# setorder(exons, chrom, strand, tx_start, region_start, nexon)
+# exons <- exons %>%
+#      dplyr::group_by(gene_name, chrom, strand, tx_start, tx_end, nexon) %>%
+#      dplyr::summarise(region_start = paste0(region_start, collapse = ","),
+#             region_end = paste0(region_end, collapse = ","))
+# setDT(exons)
+# 
+# exons[, `:=` (region_start = paste0(region_start, ','), region_end = paste0(region_end, ','))]
+# 
+# exons <- exons[gene_name != '']
+# #exons <- exons[-which(duplicated(exons[, .(gene_name)]))]
+# exons <- exons[, .(`#NAME` = gene_name, CHROM = chrom, STRAND = strand, TX_START = tx_start, TX_END = tx_end, EXON_START = region_start, EXON_END = region_end)]
+# setorder(exons, CHROM, TX_START)
+# fwrite(exons,
+#        '../ref/grch38_custom.txt', sep = '\t')
+
+```
+
+
+
+```{r}
+vars_events <- fread('../src/vars_events.tsv', sep = '\t')
+vars <- unique(vars_events[, .(chrom, pos, ref, alt)])
+```
+
+```{r}
+url <- "http://127.0.0.1:5000/spliceai/api/get_variant_assessment"
+
+scores_df <- data.frame()
+
+for (row in 1:nrow(vars)) {
+
+  chrom = paste0('chr',vars[row, chrom])
+  pos = vars[row, pos]
+  ref = vars[row, ref]
+  alt = vars[row, alt]
+  body <- list(chrom = chrom, pos = pos, ref = ref, alt = alt, assembly = 'grch38', distance = 5000, mask = 0)
+
+  r <- POST(url, body = body, encode = "form")
+  
+  if (status_code(r) == 200) {
+    scores = content(r, type = 'application/json')
+  } else {
+    scores = NA
+  }
+  
+  if (length(scores) > 0) {
+    df <- ldply(scores[[1]]$stats, data.frame)
+  } else {
+    df <- data.frame(dist_from_variant = NA, donor_ref = NA, donor_alt = NA, 
+                     donor = NA, acceptor_ref = NA, acceptor_alt = NA, acceptor = NA)
+  }
+  
+  setDT(df)
+  df[, `:=` (chrom = chrom, pos = pos, ref = ref, alt = alt)]
+  
+  scores_df <- rbind(scores_df, df)
+}
+
+fwrite(scores_df, '../ref/all_variants_spliceAI_5000nt.tsv', sep = '\t')
+```
+
+
+
+

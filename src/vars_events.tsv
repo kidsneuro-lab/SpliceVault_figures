@@ -1,0 +1,296 @@
+curated_record_id	variant_category	gene_name	tx_id	strand	variant_id	variant_type	chrom	pos	ref	alt	dist_from_ess	splice_conseq	splice_site_pos	name	value	cryptic_pos	skipped_exons_id	event_count	event_count_crypskip	splicing_event_class
+206	ours	COL6A3	NM_004369	-	2-237359089-C-T	acceptor	2	237359089	C	T	-1	Splice altering	237359089	exon_skip	1		20	1	1	exon skipping
+207	ours	ASNS	NM_001673	-	7-97853059-C-T	donor	7	97853059	C	T	1	Splice altering	97853059	exon_skip	1		12	3	2	exon skipping
+207	ours	ASNS	NM_001673	-	7-97853059-C-T	donor	7	97853059	C	T	1	Splice altering	97853059	intron_retention	1			3	2	intron retention
+207	ours	ASNS	NM_001673	-	7-97853059-C-T	donor	7	97853059	C	T	1	Splice altering	97853059	cryptic	1	97853107		3	2	cryptic donor
+228	ours	CLN5	NM_006493	+	13-76992276-G-A	donor	13	76992276	G	A	5	Splice altering	76992272	cryptic	1	76992853		1	1	cryptic donor
+229	ours	ABCB4	NM_000443	-	7-87426747-T-A	donor	7	87426747	T	A	3	Splice altering	87426749	exon_skip	1		16	1	1	exon skipping
+231	ours	SPG11	NM_025137	-	15-44622360-G-C	acceptor	15	44622360	G	C	-13	Splice altering	44622348	exon_skip	1		13	2	2	exon skipping
+231	ours	SPG11	NM_025137	-	15-44622360-G-C	acceptor	15	44622360	G	C	-13	Splice altering	44622348	cryptic	1	44622308		2	2	cryptic acceptor
+232	ours	AHI1	NM_001134831	-	6-135429877-C-T	donor	6	135429877	C	T	5	Splice altering	135429881	exon_skip	1		18	2	2	exon skipping
+232	ours	AHI1	NM_001134831	-	6-135429877-C-T	donor	6	135429877	C	T	5	Splice altering	135429881	cryptic	1	135429841		2	2	cryptic donor
+233	ours	DMD	NM_004006	-	X-32595757-C-T	donor	X	32595757	C	T	-1	Splice altering	32595756	exon_skip	1		13	1	1	exon skipping
+234	ours	TAFAZZIN	NM_000116	+	X-154412214-G-C	donor	X	154412214	G	C	-1	Splice altering	154412215	exon_skip	1		2	2	2	exon skipping
+234	ours	TAFAZZIN	NM_000116	+	X-154412214-G-C	donor	X	154412214	G	C	-1	Splice altering	154412215	cryptic	1	154412251		2	2	cryptic donor
+235	ours	DMD	NM_004006	-	X-32386309-C-T	donor	X	32386309	C	T	1	Splice altering	32386309	exon_skip	1		33	3	2	exon skipping
+235	ours	DMD	NM_004006	-	X-32386309-C-T	donor	X	32386309	C	T	1	Splice altering	32386309	intron_retention	1			3	2	intron retention
+235	ours	DMD	NM_004006	-	X-32386309-C-T	donor	X	32386309	C	T	1	Splice altering	32386309	cryptic	1	32386351		3	2	cryptic donor
+236	ours	OPHN1	NM_002547	-	X-68212104-T-C	donor	X	68212104	T	C	4	Splice altering	68212107	exon_skip	1		8	1	1	exon skipping
+239	ours	TNNT3	NM_006757	+	11-1934920-G-A	donor	11	1934920	G	A	1	Splice altering	1934920	exon_skip	1		14	1	1	exon skipping
+241	ours	ABCB4	NM_000443	-	7-87454532-T-TAA	donor	7	87454532	T	TAA	2	Splice altering	87454534	exon_skip	1		5	1	1	exon skipping
+246	ours	GAA	NM_000152	+	17-80104542-T-G	acceptor	17	80104542	T	G	-13	Splice altering	80104554	exon_skip	1		2	3	3	exon skipping
+246	ours	GAA	NM_000152	+	17-80104542-T-G	acceptor	17	80104542	T	G	-13	Splice altering	80104554	cryptic	1	80104400		3	3	cryptic acceptor
+246	ours	GAA	NM_000152	+	17-80104542-T-G	acceptor	17	80104542	T	G	-13	Splice altering	80104554	cryptic	1	80105072		3	3	cryptic acceptor
+250	ours	NEB	NM_001271208	-	2-151688291-C-T	donor	2	151688291	C	T	1	Splice altering	151688291	exon_skip	1		25	4	4	exon skipping
+250	ours	NEB	NM_001271208	-	2-151688291-C-T	donor	2	151688291	C	T	1	Splice altering	151688291	cryptic	1	151688371		4	4	cryptic donor
+250	ours	NEB	NM_001271208	-	2-151688291-C-T	donor	2	151688291	C	T	1	Splice altering	151688291	cryptic	1	151688174		4	4	cryptic donor
+250	ours	NEB	NM_001271208	-	2-151688291-C-T	donor	2	151688291	C	T	1	Splice altering	151688291	cryptic	1	151688006		4	4	cryptic donor
+251	ours	NEB	NM_001271208	-	2-151663543-C-T	donor	2	151663543	C	T	5	Splice altering	151663547	intron_retention	1			2	1	intron retention
+251	ours	NEB	NM_001271208	-	2-151663543-C-T	donor	2	151663543	C	T	5	Splice altering	151663547	cryptic	1	151663204		2	1	cryptic donor
+252	ours	TTN	NM_001267550	-	2-178581491-ATACT-A	donor	2	178581491	ATACT	A	4	Splice altering	178581498	exon_skip	1		316	1	1	exon skipping
+253	ours	NEB	NM_001271208	-	2-151682661-C-T	donor	2	151682661	C	T	1	Splice altering	151682661	exon_skip	1		29	1	1	exon skipping
+255	ours	NEB	NM_001271208	-	2-151533439-T-C	donor	2	151533439	T	C	3	Splice altering	151533441	cryptic	1	151533382		2	2	cryptic donor
+255	ours	NEB	NM_001271208	-	2-151533439-T-C	donor	2	151533439	T	C	3	Splice altering	151533441	cryptic	1	151533329		2	2	cryptic donor
+257	ours	NEB	NM_001271208	-	2-151674586-T-C	acceptor	2	151674586	T	C	-2	Splice altering	151674585	exon_skip	1		36	1	1	exon skipping
+259	ours	RYR1	NM_000540	+	19-38442455-T-C	donor	19	38442455	T	C	2	Splice altering	38442454	exon_skip	1		3	1	1	exon skipping
+262	ours	TTN	NM_001267550	-	2-178529958-A-T	donor	2	178529958	A	T	2	Splice altering	178529959	exon_skip	1		359	1	1	exon skipping
+265	ours	PIGN	NM_176787	-	18-62143352-A-C	acceptor	18	62143352	A	C	-6	Splice altering	62143347	exon_skip	1		11	3	3	exon skipping
+265	ours	PIGN	NM_176787	-	18-62143352-A-C	acceptor	18	62143352	A	C	-6	Splice altering	62143347	cryptic	1	62143373		3	3	cryptic acceptor
+265	ours	PIGN	NM_176787	-	18-62143352-A-C	acceptor	18	62143352	A	C	-6	Splice altering	62143347	exon_skip	1		11-12	3	3	exon skipping
+268	ours	COL6A2	NM_001849	+	21-46126476-T-TGGCCCAGCCCGGCCC	acceptor	21	46126476	T	TGGCCCAGCCCGGCCC	-21	Splice altering	46126502	exon_skip	1		27	2	1	exon skipping
+268	ours	COL6A2	NM_001849	+	21-46126476-T-TGGCCCAGCCCGGCCC	acceptor	21	46126476	T	TGGCCCAGCCCGGCCC	-21	Splice altering	46126502	intron_retention	1			2	1	intron retention
+277	ours	TTN	NM_001267550	-	2-178622768-C-T	acceptor	2	178622768	C	T	-1	Splice altering	178622768	exon_skip	1		243	1	1	exon skipping
+278	ours	TTN	NM_001267550	-	2-178642237-C-G	donor	2	178642237	C	G	-1	Splice altering	178642236	exon_skip	1		219-220	1	1	exon skipping
+282	ours	POMGNT1	NM_017739	-	1-46189457-C-A	donor	1	46189457	C	A	1	Splice altering	46189457	intron_retention	1			2	1	intron retention
+282	ours	POMGNT1	NM_017739	-	1-46189457-C-A	donor	1	46189457	C	A	1	Splice altering	46189457	cryptic	1	46189483		2	1	cryptic donor
+491	ours	VPS13D	NM_015378	+	1-12362848-C-T	donor	1	12362848	C	T	-3	Splice altering	12362851	exon_skip	1		51	2	1	exon skipping
+491	ours	VPS13D	NM_015378	+	1-12362848-C-T	donor	1	12362848	C	T	-3	Splice altering	12362851	intron_retention	1			2	1	intron retention
+492	ours	ACE	NM_000789	+	17-63483976-G-C	donor	17	63483976	G	C	5	Splice altering	63483972	exon_skip	1		11	2	2	exon skipping
+492	ours	ACE	NM_000789	+	17-63483976-G-C	donor	17	63483976	G	C	5	Splice altering	63483972	cryptic	1	63483955		2	2	cryptic donor
+494	ours	HSD17B4	NM_000414	+	5-119506890-G-C	donor	5	119506890	G	C	1	Splice altering	119506890	exon_skip	1		15	1	1	exon skipping
+496	ours	VPS13D	NM_015378	+	1-12257090-A-G	donor	1	12257090	A	G	3	Splice altering	12257088	exon_skip	1		9	2	1	exon skipping
+496	ours	VPS13D	NM_015378	+	1-12257090-A-G	donor	1	12257090	A	G	3	Splice altering	12257088	intron_retention	1			2	1	intron retention
+530	ours	GSDME	NM_004403	-	7-24706179-C-T	donor	7	24706179	C	T	5	Splice altering	24706183	exon_skip	1		8	1	1	exon skipping
+531	ours	GYS1	NM_002103	-	19-48970707-TACC-T	acceptor	19	48970707	TACC	T	-1	Splice altering	48970710	intron_retention	1			2	1	intron retention
+531	ours	GYS1	NM_002103	-	19-48970707-TACC-T	acceptor	19	48970707	TACC	T	-1	Splice altering	48970710	cryptic	1	48970637		2	1	cryptic acceptor
+532	ours	IL11RA	NM_001142784	+	9-34658683-G-A	donor	9	34658683	G	A	-1	Splice altering	34658684	exon_skip	1		8	2	2	exon skipping
+532	ours	IL11RA	NM_001142784	+	9-34658683-G-A	donor	9	34658683	G	A	-1	Splice altering	34658684	cryptic	1	34658696		2	2	cryptic donor
+534	ours	ABCA12	NM_173076	-	2-214955362-C-G	acceptor	2	214955362	C	G	-1	Splice altering	214955362	exon_skip	1		43	1	1	exon skipping
+535	ours	LAMP2	NM_013995	-	X-120442596-T-A	donor	X	120442596	T	A	3	Splice altering	120442598	exon_skip	1		7	1	1	exon skipping
+569	ours	ODAD2	NM_018076	-	10-27944217-C-G	donor	10	27944217	C	G	5	Splice altering	27944221	exon_skip	1		12	1	1	exon skipping
+571	ours	TRPM6	NM_017662	-	9-74816662-A-C	donor	9	74816662	A	C	7	Splice altering	74816668	exon_skip	1		11	1	1	exon skipping
+572	ours	CC2D2A	NM_001080522	+	4-15502924-G-T	donor	4	15502924	G	T	1	Splice altering	15502924	exon_skip	1		7	1	1	exon skipping
+635	published	BRCA2	NM_000059	+	13-32370556-A-G	donor	13	32370556	A	G	-2	Splice altering	32370558	exon_skip	1		19	1	1	exon skipping
+655	published	BRCA1	NM_007294	-	17-43082398-A-G	donor	17	43082398	A	G	6	Splice altering	43082403	exon_skip	1		12	1	1	exon skipping
+795	published	NF1	NM_000267	+	17-31200598-A-G	donor	17	31200598	A	G	3	Splice altering	31200596	exon_skip	1		9	1	1	exon skipping
+854	ours	SETD5	NM_001080517	+	3-9442123-C-G	acceptor	3	9442123	C	G	-5	Splice altering	9442127	exon_skip	1		10	1	1	exon skipping
+855	ours	ATP1A3	NM_152296	-	19-41968916-C-A	acceptor	19	41968916	C	A	-1	Splice altering	41968916	intron_retention	1			2	1	intron retention
+855	ours	ATP1A3	NM_152296	-	19-41968916-C-A	acceptor	19	41968916	C	A	-1	Splice altering	41968916	cryptic	1	41968904		2	1	cryptic acceptor
+856	ours	CHD8	NM_001170629	-	14-21403664-C-G	acceptor	14	21403664	C	G	-1	Splice altering	21403664	cryptic	1	21403730		2	2	cryptic acceptor
+856	ours	CHD8	NM_001170629	-	14-21403664-C-G	acceptor	14	21403664	C	G	-1	Splice altering	21403664	cryptic	1	21403593		2	2	cryptic acceptor
+857	ours	TUBA1A	NM_006009	-	12-49188973-TC-T	donor	12	49188973	TC	T	3	Splice altering	49188976	cryptic	1	49188888		1	1	cryptic donor
+858	ours	ATP2B1	NM_001682	-	12-89603041-A-C	donor	12	89603041	A	C	2	Splice altering	89603042	exon_skip	1		18	3	2	exon skipping
+858	ours	ATP2B1	NM_001682	-	12-89603041-A-C	donor	12	89603041	A	C	2	Splice altering	89603042	intron_retention	1			3	2	intron retention
+858	ours	ATP2B1	NM_001682	-	12-89603041-A-C	donor	12	89603041	A	C	2	Splice altering	89603042	exon_skip	1		17-18	3	2	exon skipping
+859	ours	GLI3	NM_000168	-	7-42076747-C-T	donor	7	42076747	C	T	5	Splice altering	42076751	exon_skip	1		4	1	1	exon skipping
+861	ours	UBE3A	NM_130838	-	15-25356056-C-G	acceptor	15	25356056	C	G	1	Splice altering	25356057	cryptic	1	25356095		1	1	cryptic acceptor
+863	ours	B9D1	NM_015681	-	17-19347784-C-T	donor	17	19347784	C	T	-1	Splice altering	19347783	exon_skip	1		4	1	1	exon skipping
+866	ours	COL4A1	NM_001845	-	13-110170546-C-T	donor	13	110170546	C	T	1	Splice altering	110170546	exon_skip	1		42	1	1	exon skipping
+867	ours	APC	NM_000038	+	5-112775743-T-A	donor	5	112775743	T	A	6	Splice altering	112775738	exon_skip	1		5	1	1	exon skipping
+870	ours	CDH23	NM_022124	+	10-71646458-G-A	acceptor	10	71646458	G	A	-1	Splice altering	71646458	exon_skip	1		14	4	3	exon skipping
+870	ours	CDH23	NM_022124	+	10-71646458-G-A	acceptor	10	71646458	G	A	-1	Splice altering	71646458	intron_retention	1			4	3	intron retention
+870	ours	CDH23	NM_022124	+	10-71646458-G-A	acceptor	10	71646458	G	A	-1	Splice altering	71646458	cryptic	1	71646503		4	3	cryptic acceptor
+870	ours	CDH23	NM_022124	+	10-71646458-G-A	acceptor	10	71646458	G	A	-1	Splice altering	71646458	cryptic	1	71646550		4	3	cryptic acceptor
+871	ours	MSH6	NM_000179	+	2-47805032-GTTT-CATTATTGTCAGG	donor	2	47805032	GTTT	CATTATTGTCAGG	5	Splice altering	47805028	exon_skip	1		6	2	1	exon skipping
+871	ours	MSH6	NM_000179	+	2-47805032-GTTT-CATTATTGTCAGG	donor	2	47805032	GTTT	CATTATTGTCAGG	5	Splice altering	47805028	intron_retention	1			2	1	intron retention
+872	ours	STXBP1	NM_003165	+	9-127675942-G-C	donor	9	127675942	G	C	-1	Splice altering	127675943	exon_skip	1		14	3	2	exon skipping
+872	ours	STXBP1	NM_003165	+	9-127675942-G-C	donor	9	127675942	G	C	-1	Splice altering	127675943	intron_retention	1			3	2	intron retention
+872	ours	STXBP1	NM_003165	+	9-127675942-G-C	donor	9	127675942	G	C	-1	Splice altering	127675943	cryptic	1	127675888		3	2	cryptic donor
+873	ours	ABCA1	NM_005502	-	9-104796306-T-G	donor	9	104796306	T	G	3	Splice altering	104796308	exon_skip	1		38	1	1	exon skipping
+875	ours	WDR45	NM_007075	-	X-49075359-C-G	donor	X	49075359	C	G	5	Splice altering	49075363	intron_retention	1			2	1	intron retention
+875	ours	WDR45	NM_007075	-	X-49075359-C-G	donor	X	49075359	C	G	5	Splice altering	49075363	cryptic	1	49075415		2	1	cryptic donor
+876	ours	TUSC3	NM_001356429	+	8-15650814-G-A	donor	8	15650814	G	A	-1	Splice altering	15650815	exon_skip	1		3	1	1	exon skipping
+878	ours	CD96	NM_198196	+	3-111577548-AGGTATGTAAATTGCTGCAG-A	donor	3	111577548	AGGTATGTAAATTGCTGCAG	A	1	Splice altering	111577550	exon_skip	1		4	1	1	exon skipping
+881	ours	EMC1	NM_015047	-	1-19243708-C-T	acceptor	1	19243708	C	T	-1	Splice altering	19243708	exon_skip	1		4	4	3	exon skipping
+881	ours	EMC1	NM_015047	-	1-19243708-C-T	acceptor	1	19243708	C	T	-1	Splice altering	19243708	intron_retention	1			4	3	intron retention
+881	ours	EMC1	NM_015047	-	1-19243708-C-T	acceptor	1	19243708	C	T	-1	Splice altering	19243708	cryptic	1	19243799		4	3	cryptic acceptor
+881	ours	EMC1	NM_015047	-	1-19243708-C-T	acceptor	1	19243708	C	T	-1	Splice altering	19243708	cryptic	1	19243684		4	3	cryptic acceptor
+884	ours	SRPK3	NM_014370	+	X-153783256-G-C	donor	X	153783256	G	C	5	Splice altering	153783252	exon_skip	1		8	2	1	exon skipping
+884	ours	SRPK3	NM_014370	+	X-153783256-G-C	donor	X	153783256	G	C	5	Splice altering	153783252	intron_retention	1			2	1	intron retention
+885	ours	MYH7	NM_000257	-	14-23414003-T-A	donor	14	23414003	T	A	4	Splice altering	23414006	exon_skip	1		38	2	1	exon skipping
+885	ours	MYH7	NM_000257	-	14-23414003-T-A	donor	14	23414003	T	A	4	Splice altering	23414006	intron_retention	1			2	1	intron retention
+889	published	MYH7	NM_000257	-	14-23414002-C-G	donor	14	23414002	C	G	5	Splice altering	23414006	exon_skip	1		38	1	1	exon skipping
+892	published	LAMP2	NM_002294	-	X-120442599-C-T	donor	X	120442599	C	T	-1	Splice altering	120442598	exon_skip	1		7	1	1	exon skipping
+893	published	B9D1	NM_015681	-	17-19347782-A-G	donor	17	19347782	A	G	2	Splice altering	19347783	exon_skip	1		4	1	1	exon skipping
+898	published	ARL2BP	NM_012106	+	16-57248644-G-A	donor	16	57248644	G	A	1	Splice altering	57248644	exon_skip	1		3	1	1	exon skipping
+899	published	ARL2BP	NM_012106	+	16-57250512-G-A	donor	16	57250512	G	A	5	Splice altering	57250508	exon_skip	1		5	5	5	exon skipping
+899	published	ARL2BP	NM_012106	+	16-57250512-G-A	donor	16	57250512	G	A	5	Splice altering	57250508	cryptic	1	57250562		5	5	cryptic donor
+899	published	ARL2BP	NM_012106	+	16-57250512-G-A	donor	16	57250512	G	A	5	Splice altering	57250508	cryptic	1	57250697		5	5	cryptic donor
+899	published	ARL2BP	NM_012106	+	16-57250512-G-A	donor	16	57250512	G	A	5	Splice altering	57250508	cryptic	1	57250801		5	5	cryptic donor
+899	published	ARL2BP	NM_012106	+	16-57250512-G-A	donor	16	57250512	G	A	5	Splice altering	57250508	cryptic	1	57251948		5	5	cryptic donor
+900	published	ARL2BP	NM_012106	+	16-57248644-G-T	donor	16	57248644	G	T	1	Splice altering	57248644	exon_skip	1		3	1	1	exon skipping
+901	published	ARL2BP	NM_012106	+	16-57248536-G-C	acceptor	16	57248536	G	C	-1	Splice altering	57248536	exon_skip	1		3	5	5	exon skipping
+901	published	ARL2BP	NM_012106	+	16-57248536-G-C	acceptor	16	57248536	G	C	-1	Splice altering	57248536	cryptic	1	57248414		5	5	cryptic acceptor
+901	published	ARL2BP	NM_012106	+	16-57248536-G-C	acceptor	16	57248536	G	C	-1	Splice altering	57248536	cryptic	1	57248426		5	5	cryptic acceptor
+901	published	ARL2BP	NM_012106	+	16-57248536-G-C	acceptor	16	57248536	G	C	-1	Splice altering	57248536	cryptic	1	57248544		5	5	cryptic acceptor
+901	published	ARL2BP	NM_012106	+	16-57248536-G-C	acceptor	16	57248536	G	C	-1	Splice altering	57248536	cryptic	1	57248550		5	5	cryptic acceptor
+902	published	HYDIN	NM_001270974	-	16-70991397-C-A	acceptor	16	70991397	C	A	-1	Splice altering	70991397	exon_skip	1		25	1	1	exon skipping
+904	published	PKD1	NM_001009944	-	16-2090285-C-T	donor	16	2090285	C	T	-1	Splice altering	2090284	cryptic	1	2090280		1	1	cryptic donor
+905	published	PKD1	NM_001009944	-	16-2090284-C-T	donor	16	2090284	C	T	1	Splice altering	2090284	cryptic	1	2090280		1	1	cryptic donor
+907	published	TRIP11	NM_004239	-	14-92021558-G-A	donor	14	92021558	G	A	-3	Splice altering	92021555	exon_skip	1		4	1	1	exon skipping
+908	published	TRIP11	NM_004239	-	14-92011072-C-A	acceptor	14	92011072	C	A	1	Splice altering	92011073	exon_skip	1		9	2	2	exon skipping
+908	published	TRIP11	NM_004239	-	14-92011072-C-A	acceptor	14	92011072	C	A	1	Splice altering	92011073	exon_skip	1		8-9	2	2	exon skipping
+912	published	SCN5A	NM_198056	-	3-38586046-G-T	acceptor	3	38586046	G	T	-5	Splice altering	38586042	exon_skip	1		16	1	1	exon skipping
+913	published	KCNQ1	NM_000218	+	11-2572846-GA-TC	acceptor	11	2572846	GA	TC	1	Splice altering	2572845	exon_skip	1		6	1	1	exon skipping
+914	published	ZC4H2	NM_018684	-	X-64921812-C-T	donor	X	64921812	C	T	5	Splice altering	64921816	cryptic	1	64921771		1	1	cryptic donor
+915	ours	COL4A3	NM_000091	+	2-227284346-G-A	donor	2	227284346	G	A	1	Splice altering	227284346	exon_skip	1		34	1	1	exon skipping
+916	ours	PYGM	NM_005609	-	11-64757779-C-T	donor	11	64757779	C	T	-1	Splice altering	64757778	exon_skip	1		5	1	1	exon skipping
+917	ours	CIC	NM_015125	+	19-42287241-G-T	donor	19	42287241	G	T	1	Splice altering	42287241	cryptic	1	42287147		1	1	cryptic donor
+920	ours	EPG5	NM_020964	-	18-45876346-TAAAGA-T	acceptor	18	45876346	TAAAGA	T	Option not available	Splice altering	45876343	exon_skip	1		35	1	1	exon skipping
+923	ours	EMD	NM_000117	+	X-154380231-A-G	acceptor	X	154380231	A	G	-3	Splice altering	154380233	intron_retention	1			2	1	intron retention
+923	ours	EMD	NM_000117	+	X-154380231-A-G	acceptor	X	154380231	A	G	-3	Splice altering	154380233	cryptic	1	154380276		2	1	cryptic acceptor
+924	ours	FXN	NM_000144	+	9-69046380-T-G	acceptor	9	69046380	T	G	-5	Splice altering	69046384	exon_skip	1		2	3	2	exon skipping
+924	ours	FXN	NM_000144	+	9-69046380-T-G	acceptor	9	69046380	T	G	-5	Splice altering	69046384	intron_retention	1			3	2	intron retention
+924	ours	FXN	NM_000144	+	9-69046380-T-G	acceptor	9	69046380	T	G	-5	Splice altering	69046384	exon_skip	1		2-3	3	2	exon skipping
+925	ours	FANCA	NM_000135	-	16-89779855-GCAGCCCAGCCT-G	donor	16	89779855	GCAGCCCAGCCT	G	Option not available	Splice altering	89779868	exon_skip	1		18	2	2	exon skipping
+925	ours	FANCA	NM_000135	-	16-89779855-GCAGCCCAGCCT-G	donor	16	89779855	GCAGCCCAGCCT	G	Option not available	Splice altering	89779868	cryptic	1	89779610		2	2	cryptic donor
+927	ours	KCNH2	NM_000238	-	7-150957276-CCGCTGGGCGC-GT	donor	7	150957276	CCGCTGGGCGC	GT	Option not available	Splice altering	150957290	exon_skip	1		5	1	1	exon skipping
+930	ours	HSPG2	NM_001291860	-	1-21861754-T-A	donor	1	21861754	T	A	3	Splice altering	21861756	exon_skip	1		39	2	2	exon skipping
+930	ours	HSPG2	NM_001291860	-	1-21861754-T-A	donor	1	21861754	T	A	3	Splice altering	21861756	cryptic	1	21861763		2	2	cryptic donor
+939	published	DMD	NM_004006	-	X-31180365-C-A	donor	X	31180365	C	A	5	Splice altering	31180369	exon_skip	1		69	1	1	exon skipping
+941	ours	MANBA	NM_005908	-	4-102722870-C-T	donor	4	102722870	C	T	1	Splice altering	102722870	exon_skip	1		4	1	1	exon skipping
+943	ours	DMD	NM_004006	-	X-32573525-C-T	donor	X	32573525	C	T	5	Splice altering	32573529	exon_skip	1		15	2	1	exon skipping
+943	ours	DMD	NM_004006	-	X-32573525-C-T	donor	X	32573525	C	T	5	Splice altering	32573529	intron_retention	1			2	1	intron retention
+945	ours	SLC5A6	NM_021095	-	2-27207256-A-G	donor	2	27207256	A	G	2	Splice altering	27207257	intron_retention	1			2	1	intron retention
+945	ours	SLC5A6	NM_021095	-	2-27207256-A-G	donor	2	27207256	A	G	2	Splice altering	27207257	cryptic	1	27207638		2	1	cryptic donor
+947	ours	ABCB4	NM_000443	-	7-87449963-C-T	donor	7	87449963	C	T	5	Splice altering	87449967	cryptic	1	87449900		1	1	cryptic donor
+948	ours	CREBBP	NM_004380	-	16-3739724-C-A	acceptor	16	3739724	C	A	1	Splice altering	3739725	exon_skip	1		25	2	1	exon skipping
+948	ours	CREBBP	NM_004380	-	16-3739724-C-A	acceptor	16	3739724	C	A	1	Splice altering	3739725	intron_retention	1			2	1	intron retention
+954	ours	NF1	NM_001042492	+	17-31214586-G-GT	donor	17	31214586	G	GT	2	Splice altering	31214586	exon_skip	1		13	2	1	exon skipping
+954	ours	NF1	NM_001042492	+	17-31214586-G-GT	donor	17	31214586	G	GT	2	Splice altering	31214586	intron_retention	1			2	1	intron retention
+955	ours	RPL11	NM_000975	+	1-23694793-T-A	donor	1	23694793	T	A	2	Splice altering	23694792	cryptic	1	23694858		1	1	cryptic donor
+959	published	ADAMTSL4	NM_019032	+	1-150558649-G-A	donor	1	150558649	G	A	-1	Splice altering	150558650	exon_skip	1		15	1	1	exon skipping
+960	published	AIFM1	NM_004208	-	X-130140644-A-C	acceptor	X	130140644	A	C	-27	Splice altering	130140618	exon_skip	1		7	1	1	exon skipping
+962	published	BRCA1	NM_007294	-	17-43115723-T-A	donor	17	43115723	T	A	3	Splice altering	43115725	exon_skip	1		3	1	1	exon skipping
+963	published	BRCA1	NM_007294	-	17-43106456-C-A	donor	17	43106456	C	A	-1	Splice altering	43106455	cryptic	1	43106477		1	1	cryptic donor
+965	published	BRCA1	NM_007294	-	17-43104961-A-C	acceptor	17	43104961	A	C	-5	Splice altering	43104957	cryptic	1	43105016		1	1	cryptic acceptor
+967	published	BRCA1	NM_007294	-	17-43076640-CTACTT-C	acceptor	17	43076640	CTACTT	C	Option not available	Splice altering	43076615	exon_skip	1		13	1	1	exon skipping
+969	published	BRCA1	NM_007294	-	17-43063869-C-G	donor	17	43063869	C	G	5	Splice altering	43063873	exon_skip	1		17	1	1	exon skipping
+970	published	BRCA1	NM_007294	-	17-43063868-A-G	donor	17	43063868	A	G	6	Splice altering	43063873	exon_skip	1		17	1	1	exon skipping
+971	published	BRCA1	NM_007294	-	17-43063399-T-C	acceptor	17	43063399	T	C	-26	Splice altering	43063374	exon_skip	1		18	1	1	exon skipping
+973	published	BRCA2	NM_000059	+	13-32326153-AT-A	donor	13	32326153	AT	A	4	Splice altering	32326151	exon_skip	1		5	1	1	exon skipping
+976	published	BRCA2	NM_000059	+	13-32329493-G-A	donor	13	32329493	G	A	1	Splice altering	32329493	exon_skip	1		8	1	1	exon skipping
+979	published	CHD2	NM_001271	+	15-93002171-T-G	acceptor	15	93002171	T	G	-6	Splice altering	93002176	exon_skip	1		33	1	1	exon skipping
+980	published	COL4A1	NM_001845	-	13-110212573-C-T	donor	13	110212573	C	T	1	Splice altering	110212573	exon_skip	1		5	1	1	exon skipping
+981	published	DICER1	NM_030621	-	14-95117622-C-T	donor	14	95117622	C	T	-1	Splice altering	95117621	exon_skip	1		11	1	1	exon skipping
+983	published	ENPP1	NM_006208	+	6-131847776-G-T	acceptor	6	131847776	G	T	1	Splice altering	131847775	exon_skip	1		2	1	1	exon skipping
+985	published	FBN1	NM_000138	-	15-48600138-C-T	donor	15	48600138	C	T	1	Splice altering	48600138	exon_skip	1		5	1	1	exon skipping
+986	published	FBN1	NM_000138	-	15-48537611-C-T	donor	15	48537611	C	T	-1	Splice altering	48537610	exon_skip	1		7	1	1	exon skipping
+987	published	FBN1	NM_000138	-	15-48520818-C-T	acceptor	15	48520818	C	T	-1	Splice altering	48520818	exon_skip	1		10	1	1	exon skipping
+989	published	FBN1	NM_000138	-	15-48497266-C-T	donor	15	48497266	C	T	-1	Splice altering	48497265	cryptic	1	48497269		1	1	cryptic donor
+991	published	FBN1	NM_000138	-	15-48481655-C-G	donor	15	48481655	C	G	-1	Splice altering	48481654	exon_skip	1		32	1	1	exon skipping
+992	published	FBN1	NM_000138	-	15-48468412-C-A	donor	15	48468412	C	A	-1	Splice altering	48468411	exon_skip	1		37	1	1	exon skipping
+993	published	FBN1	NM_000138	-	15-48468399-TTTAAGGTC-T	donor	15	48468399	TTTAAGGTC	T	Option not available	Splice altering	48468411	exon_skip	1		37	1	1	exon skipping
+994	published	FBN1	NM_000138	-	15-48467933-C-T	donor	15	48467933	C	T	5	Splice altering	48467937	cryptic	1	48467985		1	1	cryptic donor
+995	published	FBN1	NM_000138	-	15-48465558-GACCATTT-G	donor	15	48465558	GACCATTT	G	Option not available	Splice altering	48465567	cryptic	1	48465554		1	1	cryptic donor
+996	published	FBN1	NM_000138	-	15-48460246-C-T	donor	15	48460246	C	T	-1	Splice altering	48460245	exon_skip	1		43	1	1	exon skipping
+997	published	FBN1	NM_000138	-	15-48446701-C-T	donor	15	48446701	C	T	5	Splice altering	48446705	exon_skip	1		47	1	1	exon skipping
+998	published	FBN1	NM_000138	-	15-48437765-T-A	donor	15	48437765	T	A	3	Splice altering	48437767	cryptic	1	48437710		1	1	cryptic donor
+1001	published	FBN1	NM_000138	-	15-48427568-T-C	donor	15	48427568	T	C	-2	Splice altering	48427566	exon_skip	1		58	1	1	exon skipping
+1002	published	FBN1	NM_000138	-	15-48427567-C-G	donor	15	48427567	C	G	-1	Splice altering	48427566	exon_skip	1		58	1	1	exon skipping
+1003	published	FBN1	NM_000138	-	15-48421950-A-C	donor	15	48421950	A	C	2	Splice altering	48421951	exon_skip	1		61	1	1	exon skipping
+1041	ours	CTNNB1	NM_001904	+	3-41224951-C-A	acceptor	3	41224951	C	A	-3	Splice altering	41224953	exon_skip	1		4	2	2	exon skipping
+1041	ours	CTNNB1	NM_001904	+	3-41224951-C-A	acceptor	3	41224951	C	A	-3	Splice altering	41224953	cryptic	1	41225102		2	2	cryptic acceptor
+1042	ours	CC2D2A	NM_001080522	+	4-15596210-A-G	donor	4	15596210	A	G	3	Splice altering	15596208	exon_skip	1		35	1	1	exon skipping
+1044	ours	TSC1	NM_000368	-	9-132921360-T-C	donor	9	132921360	T	C	3	Splice altering	132921362	exon_skip	1		8	1	1	exon skipping
+1045	ours	DNAH11	NM_001277115	+	7-21600934-A-C	donor	7	21600934	A	C	4	Splice altering	21600931	exon_skip	1		16	2	1	exon skipping
+1045	ours	DNAH11	NM_001277115	+	7-21600934-A-C	donor	7	21600934	A	C	4	Splice altering	21600931	intron_retention	1			2	1	intron retention
+1046	ours	NADSYN1	NM_018161	+	11-71497476-T-A	acceptor	11	71497476	T	A	-7	Splice altering	71497482	exon_skip	1		19	3	2	exon skipping
+1046	ours	NADSYN1	NM_018161	+	11-71497476-T-A	acceptor	11	71497476	T	A	-7	Splice altering	71497482	intron_retention	1			3	2	intron retention
+1046	ours	NADSYN1	NM_018161	+	11-71497476-T-A	acceptor	11	71497476	T	A	-7	Splice altering	71497482	cryptic	1	71497465		3	2	cryptic acceptor
+1050	ours	MTHFR	NM_005957	-	1-11794724-C-G	donor	1	11794724	C	G	5	Splice altering	11794728	exon_skip	1		7	2	1	exon skipping
+1050	ours	MTHFR	NM_005957	-	1-11794724-C-G	donor	1	11794724	C	G	5	Splice altering	11794728	intron_retention	1			2	1	intron retention
+1052	ours	METTL23	NM_001080510	+	17-76733216-G-GT	donor	17	76733216	G	GT	Option not available	Splice altering	76733216	exon_skip	1		3	1	1	exon skipping
+1053	ours	NEU1	NM_000434	-	6-31861188-C-T	donor	6	31861188	C	T	-1	Splice altering	31861187	exon_skip	1		3	3	2	exon skipping
+1053	ours	NEU1	NM_000434	-	6-31861188-C-T	donor	6	31861188	C	T	-1	Splice altering	31861187	intron_retention	1			3	2	intron retention
+1053	ours	NEU1	NM_000434	-	6-31861188-C-T	donor	6	31861188	C	T	-1	Splice altering	31861187	cryptic	1	31861195		3	2	cryptic donor
+1054	ours	MECOM	NM_004991	-	3-169112783-T-A	donor	3	169112783	T	A	4	Splice altering	169112786	exon_skip	1		9	2	2	exon skipping
+1054	ours	MECOM	NM_004991	-	3-169112783-T-A	donor	3	169112783	T	A	4	Splice altering	169112786	exon_skip	1		9-10	2	2	exon skipping
+1056	ours	GLB1	NM_001317040	-	3-33058083-A-G	donor	3	33058083	A	G	6	Splice altering	33058088	exon_skip	1		7	1	1	exon skipping
+1060	published	NIPBL	NM_133433	+	5-37006354-C-T	acceptor	5	37006354	C	T	-3	Splice altering	37006356	exon_skip	1		17	1	1	exon skipping
+1078	minigene	BRCA2	NM_000059	+	13-32326239-C-A	acceptor	13	32326239	C	A	-3	Splice altering	32326241	exon_skip	1		6	2	2	exon skipping
+1078	minigene	BRCA2	NM_000059	+	13-32326239-C-A	acceptor	13	32326239	C	A	-3	Splice altering	32326241	exon_skip	1		5-6	2	2	exon skipping
+1100	ours	COL4A3	NM_000091	+	2-227253638-G-A	donor	2	227253638	G	A	-1	Splice altering	227253639	exon_skip	1		13	1	1	exon skipping
+1101	ours	FBN1	NM_000138	-	15-48444542-T-C	donor	15	48444542	T	C	-2	Splice altering	48444540	cryptic	1	48444618		2	2	cryptic donor
+1101	ours	FBN1	NM_000138	-	15-48444542-T-C	donor	15	48444542	T	C	-2	Splice altering	48444540	cryptic	1	48444414		2	2	cryptic donor
+1104	ours	TRRAP	NM_001375524	+	7-98978324-G-A	donor	7	98978324	G	A	1	Splice altering	98978324	exon_skip	1		57	3	2	exon skipping
+1104	ours	TRRAP	NM_001375524	+	7-98978324-G-A	donor	7	98978324	G	A	1	Splice altering	98978324	intron_retention	1			3	2	intron retention
+1104	ours	TRRAP	NM_001375524	+	7-98978324-G-A	donor	7	98978324	G	A	1	Splice altering	98978324	cryptic	1	98978361		3	2	cryptic donor
+1109	published	DMD	NM_004006	-	X-32644316-G-C	acceptor	X	32644316	G	C	-3	Splice altering	32644314	exon_skip	1		11	1	1	exon skipping
+1110	published	NIPBL	NM_133433	+	5-36958236-G-C	donor	5	36958236	G	C	5	Splice altering	36958232	exon_skip	1		4	1	1	exon skipping
+1111	published	NIPBL	NM_133433	+	5-36953761-G-A	donor	5	36953761	G	A	1	Splice altering	36953761	exon_skip	1		2	1	1	exon skipping
+1112	published	RPL13	NM_000977	+	16-89562392-G-A	donor	16	89562392	G	A	1	Splice altering	89562392	intron_retention	1			2	1	intron retention
+1112	published	RPL13	NM_000977	+	16-89562392-G-A	donor	16	89562392	G	A	1	Splice altering	89562392	cryptic	1	89562446		2	1	cryptic donor
+1113	published	PRUNE1	NM_021222	+	1-151028944-G-A	donor	1	151028944	G	A	-1	Splice altering	151028945	exon_skip	1		7	1	1	exon skipping
+1115	published	AP4M1	NM_004722	+	7-100105544-G-A	donor	7	100105544	G	A	5	Splice altering	100105540	intron_retention	1			2	1	intron retention
+1115	published	AP4M1	NM_004722	+	7-100105544-G-A	donor	7	100105544	G	A	5	Splice altering	100105540	cryptic	1	100105592		2	1	cryptic donor
+1118	published	MPV17	NM_002437	-	2-27312255-A-C	acceptor	2	27312255	A	C	-9	Splice altering	27312247	exon_skip	1		6	1	1	exon skipping
+1120	ours	EPHB4	NM_004444	-	7-100823645-T-A	donor	7	100823645	T	A	-2	Splice altering	100823643	intron_retention	1			2	1	intron retention
+1120	ours	EPHB4	NM_004444	-	7-100823645-T-A	donor	7	100823645	T	A	-2	Splice altering	100823643	cryptic	1	100823607		2	1	cryptic donor
+1132	published	NIPBL	NM_133433	+	5-37022045-T-G	acceptor	5	37022045	T	G	-6	Splice altering	37022050	exon_skip	1		28	1	1	exon skipping
+1140	minigene	BRCA2	NM_000059	+	13-32316528-G-T	donor	13	32316528	G	T	1	Splice altering	32316528	exon_skip	1		2	1	1	exon skipping
+1141	minigene	BRCA2	NM_000059	+	13-32316529-T-C	donor	13	32316529	T	C	2	Splice altering	32316528	exon_skip	1		2	1	1	exon skipping
+1142	minigene	BRCA2	NM_000059	+	13-32316530-A-G	donor	13	32316530	A	G	3	Splice altering	32316528	exon_skip	1		2	1	1	exon skipping
+1145	minigene	BRCA2	NM_000059	+	13-32319327-T-C	donor	13	32319327	T	C	2	Splice altering	32319326	exon_skip	1		3	1	1	exon skipping
+1146	minigene	BRCA2	NM_000059	+	13-32319327-TA-T	donor	13	32319327	TA	T	3	Splice altering	32319326	exon_skip	1		3	1	1	exon skipping
+1147	minigene	BRCA2	NM_000059	+	13-32319330-G-C	donor	13	32319330	G	C	5	Splice altering	32319326	exon_skip	1		3	1	1	exon skipping
+1148	minigene	BRCA2	NM_000059	+	13-32319331-T-C	donor	13	32319331	T	C	6	Splice altering	32319326	exon_skip	1		3	1	1	exon skipping
+1150	minigene	BRCA2	NM_000059	+	13-32326088-TGTTTT-T	acceptor	13	32326088	TGTTTT	T	-8	Splice altering	32326100	exon_skip	1		5	1	1	exon skipping
+1151	minigene	BRCA2	NM_000059	+	13-32326099-A-T	acceptor	13	32326099	A	T	-2	Splice altering	32326100	exon_skip	1		5	1	1	exon skipping
+1155	minigene	BRCA2	NM_000059	+	13-32326144-AAGTCA-A	donor	13	32326144	AAGTCA	A	-2	Splice altering	32326151	exon_skip	1		5	1	1	exon skipping
+1156	minigene	BRCA2	NM_000059	+	13-32326151-G-T	donor	13	32326151	G	T	1	Splice altering	32326151	exon_skip	1		5	1	1	exon skipping
+1157	minigene	BRCA2	NM_000059	+	13-32326153-A-T	donor	13	32326153	A	T	3	Splice altering	32326151	exon_skip	1		5	1	1	exon skipping
+1158	minigene	BRCA2	NM_000059	+	13-32326240-A-G	acceptor	13	32326240	A	G	-2	Splice altering	32326241	exon_skip	1		6	2	2	exon skipping
+1158	minigene	BRCA2	NM_000059	+	13-32326240-A-G	acceptor	13	32326240	A	G	-2	Splice altering	32326241	exon_skip	1		5-6	2	2	exon skipping
+1159	minigene	BRCA2	NM_000059	+	13-32326283-G-T	donor	13	32326283	G	T	1	Splice altering	32326283	exon_skip	1		6	2	2	exon skipping
+1159	minigene	BRCA2	NM_000059	+	13-32326283-G-T	donor	13	32326283	G	T	1	Splice altering	32326283	exon_skip	1		5-6	2	2	exon skipping
+1160	minigene	BRCA2	NM_000059	+	13-32326284-T-C	donor	13	32326284	T	C	2	Splice altering	32326283	exon_skip	1		6	2	2	exon skipping
+1160	minigene	BRCA2	NM_000059	+	13-32326284-T-C	donor	13	32326284	T	C	2	Splice altering	32326283	exon_skip	1		5-6	2	2	exon skipping
+1161	minigene	BRCA2	NM_000059	+	13-32326285-AAA-A	donor	13	32326285	AAA	A	4	Splice altering	32326283	exon_skip	1		6	2	2	exon skipping
+1161	minigene	BRCA2	NM_000059	+	13-32326285-AAA-A	donor	13	32326285	AAA	A	4	Splice altering	32326283	exon_skip	1		5-6	2	2	exon skipping
+1162	minigene	BRCA2	NM_000059	+	13-32326497-A-G	acceptor	13	32326497	A	G	-2	Splice altering	32326498	exon_skip	1		7	1	1	exon skipping
+1164	minigene	BRCA2	NM_000059	+	13-32326499-G-T	acceptor	13	32326499	G	T	1	Splice altering	32326498	exon_skip	1		7	1	1	exon skipping
+1166	minigene	BRCA2	NM_000059	+	13-32326613-G-A	donor	13	32326613	G	A	-1	Splice altering	32326614	exon_skip	1		7	1	1	exon skipping
+1167	minigene	BRCA2	NM_000059	+	13-32326614-G-A	donor	13	32326614	G	A	1	Splice altering	32326614	exon_skip	1		7	1	1	exon skipping
+1168	minigene	BRCA2	NM_000059	+	13-32326616-A-G	donor	13	32326616	A	G	3	Splice altering	32326614	exon_skip	1		7	1	1	exon skipping
+1172	minigene	BRCA2	NM_000059	+	13-32330918-G-C	acceptor	13	32330918	G	C	-1	Splice altering	32330918	exon_skip	1		9	1	1	exon skipping
+1173	minigene	BRCA2	NM_000059	+	13-32331031-G-T	donor	13	32331031	G	T	1	Splice altering	32331031	exon_skip	1		9	1	1	exon skipping
+1174	minigene	ABCA4	NM_000350	-	1-94112968-C-G	donor	1	94112968	C	G	5	Splice altering	94112972	exon_skip	1		2	3	3	exon skipping
+1174	minigene	ABCA4	NM_000350	-	1-94112968-C-G	donor	1	94112968	C	G	5	Splice altering	94112972	cryptic	1	94112958		3	3	cryptic donor
+1174	minigene	ABCA4	NM_000350	-	1-94112968-C-G	donor	1	94112968	C	G	5	Splice altering	94112972	exon_skip	1		2-3	3	3	exon skipping
+1175	minigene	ABCA4	NM_000350	-	1-94111579-C-A	acceptor	1	94111579	C	A	1	Splice altering	94111580	exon_skip	1		3	1	1	exon skipping
+1176	minigene	ABCA4	NM_000350	-	1-94111434-T-G	donor	1	94111434	T	G	4	Splice altering	94111437	exon_skip	1		3	1	1	exon skipping
+1178	minigene	ABCA4	NM_000350	-	1-94098794-C-A	donor	1	94098794	C	A	-1	Splice altering	94098793	cryptic	1	94098758		1	1	cryptic donor
+1179	minigene	ABCA4	NM_000350	-	1-94080727-A-G	acceptor	1	94080727	A	G	-9	Splice altering	94080719	exon_skip	1		8-10	1	1	exon skipping
+1182	minigene	ABCA4	NM_000350	-	1-94056596-C-G	donor	1	94056596	C	G	5	Splice altering	94056600	exon_skip	1		15	1	1	exon skipping
+1184	minigene	ABCA4	NM_000350	-	1-94044754-A-G	acceptor	1	94044754	A	G	-10	Splice altering	94044745	exon_skip	1		20	1	1	exon skipping
+1185	minigene	ABCA4	NM_000350	-	1-94044750-G-T	acceptor	1	94044750	G	T	-6	Splice altering	94044745	exon_skip	1		20	1	1	exon skipping
+1186	minigene	ABCA4	NM_000350	-	1-94044608-C-T	donor	1	94044608	C	T	5	Splice altering	94044612	exon_skip	1		20	1	1	exon skipping
+1187	minigene	ABCA4	NM_000350	-	1-94041203-AC-A	donor	1	94041203	AC	A	5	Splice altering	94041208	exon_skip	1		23	1	1	exon skipping
+1188	minigene	ABCA4	NM_000350	-	1-94040043-C-T	donor	1	94040043	C	T	-1	Splice altering	94040042	exon_skip	1		24	1	1	exon skipping
+1189	minigene	ABCA4	NM_000350	-	1-94040040-T-A	donor	1	94040040	T	A	3	Splice altering	94040042	exon_skip	1		24	1	1	exon skipping
+1190	minigene	ABCA4	NM_000350	-	1-94037146-T-C	donor	1	94037146	T	C	-2	Splice altering	94037144	exon_skip	1		25	1	1	exon skipping
+1191	minigene	ABCA4	NM_000350	-	1-94037145-C-G	donor	1	94037145	C	G	-1	Splice altering	94037144	exon_skip	1		25	1	1	exon skipping
+1192	minigene	ABCA4	NM_000350	-	1-94036737-T-C	donor	1	94036737	T	C	3	Splice altering	94036739	exon_skip	1		26	1	1	exon skipping
+1193	minigene	ABCA4	NM_000350	-	1-94031778-C-T	donor	1	94031778	C	T	-1	Splice altering	94031777	cryptic	1	94031765		1	1	cryptic donor
+1194	minigene	ABCA4	NM_000350	-	1-94030992-G-A	donor	1	94030992	G	A	4	Splice altering	94030995	exon_skip	1		28	1	1	exon skipping
+1195	minigene	ABCA4	NM_000350	-	1-94030991-C-T	donor	1	94030991	C	T	5	Splice altering	94030995	exon_skip	1		28	1	1	exon skipping
+1196	minigene	ABCA4	NM_000350	-	1-94030991-C-A	donor	1	94030991	C	A	5	Splice altering	94030995	exon_skip	1		28	1	1	exon skipping
+1197	minigene	ABCA4	NM_000350	-	1-94029446-T-C	donor	1	94029446	T	C	-2	Splice altering	94029444	cryptic	1	94029414		2	2	cryptic donor
+1197	minigene	ABCA4	NM_000350	-	1-94029446-T-C	donor	1	94029446	T	C	-2	Splice altering	94029444	cryptic	1	94029517		2	2	cryptic donor
+1198	minigene	ABCA4	NM_000350	-	1-94029446-T-G	donor	1	94029446	T	G	-2	Splice altering	94029444	cryptic	1	94029414		2	2	cryptic donor
+1198	minigene	ABCA4	NM_000350	-	1-94029446-T-G	donor	1	94029446	T	G	-2	Splice altering	94029444	cryptic	1	94029517		2	2	cryptic donor
+1200	minigene	ABCA4	NM_000350	-	1-94023386-C-G	donor	1	94023386	C	G	-1	Splice altering	94023385	exon_skip	1		32	1	1	exon skipping
+1201	minigene	ABCA4	NM_000350	-	1-94021846-C-G	donor	1	94021846	C	G	-1	Splice altering	94021845	exon_skip	1		33	2	2	exon skipping
+1201	minigene	ABCA4	NM_000350	-	1-94021846-C-G	donor	1	94021846	C	G	-1	Splice altering	94021845	exon_skip	1		33-35	2	2	exon skipping
+1202	minigene	ABCA4	NM_000350	-	1-94021843-T-C	donor	1	94021843	T	C	3	Splice altering	94021845	exon_skip	1		33	1	1	exon skipping
+1203	minigene	ABCA4	NM_000350	-	1-94021841-C-T	donor	1	94021841	C	T	5	Splice altering	94021845	exon_skip	1		33	2	2	exon skipping
+1203	minigene	ABCA4	NM_000350	-	1-94021841-C-T	donor	1	94021841	C	T	5	Splice altering	94021845	exon_skip	1		33-35	2	2	exon skipping
+1204	minigene	ABCA4	NM_000350	-	1-94019575-CACTT-C	donor	1	94019575	CACTT	C	3	Splice altering	94019581	exon_skip	1		36	2	2	exon skipping
+1204	minigene	ABCA4	NM_000350	-	1-94019575-CACTT-C	donor	1	94019575	CACTT	C	3	Splice altering	94019581	exon_skip	1		35-36	2	2	exon skipping
+1206	minigene	ABCA4	NM_000350	-	1-94015736-T-A	donor	1	94015736	T	A	3	Splice altering	94015738	exon_skip	1		37	1	1	exon skipping
+1208	minigene	ABCA4	NM_000350	-	1-94014538-C-T	donor	1	94014538	C	T	5	Splice altering	94014542	exon_skip	1		38	1	1	exon skipping
+1209	minigene	ABCA4	NM_000350	-	1-94011395-A-G	acceptor	1	94011395	A	G	-10	Splice altering	94011386	exon_skip	1		39-40	1	1	exon skipping
+1210	minigene	ABCA4	NM_000350	-	1-94011393-A-C	acceptor	1	94011393	A	C	-8	Splice altering	94011386	exon_skip	1		39-40	1	1	exon skipping
+1211	minigene	ABCA4	NM_000350	-	1-94011262-C-G	donor	1	94011262	C	G	-1	Splice altering	94011261	exon_skip	1		39-40	1	1	exon skipping
+1212	minigene	ABCA4	NM_000350	-	1-94011257-C-T	donor	1	94011257	C	T	5	Splice altering	94011261	exon_skip	1		39	2	2	exon skipping
+1212	minigene	ABCA4	NM_000350	-	1-94011257-C-T	donor	1	94011257	C	T	5	Splice altering	94011261	exon_skip	1		39-40	2	2	exon skipping
+1213	minigene	ABCA4	NM_000350	-	1-94011256-A-G	donor	1	94011256	A	G	6	Splice altering	94011261	exon_skip	1		39	2	2	exon skipping
+1213	minigene	ABCA4	NM_000350	-	1-94011256-A-G	donor	1	94011256	A	G	6	Splice altering	94011261	exon_skip	1		39-40	2	2	exon skipping
+1215	minigene	ABCA4	NM_000350	-	1-94010795-C-T	donor	1	94010795	C	T	5	Splice altering	94010799	exon_skip	1		40	1	1	exon skipping
+1216	minigene	ABCA4	NM_000350	-	1-94008300-G-T	acceptor	1	94008300	G	T	-3	Splice altering	94008298	cryptic	1	94008328		1	1	cryptic acceptor
+1217	minigene	ABCA4	NM_000350	-	1-94008229-AC-A	donor	1	94008229	AC	A	5	Splice altering	94008234	intron_retention	1			2	1	intron retention
+1217	minigene	ABCA4	NM_000350	-	1-94008229-AC-A	donor	1	94008229	AC	A	5	Splice altering	94008234	cryptic	1	94008064		2	1	cryptic donor
+1218	minigene	ABCA4	NM_000350	-	1-94000837-T-C	donor	1	94000837	T	C	-2	Splice altering	94000835	exon_skip	1		47	1	1	exon skipping
+1219	minigene	ABCA4	NM_000350	-	1-94000832-T-C	donor	1	94000832	T	C	4	Splice altering	94000835	exon_skip	1		47	1	1	exon skipping
+1220	minigene	ABCA4	NM_000350	-	1-93997841-GTGCCCCAGGGCCAAC-G	donor	1	93997841	GTGCCCCAGGGCCAAC	G	5	Splice altering	93997860	exon_skip	1		48	1	1	exon skipping

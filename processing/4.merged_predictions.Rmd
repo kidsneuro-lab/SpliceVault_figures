@@ -1,0 +1,55 @@
+---
+title: "R Notebook"
+output: 
+---
+
+```{r}
+library(data.table)
+library(tidyverse)
+```
+
+```{r}
+vars_events <- fread('../src/vars_events.tsv', sep = '\t')
+
+# SpliceAI predictions
+sai_preds <- fread('../ref/sai_preds_complete.csv')
+sai_preds_filt <- sai_preds[!splicing_event_class %in% c('mis-splicing')]
+
+# 300K-RNA predictions
+splicevault <- fread('../ref/300KRNA_filt.tsv.gz')
+```
+
+# joining datasets
+```{r}
+# join on CRD, splicing_event_class, cryptic_pos, skipped_exons_id
+sai <- sai_preds_filt[, .(curated_record_id, splicing_event_class, cryptic_pos, skipped_exons_id, 
+                          delta, spliceai = 1)]
+sv <- splicevault[, .(curated_record_id, splicing_event_class, cryptic_pos, skipped_exons_id, 
+                      missplicing_event_rank, missplicing_event_rank_simple, 
+                      missplicing_event_rank_basic,missplicing_inframe,
+                      gtex_sample_count,sra_sample_count, sample_count, 
+                      cryptic_distance, skipped_exons_count, splicevault = 1)]
+
+vars <- vars_events[, .(curated_record_id, splicing_event_class, cryptic_pos, skipped_exons_id, in_rna_studies = 1)]
+
+vars_sai <- merge(vars, sai, by = c('curated_record_id', 'splicing_event_class', 'cryptic_pos', 'skipped_exons_id'), all = T)
+merged_data <- merge(vars_sai, sv, by = c('curated_record_id', 'splicing_event_class', 'cryptic_pos', 'skipped_exons_id'), all = T)
+
+merged_data[is.na(in_rna_studies), in_rna_studies := 0]
+merged_data[is.na(spliceai), spliceai := 0]
+merged_data[is.na(splicevault), splicevault := 0]
+
+# annotate with event count, variant type
+info <- unique(vars_events[, .(curated_record_id, variant_id, tx_id, variant_type, variant_category,
+                               chrom, pos, ref, alt, dist_from_ess, splice_site_pos, 
+                               event_count, event_count_crypskip)])
+merged_data <- info[merged_data, on = .(curated_record_id)]
+
+fwrite(merged_data, '../ref/vars_events_prediction.tsv', sep = '\t')
+
+```
+
+
+
+
+

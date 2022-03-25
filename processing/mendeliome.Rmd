@@ -1,0 +1,19 @@
+---
+title: "R Notebook"
+output: 
+---
+
+```{r}
+library(data.table)
+library(tidyverse)
+```
+
+# getting canonical ensembl transcripts for mendelian disease genes
+```{r}
+disease_genes <- fread('../ref/clinically_relevant_genes_Sep2021.tsv')
+ensembl <- fread('../ref/ensembl_introns_exons.tsv.gz')
+length(unique(disease_genes$Ensembl.ID))
+can_tx <- ensembl[canonical == 1, .(gene_id, tx_id)]
+disease_genes_canonical_tx <- unique(can_tx)[disease_genes[, .(gene_id = Ensembl.ID)], on = .(gene_id)]
+fwrite(disease_genes_canonical_tx[!is.na(tx_id)], '../ref/disease_genes_canonical_tx.tsv', sep = '\t')
+```

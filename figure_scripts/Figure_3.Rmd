@@ -1,0 +1,212 @@
+---
+title: "R Notebook"
+output: 
+---
+
+
+```{r}
+library(data.table)
+library(tidyverse)
+theme_set(theme_classic())
+library(eulerr)
+options(scipen=999)
+library(ggsci)
+library(ggpubr)
+library(UpSetR)
+library(bigrquery)
+library(DBI)
+library(cowplot)
+library(readxl)
+```
+
+```{r}
+merged_data <- fread('../ref/vars_events_prediction.tsv')
+```
+
+# 4A- tissue-specific mis-splicing ranks correlation for 88 variants (order by # of samples and add ns)
+
+
+```{r}
+splicevault_ts_fg <- fread('../ref/300k_var_tx_tissue_samples.tsv.gz')
+splicevault_ts_fg <- splicevault_ts_fg[splice_site_pos %in% merged_data[variant_category == 'ours', splice_site_pos] & 
+                    tx_id %in% merged_data[variant_category == 'ours', tx_id]]
+splicevault_ts_fg <- splicevault_ts_fg[splicing_event_class != 'normal splicing']
+setorder(splicevault_ts_fg, splice_site_pos, tx_id, TISSUE, -tissue_sample_count, -tissue_max_junc_count)
+
+setDT(splicevault_ts_fg)[(skipped_exons_count <= 2 |abs(cryptic_distance) <= 600), 
+                         gtex_event_rank_simple := frankv(gtex_sample_count, ties.method = "first", order = -1),
+                         by = .(splice_site_pos, tx_id, TISSUE)]
+
+setDT(splicevault_ts_fg)[(skipped_exons_count <= 2 |abs(cryptic_distance) <= 600), 
+                         missplicing_event_rank_simple_ts := frankv(tissue_sample_count, ties.method = "first", order = -1),
+             by = .( splice_site_pos, tx_id, TISSUE)]
+
+setnames(splicevault_ts_fg, old = 'TISSUE', new = 'tissue')
+```
+
+```{r}
+gtex_scounts <- fread('../ref/gtexv2_samples.tsv')
+
+#order factor by number of samples in each tissue
+splicevault_ts_fg <- splicevault_ts_fg[gtex_scounts, on = .(tissue)]
+splicevault_ts_fg[, tissue := factor(tissue, levels = gtex_scounts$tissue)]
+
+```
+
+
+```{r}
+A <- splicevault_ts_fg %>%
+  filter(tissue_samples > 100 & !is.na(gtex_event_rank_simple)) %>%
+  dplyr::group_by(gtex_event_rank_simple, tissue, missplicing_event_rank_simple_ts) %>% dplyr::tally() %>%
+  ungroup() %>% dplyr::group_by(gtex_event_rank_simple, tissue) %>%
+  dplyr::mutate(sum = sum(n), perc = 100 * (n / sum)) %>%
+  filter(gtex_event_rank_simple <= 10 & gtex_event_rank_simple == missplicing_event_rank_simple_ts) %>%
+  ggplot(aes(x = factor(gtex_event_rank_simple), y = tissue, fill = perc)) +
+  geom_tile() +
+  scale_fill_gradientn(colours = colorspace::terrain_hcl(5, rev = 1)) +
+  xlab('Event Rank in GTEx overall') + ylab('Tissue')  +
+  labs(fill = '% of events\nwith same rank\nin this tissue') + 
+  scale_y_discrete(limits = rev(levels(droplevels(splicevault_ts_fg[tissue_samples > 100]$tissue))))+
+  annotate("text", x = 11.5, y = nrow(gtex_scounts[tissue_samples > 100]) + 1,
+           label = 'samples (n)', size = 3)+
+  annotate("text", x = 11.5, y = 1:nrow(gtex_scounts[tissue_samples > 100]), 
+           label = as.character(rev(gtex_scounts[tissue_samples > 100, tissue_samples])), size = 3) +
+  coord_cartesian(clip = 'off')+
+  theme(legend.position="right",
+        plot.margin = unit(c(1,3,1,1), "lines"))
+
+```
+
+# Figure 4B - GTEx vs SRA top ranked events correlation for 88 variant splice sites
+
+
+```{r}
+sv <- merged_data[!is.na(missplicing_event_rank_simple) & variant_category == 'ours']
+
+setDT(sv)[, gtex_rank := frankv(gtex_sample_count, ties.method = "first", order = -1),
+             by = .(curated_record_id)]
+setDT(sv)[, sra_rank := frankv(sra_sample_count, ties.method = "first", order = -1),
+             by = .(curated_record_id)]
+```
+
+```{r}
+conc_plot <- sv %>%
+  dplyr::group_by(sra_rank, gtex_rank) %>%
+  tally() %>%
+  ungroup() %>% 
+  dplyr::group_by(gtex_rank) %>% 
+  dplyr::mutate(sum = sum(n), perc = n / sum(n)) %>%
+  filter(gtex_rank <= 10 & sra_rank <= 10)
+
+B <- ggplot(conc_plot, 
+            aes(as.factor(gtex_rank), as.factor(sra_rank), fill= perc)) + 
+  geom_tile() +
+  scale_fill_gradientn(colours = colorspace::terrain_hcl(5, rev = 1)) +
+  xlab('Event Rank in GTEx') + ylab('Event Rank in SRA') +
+  geom_segment(aes(x = 4.5, xend = 4.5,y = -Inf,  yend = 4.5), linetype = 'dashed') +
+  geom_segment(aes(x = -Inf, xend = 4.5,y = 4.5,  yend = 4.5), linetype = 'dashed')+
+  geom_text(data=subset(conc_plot, gtex_rank == sra_rank),
+            aes(as.factor(gtex_rank), as.factor(sra_rank),label= scales::percent(perc, accuracy = 1)))+
+  labs(fill = 'Proportion of Events') +
+  theme(plot.margin = margin(1.5,0,1.5,1.5, "cm"))
+```
+
+
+# Figure 4C
+
+```{r}
+splicevault_ts_dg <- fread('../ref/300k_tissue_samples.tsv.gz')
+# spearman correlation of sample counts in each tissue - for all mendelian disease genes
+C <- splicevault_ts_dg[TISSUE!='', .(sj_pos_key, sj_event_key, TISSUE, tissue_sample_count, gtex_sample_count)] %>%
+  dplyr::group_by(TISSUE) %>%
+  dplyr::summarise(rank_corr = cor(gtex_sample_count, tissue_sample_count, 
+                                   method='spearman')) %>%
+  mutate(cat = ifelse(TISSUE %in% c('Muscle - Skeletal', 
+                                    'Whole Blood', 
+                                    'Cells - Cultured fibroblasts', 
+                                    'Cells - EBV-transformed lymphocytes'), 1, 0)) %>%
+  ggplot(aes(x = rank_corr, y = TISSUE, color = factor(cat))) + geom_point(stat = 'identity')   +
+  geom_segment(aes(xend=rank_corr, y = TISSUE, yend = TISSUE), x=0) +
+    expand_limits(y=0) +
+  scale_color_manual(values = c('grey', 'black')) +
+  scale_y_discrete(limits = rev(levels(droplevels(splicevault_ts_fg[tissue_samples > 100]$tissue)))) +
+  xlab('Spearman Correlation\nwith overall GTEx sample count')  + ylab('Tissue') + 
+  scale_x_continuous(breaks = seq(0.65, 1, 0.05)) +
+  theme(legend.position = 'none',
+        panel.grid.major.x = element_line(colour = "lightgrey", size = 0.1),
+        panel.grid.minor.x = element_line(colour = "lightgrey", size = 0.1),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        plot.margin = unit(c(1,1,4.5,0), "lines")) 
+```
+
+
+# Figure 4D- upset plot overlap of top-4 events in clinically accessible tissues
+
+```{r}
+
+splicevault_dg <- fread('../ref/splicevault_dg.tsv.gz')
+splicevault_dg <- splicevault_dg[splicing_event_class != 'normal splicing']
+setorder(splicevault_dg, splice_site_pos, tx_id, -sample_count)
+
+setDT(splicevault_dg)[(skipped_exons_count <= 2 |abs(cryptic_distance) <= 600), 
+                         missplicing_event_rank_simple := frankv(sample_count, ties.method = "first", order = -1),
+                         by = .(splice_site_pos, tx_id)]
+```
+ 
+```{r}
+setorder(splicevault_ts_dg, splice_site_pos, tx_id, TISSUE, -tissue_sample_count, -tissue_max_junc_count)
+splicevault_ts_dg[(skipped_exons_count <= 2 |abs(cryptic_distance) <= 600),
+         missplicing_event_rank_simple_ts := rowid(splice_site_pos), by = list(tx_id, TISSUE)]
+```
+ 
+ 
+
+```{r}
+listInput <- list(top_4_300krna = unique(splicevault_dg[missplicing_event_rank_simple<=4]$sj_event_key),
+                  top_4_gtex_muscle = unique(splicevault_ts_dg[missplicing_event_rank_simple_ts <= 4 & 
+                                                                 TISSUE == 'Muscle - Skeletal', sj_event_key]), 
+                  top_4_gtex_blood = unique(splicevault_ts_dg[missplicing_event_rank_simple_ts <= 4 & 
+                                                                TISSUE == 'Whole Blood', sj_event_key]),
+                  top_4_gtex_fibroblasts = unique(splicevault_ts_dg[missplicing_event_rank_simple_ts <= 4 & 
+                                                                      TISSUE == 'Cells - Cultured fibroblasts', sj_event_key]),
+                  top_4_gtex_lymphocytes = unique(splicevault_ts_dg[missplicing_event_rank_simple_ts <= 4 & 
+                                                                      TISSUE == 'Cells - EBV-transformed lymphocytes', sj_event_key] ))
+
+names(listInput) = c("300K-RNA", "GTEx Muscle", "GTEx Blood", "GTEx Fibroblasts", "GTEx Lymphocytes")
+
+
+D <- upset(fromList(listInput), order.by = "freq", 
+          nintersects = 20, number.angles = 30, 
+           sets.x.label = "Top-4 events across Mendelian disease genes")
+
+
+
+D <- cowplot::plot_grid(NULL, D$Main_bar, D$Sizes, D$Matrix,
+                            nrow=2, align='hv', rel_heights = c(3,1),
+                           rel_widths = c(2,3))
+
+
+```
+
+
+# Putting figure 3 together
+
+```{r}
+left <- ggarrange(A,D, heights = c(1.7, 1), ncol = 1)
+right <- ggarrange(B,C, heights = c(0.5, 1), ncol = 1)
+
+ggarrange(left,right, ncol = 2, widths = c(1.5, 1))
+ggsave('../figs/figure_three.pdf', width = 11, height = 11)
+```
+
+
+
+
+
+
+
+
+
+
+

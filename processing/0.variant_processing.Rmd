@@ -1,0 +1,250 @@
+---
+title: "R Notebook"
+output: 
+---
+
+```{r}
+library(data.table)
+library(tidyverse)
+library(xlsx)
+library(liftOver)
+ch = import.chain("../ref/hg19ToHg38.over.chain")
+library(GenomicRanges)
+```
+
+
+```{r}
+vars <- read.xlsx('../src/source_variants.xlsx', sheetIndex = 1)
+pub_vars <- read.xlsx('../src/source_variants.xlsx', sheetIndex = 2)
+mg_vars <- read.xlsx('../src/source_variants.xlsx', sheetIndex = 3)
+
+setDT(vars)
+setDT(pub_vars)
+setDT(mg_vars)
+
+vars[, variant_category := 'ours']
+pub_vars[, variant_category := 'published']
+mg_vars[, variant_category := 'minigene']
+
+vars <- rbind(vars, pub_vars, mg_vars, fill = TRUE)
+names(vars) <- gsub('\\.', '_', tolower(names(vars)))
+names(vars) <- gsub("_$","",names(vars))
+names(vars) <- gsub("__|___|____","_",names(vars))
+names(vars)[2] <- 'unique_record_id'
+names(vars)[26] <- 'cryptic_sites'
+names(vars)[28] <- 'pseudo_exon_sites'
+```
+
+```{r}
+# variant 1115 has position missing a digit from manual data entry
+vars[curated_record_id == 1115, `:=` (unique_record_id = '7-100105544-G-A', position = 100105544)]
+
+# fixing one with annotation error in redcap
+vars[curated_record_id == 927, position := 150654364]
+
+# remove variants that have modified a cryptic
+vars <- vars[!curated_record_id %in% c(957, 254)]
+
+# remove variants whcih do not cause either exon skipping or cryptic activation
+vars <- vars[functional_study_other_consequences_choice_exon_skipping == 'Checked' |
+       functional_study_other_consequences_choice_cryptic_splice_site == 'Checked']
+
+```
+
+
+```{r}
+#Some of the "cryptic" columns have malformed delimiters. Fix these so that it is possible to cleanly transform this column into rows.
+vars[, cryptic_sites := gsub("\\s+", ";", cryptic_sites, perl = T)]
+vars[, cryptic_sites := gsub("^\\s+|\\s$", "", cryptic_sites)]
+vars[, cryptic_sites := gsub(";;", ";", cryptic_sites)]
+
+# cleaning cryptic information
+vars_cryptics <- vars[!is.na(cryptic_sites), .(curated_record_id, cryptic_sites, chromosome, assembly)]
+
+#restructuring so variants with multiple used cryptic donors get seperate rows
+vars_cryptics <- vars_cryptics[, list(cryptic_sites = as.character(unlist(strsplit(cryptic_sites, "\\;")))),
+                                     by = list(curated_record_id, chromosome, assembly)]
+# remove 'candidate' (decoy) cryptics, keep only actual used cryptics
+vars_cryptics <- vars_cryptics[!grepl('candidate', cryptic_sites)]
+
+#Getting the genomic position of the donor G for actual cryptic sites
+vars_cryptics[, cryptic_pos := sapply(strsplit(cryptic_sites,"\\|"),"[",2)]
+vars_cryptics[, cryptic_pos := strtoi(cryptic_pos)]
+```
+
+```{r}
+# convert cryptic positions to hg38
+vars_cryptics[assembly == 'GRCh37', liftover_export_cryptic := paste('chr', chromosome, ':', cryptic_pos, '-', cryptic_pos, sep = '')]
+cpos <- makeGRangesFromDataFrame(vars_cryptics[assembly == 'GRCh37', .(chromosome, start = cryptic_pos, end = cryptic_pos)])
+seqlevelsStyle(cpos) = "UCSC"
+cpos38 = liftOver(cpos, ch)
+names(cpos38) <- vars_cryptics[assembly == 'GRCh37', curated_record_id]
+results = data.table(curated_record_id = names(cpos38), 
+                     liftover_export_cryptic = vars_cryptics[assembly == 'GRCh37', liftover_export_cryptic],
+                     cpos = as.character(unlist(cpos38)))
+results <- results %>% 
+  separate(cpos, into = c(NA, 'chrom_hg38', 'pos_hg38'), sep = 'chr|:|-') %>% 
+  mutate(curated_record_id = as.double(curated_record_id)) %>% setDT()
+
+vars_cryptics <- results[vars_cryptics, on = .(curated_record_id, liftover_export_cryptic)]
+
+```
+
+```{r}
+vars_cryptics <- rbind(vars_cryptics[assembly == 'GRCh37', list(cryptic_sites = paste0(cryptic_sites, collapse=";"),
+                                            cryptic_pos = paste0(pos_hg38, collapse = ";")), 
+                                     by= curated_record_id],
+                       vars_cryptics[assembly == 'GRCh38', list(cryptic_sites = paste0(cryptic_sites, collapse=";"),
+                                            cryptic_pos = paste0(cryptic_pos, collapse = ";")), 
+                                     by= curated_record_id])
+
+vars[, cryptic_sites := NULL]
+vars <- vars_cryptics[vars, on = .(curated_record_id)]
+```
+
+
+# liftover hg37 variants to hg38
+```{r}
+vars[assembly == 'GRCh37', liftover_export := paste('chr', chromosome, ':', position, '-', position, sep = '')]
+vpos <- makeGRangesFromDataFrame(vars[assembly == 'GRCh37', .(chromosome, start = position, end = position)])
+seqlevelsStyle(vpos) = "UCSC"
+vpos38 = liftOver(vpos, ch)
+names(vpos38) <- vars[assembly == 'GRCh37', curated_record_id]
+results = data.table(curated_record_id = names(vpos38), 
+                     liftover_export = vars[assembly == 'GRCh37', liftover_export],
+                     vpos = as.character(unlist(vpos38)))
+results <- results %>% 
+  separate(vpos, into = c(NA, 'chrom_hg38', 'pos_hg38'), sep = 'chr|:|-') %>% 
+  mutate(curated_record_id = as.double(curated_record_id),
+         pos_hg38 = as.integer(pos_hg38)) %>% setDT()
+
+vars <- results[vars, on = .(curated_record_id, liftover_export)]
+vars[assembly == 'GRCh37', chromosome := chrom_hg38]
+vars[assembly == 'GRCh37', position := pos_hg38]
+vars[, `:=` (chrom_hg38 = NULL, pos_hg38 = NULL, liftover_export = NULL)]
+```
+
+
+# get transcript info
+```{r}
+tx <- fread('../ref/refseq_introns_exons.tsv.gz')
+
+vars[, transcript := sapply(strsplit(transcript, split = '\\.'), '[[', 1)]
+var_txs <- unique(vars$transcript)
+ref_tx <- tx[region_type %in% c('exon', 'intron') & nexon > 1 & tx_id %in% var_txs, 
+             .(chrom, tx_id, start = region_start, end = region_end, strand, gene_name, region_type, region_no)]
+setkey(ref_tx, chrom, start, end)
+
+vars[, `:=` (start = position, end = position)]
+setkey(vars, chromosome, start, end)
+
+vars_introns <- foverlaps(vars, 
+                ref_tx,
+                type = 'within')
+vars_introns <- vars_introns[tx_id == transcript]
+
+```
+
+```{r}
+# associate variant position with authentic splice site
+vars_introns[region_type == 'intron', donor_pos := ifelse(strand == '+', start, end)]
+vars_introns[region_type == 'intron', acceptor_pos := ifelse(strand == '+', end, start)]
+vars_introns[region_type == 'exon', donor_pos := ifelse(strand == '+', end + 1, start - 1)]
+vars_introns[region_type == 'exon', acceptor_pos := ifelse(strand == '+', start - 1, end + 1)]
+
+vars_introns[grepl('Donor',  variant_type), variant_type := 'donor']
+vars_introns[grepl('Acceptor',  variant_type), variant_type := 'acceptor']
+vars_introns[variant_type == 'donor', splice_site_pos := donor_pos ]
+vars_introns[variant_type == 'acceptor', splice_site_pos := acceptor_pos ]
+```
+
+
+
+```{r}
+vars_introns[, variant_id_hg38 := paste(chromosome, position, ref, alt, sep = '-')]
+
+vars_introns <- vars_introns[, .(variant_id = variant_id_hg38, chrom = chromosome, pos = position, ref, alt, 
+                                 variant_category, tx_id, strand, 
+                    curated_record_id, gene_name, cryptic_sites, cryptic_pos, variant_type, hgvs_cdna, 
+                    dist_from_ess = distance_from_donor_or_acceptor,  
+                    func_study_splice_conseq = functional_study_splicing_consequence,
+                    func_study_other_conseq___exon_ext = functional_study_other_consequences_choice_exon_extension,
+                    func_study_other_conseq___exon_skip = functional_study_other_consequences_choice_exon_skipping, 
+                    func_study_other_conseq___intron_retention = functional_study_other_consequences_choice_intron_retention,
+                    func_study_other_conseq___cryptic = functional_study_other_consequences_choice_cryptic_splice_site,
+                    func_study_other_conseq___alt_transcript = functional_study_other_consequences_choice_alternative_transcript,
+                    donor_pos, acceptor_pos, splice_site_pos, region_type, region_no)]
+
+```
+
+
+
+```{r}
+names(vars_introns) <- gsub('func_study_', '', names(vars_introns))
+names(vars_introns) <- gsub('type___|other_conseq___', '', names(vars_introns))
+
+vars_events <- pivot_longer(vars_introns, cols = c('exon_skip', 'intron_retention', 
+                                                        'cryptic')) 
+setDT(vars_events)
+vars_events[value == 'Checked', value := 1]
+vars_events[value == 'Unchecked', value := 0]
+vars_events <- vars_events[value == 1] 
+
+vars_events[name != 'cryptic', cryptic_pos :=  NA]
+
+vars_events <- vars_events[, list(cryptic_pos = as.character(unlist(strsplit(cryptic_pos, 
+                                                                                   split = ';')))), 
+                                 by = c(names(vars_events)[-which(names(vars_events) == 'cryptic_pos')])]
+
+
+vars_events <- vars_events[, .(curated_record_id, variant_category, gene_name, tx_id, strand,
+                                     variant_id,variant_type, chrom, pos, ref, alt, dist_from_ess,
+                                     splice_conseq, splice_site_pos, name, value, cryptic_pos,
+                                     region_type, region_no)]
+
+```
+
+
+```{r}
+# getting skipped exons id for single exon skipping
+vars_events[name == 'exon_skip' & region_type == 'exon', skipped_exons_id := region_no]
+vars_events[name == 'exon_skip' & region_type == 'intron' & variant_type == 'donor', skipped_exons_id := region_no]
+vars_events[name == 'exon_skip' & region_type == 'intron' & variant_type == 'acceptor', skipped_exons_id := region_no + 1]
+vars_events[, `:=` (region_type = NULL, region_no = NULL)]
+```
+
+
+
+```{r}
+# adding multi exon skipping events
+mes <- readxl::read_xlsx('../src/multiExonSkippingInfo.xlsx')
+setDT(mes)
+
+mes[, `:=` (name = 'exon_skip', value = 1, cryptic_pos = NA)]
+mes <- distinct(vars_events[, c(1:14)])[mes, on = .(curated_record_id)]
+vars_events <- rbind(vars_events, mes) %>% arrange(curated_record_id)
+
+# remove single exon skipping for variant 278, 1179, 1209, 1210, 1211
+vars_events <- vars_events[!(curated_record_id %in% c(278, 1179, 1209, 1210, 1211) & name == 'exon_skip' & !grepl('\\-', skipped_exons_id))]
+
+vars_events %>% group_by(name) %>% tally()%>% arrange(-n)
+```
+
+```{r}
+vars_events[, event_count := .N, by = .(curated_record_id)]
+vars_events[, event_count_crypskip := sum(name != 'intron_retention'), by = .(curated_record_id)]
+```
+
+```{r}
+vars_events[name == 'exon_skip', splicing_event_class := 'exon skipping']
+vars_events[name == 'intron_retention', splicing_event_class := 'intron retention']
+vars_events[name == 'cryptic' & variant_type == 'donor', splicing_event_class := "cryptic donor"]
+vars_events[name == 'cryptic' & variant_type == 'acceptor', splicing_event_class := "cryptic acceptor"]
+```
+
+```{r}
+fwrite(vars_events, '../src/vars_events.tsv', sep = '\t')
+
+```
+
+

@@ -1,0 +1,275 @@
+---
+title: "R Notebook"
+output: 
+---
+
+```{r}
+library(data.table)
+library(tidyverse)
+theme_set(theme_classic())
+library(ggsci)
+library(ggpubr)
+library(Cairo)
+```
+
+```{r}
+merged_data <- fread('../ref/vars_events_prediction.tsv')
+merged_data %>%
+  dplyr::select(curated_record_id, variant_category) %>% 
+  distinct() %>% group_by(variant_category) %>% tally()
+```
+
+
+# Figure 2A: % of mis-splicing events seen in 300K-RNA at different event ranks
+
+```{r}
+df_2a <- merged_data[splicing_event_class != 'intron retention' & 
+                         variant_category == 'ours' &
+                         (in_rna_studies == 1)]
+
+plot_data <- data.table(rank_cutoff = 1:25)
+plot_data[, count_in_sv := sapply(rank_cutoff, function(x) nrow(df_2a[missplicing_event_rank_simple <= x]))]
+plot_data[, prop_in_sv := count_in_sv / nrow(df_2a)]
+
+A <- plot_data  %>%
+  filter(rank_cutoff <= 10) %>%
+  ggplot(aes(x = factor(rank_cutoff), y = prop_in_sv)) + 
+  geom_point(color = '#2e72af') + geom_path(group = 1, color = '#2e72af') + 
+  geom_text(aes(x = factor(rank_cutoff), y = prop_in_sv, 
+                label = scales::percent(prop_in_sv, accuracy = 1)), vjust =-1, color = '#2e72af', size = 3) +
+  coord_cartesian(ylim = c(0.5, 1.05)) + 
+  scale_y_continuous(labels = scales::percent, expand = c(0,0)) + 
+  ylab('Detected events (%)') + xlab('Event Rank in 300K-RNA') + labs(color = '') +
+  scale_x_discrete(labels = function(x) paste0(intToUtf8(8804), x)) +
+  theme(plot.margin = margin(1,1,1.5,1.2, "cm"))
+```
+
+
+
+
+
+
+# Figure 2B: PR curve of our 88 variants, SpliceAI & 300K-RNA predictions of exon-skipping & cryptic-activation
+
+```{r}
+# Remove insertion-deletions from comparative PR curve. 86 variants in total.
+# keep only cryptic and exon skipping predictions form spliceAI (remove other / uninterpretable predictions)
+pr_data <- merged_data[!curated_record_id %in% c(871, 913, 927) &
+                         splicing_event_class %in% c('cryptic acceptor', 'cryptic donor', 'exon skipping') &
+                         variant_category == 'ours' &
+                         (spliceai == 1 | splicevault == 1 | in_rna_studies == 1)]
+
+# #find thresholds where SAI predicts the same number of events as 300K-RNA top-1, 2, 3, 4, etc.
+# sai_cutoffs <- data.table(cutoffs = seq(0, 1, 0.000001))
+# sai_cutoffs[, pred_count := sapply(cutoffs, function(x) nrow(pr_data[spliceai == 1 & abs(delta) >= x]))]
+# fwrite(sai_cutoffs, '../ref/sai_cutoffs.csv')
+sai_cutoffs <- fread('../ref/sai_cutoffs.csv')
+
+cutoffs <- data.table(splicevault_rank_cutoffs = 1:25)
+cutoffs[, pred_count := sapply(splicevault_rank_cutoffs, function(x) nrow(pr_data[missplicing_event_rank_simple <= x]))]
+
+
+cutoffs[pred_count <= nrow(pr_data[spliceai == 1]), sai_threshold := sapply(pred_count, function(x)  min(sai_cutoffs[pred_count == x,cutoffs]))]
+cutoffs[pred_count > nrow(pr_data[spliceai == 1]), sai_threshold := NA]
+
+```
+
+```{r}
+# calculating sensitivity & PPV
+cutoffs[, sv_TP := unlist(lapply(splicevault_rank_cutoffs, 
+                                 function(x) nrow(pr_data[in_rna_studies == 1 & missplicing_event_rank_simple <= x])))]
+cutoffs[, sv_FP := unlist(lapply(splicevault_rank_cutoffs, 
+                                 function(x) nrow(pr_data[in_rna_studies == 0 & missplicing_event_rank_simple <= x])))]
+cutoffs[, sv_FN := unlist(lapply(splicevault_rank_cutoffs, 
+                                 function(x) nrow(pr_data[in_rna_studies == 1 & (missplicing_event_rank_simple > x |
+                                                                is.na(missplicing_event_rank_simple))])))]
+cutoffs[, sv_sens := sv_TP / (sv_TP + sv_FN)]
+cutoffs[, sv_ppv := sv_TP / (sv_TP + sv_FP)]
+
+cutoffs[, sai_TP := unlist(lapply(sai_threshold, 
+                                 function(x) nrow(pr_data[in_rna_studies == 1 & abs(delta) >= x])))]
+cutoffs[, sai_FP := unlist(lapply(sai_threshold, 
+                                 function(x) nrow(pr_data[in_rna_studies == 0 & abs(delta) >= x])))]
+cutoffs[, sai_FN := unlist(lapply(sai_threshold, 
+                                 function(x) nrow(pr_data[in_rna_studies == 1 & (abs(delta) < x | is.na(delta))])))]
+cutoffs[, sai_sens := sai_TP / (sai_TP + sai_FN)]
+cutoffs[, sai_ppv := sai_TP / (sai_TP + sai_FP)]
+
+```
+
+
+
+```{r}
+# plot PR curve
+plot_df <- cutoffs %>%
+  filter(splicevault_rank_cutoffs %in% c(1:5, seq(6, 10, 2), 16)) %>%
+  dplyr::select(-sv_TP, -sv_FP, -sv_FN, -sai_TP, -sai_FP, -sai_FN) %>%
+  pivot_longer(cols = c('sv_sens', 'sv_ppv', 'sai_sens', 'sai_ppv')) %>%
+  separate(name, into = c('alg', 'metric'), sep = '_') %>%
+  pivot_wider(names_from = metric, values_from = value)
+setDT(plot_df)
+
+B <- ggplot(plot_df[!is.na(sai_threshold)], aes(x = sens, y = ppv, color = alg)) +
+  geom_point() + geom_path() +
+  coord_cartesian(xlim = c(0.5,1), y = c(0,1)) +
+  xlab('Sensitivity') + ylab('Positive Predictive Value') +
+  labs(color = '')+
+  scale_color_nejm(labels = c("SpliceAI", "300K-RNA"))+
+  geom_text(data=plot_df[alg == 'sv'][c(1:4)],aes(x=sens,y=ppv + 0.08,label=splicevault_rank_cutoffs), color='#2e72af', size = 3)+
+  geom_text(data=plot_df[alg == 'sai'][c(1:4)],aes(x=sens - 0.04,y=ppv - 0.05,label=round(sai_threshold,3)), color='#ae4631', size = 3) +
+  scale_x_continuous(breaks = seq(0,1,0.1))+
+  scale_y_continuous(breaks = seq(0,1,0.1)) +
+  theme(panel.grid.major = element_line(colour = "lightgrey", size = 0.1))+
+  theme(plot.margin = margin(1,2,1.5,2, "cm"))
+
+```
+
+
+# Figure 2C: TP / FP dot plots for exon skipping
+
+#spliceai & MMSplice delta jitter plot
+
+```{r}
+jitter_data_sv <- merged_data[variant_category == 'ours' & 
+                                !curated_record_id %in% c(871, 913, 927) &
+                            splicing_event_class != 'intron retention' &
+                         (!is.na(missplicing_event_rank_simple) | in_rna_studies == 1)] %>%
+  mutate(in_rna_studies = ifelse(in_rna_studies == 0, 'not seen in RNA studies', 'seen in RNA studies')) %>%
+  mutate(in_rna_studies = factor(in_rna_studies, levels = c('seen in RNA studies', 'not seen in RNA studies')))
+jitter_data_sai <- merged_data[variant_category == 'ours' & 
+                                 !curated_record_id %in% c(871, 913, 927) &
+                            splicing_event_class != 'intron retention' &
+                         (spliceai == 1 | in_rna_studies == 1)]%>%
+  mutate(in_rna_studies = ifelse(in_rna_studies == 0, 'not seen in RNA studies', 'seen in RNA studies')) %>%
+  mutate(in_rna_studies = factor(in_rna_studies, levels = c('seen in RNA studies', 'not seen in RNA studies')))
+
+jitter_data_sv[, rank_above_4 := ifelse(missplicing_event_rank_simple <= 4, 1,0)]
+labs_sv <- jitter_data_sv  %>% 
+  mutate(splicing_event_class = ifelse(grepl('cryptic', splicing_event_class), 'cryptic', splicing_event_class)) %>% 
+  group_by(splicing_event_class, rank_above_4, in_rna_studies) %>% tally() 
+setDT(labs_sv)
+
+
+jitter_data_sai[, delta_above_thresh := ifelse(abs(delta) < cutoffs[splicevault_rank_cutoffs == 4, sai_threshold] |
+                                                 is.na(delta),0,1)]
+labs_sai <- jitter_data_sai %>% 
+  mutate(splicing_event_class = ifelse(grepl('cryptic', splicing_event_class), 'cryptic', splicing_event_class)) %>%
+  group_by(splicing_event_class, delta_above_thresh, in_rna_studies) %>% tally() 
+setDT(labs_sai)
+```
+
+```{r}
+es_sai <- jitter_data_sai %>%
+  filter(splicing_event_class == 'exon skipping') %>%
+  mutate(color = ifelse(is.na(delta), 'not seen', as.character(in_rna_studies))) %>%
+  mutate(delta = ifelse(is.na(delta), 0.001, delta))  %>%
+  ggplot(aes(x = in_rna_studies, y  = abs(delta),color = color)) +
+  geom_jitter(width =0.2, height = 0, size = 0.5, alpha =0.4) +
+  theme(strip.background = element_blank(), axis.text.x = element_text(angle = 45, hjust = 1), 
+        legend.position = 'none')+
+  ylab('\u0394-score') + xlab('') + 
+  scale_color_manual(values = c('black', 'grey','#ae4631'))+
+  scale_y_log10() +
+  geom_hline(yintercept = 0.011562, linetype = 'dashed') + 
+  ggtitle('SpliceAI')+
+  theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm"))+
+  annotate("text", x = 1, y = 0.017, label = paste('TP =', labs_sai[splicing_event_class == 'exon skipping' & 
+                                                                     !grepl('not', in_rna_studies) &
+                                                                     delta_above_thresh == 1 , n]), size = 3) +
+  annotate("text", x = 1, y = 0.008, label = paste('FN =', labs_sai[splicing_event_class == 'exon skipping' & 
+                                                                     !grepl('not', in_rna_studies) &
+                                                                     delta_above_thresh == 0 , n]), size = 3)+
+  annotate("text", x = 2, y = 0.017, label = paste('FP =',labs_sai[splicing_event_class == 'exon skipping' & 
+                                                                    grepl('not', in_rna_studies) &
+                                                                    delta_above_thresh == 1 , n]), size = 3)
+
+es_sv <- jitter_data_sv %>%
+  filter(splicing_event_class == 'exon skipping')%>%
+  ggplot(aes(x = factor(in_rna_studies), y = missplicing_event_rank_simple, color = in_rna_studies)) + 
+  geom_jitter(width =0.2, height = 0.1, size = 0.5, alpha =0.4) + 
+  scale_color_manual(values = c('#2e72af', 'grey')) +
+  scale_y_reverse(breaks = seq(1,25,2)) +
+  theme(strip.background = element_blank(),legend.position = 'none', 
+        axis.text.x = element_text(angle = 45, hjust = 1), axis.title.x = element_blank()) +
+  geom_hline(yintercept = 4.2, linetype = 'dashed') +
+  ggtitle('300K-RNA')  +
+  ylab('event rank')+
+  theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm"))+
+  annotate("text", x = 1, y = 3.5, label = paste('TP =', labs_sv[splicing_event_class == 'exon skipping' & 
+                                                                     !grepl('not', in_rna_studies) &
+                                                                     rank_above_4 == 1 , n]), size = 3) +
+  annotate("text", x = 1, y = 4.8, label = paste('FN =', labs_sv[splicing_event_class == 'exon skipping' & 
+                                                                     !grepl('not', in_rna_studies) &
+                                                                     rank_above_4 == 0 , n]), size = 3)+
+  annotate("text", x = 2, y = 3.5, label = paste('FP =',labs_sv[splicing_event_class == 'exon skipping' & 
+                                                                    grepl('not', in_rna_studies) &
+                                                                    rank_above_4 == 1 , n]), size = 3)
+
+
+
+
+C <- ggarrange(es_sv, es_sai, nrow = 1)  %>% annotate_figure(fig.lab = 'Exon Skipping', fig.lab.size = 12)
+```
+
+# Figure 2D: TP / FP dot plots for cryptic activation
+
+```{r}
+ca_sai <- jitter_data_sai %>%
+  filter(grepl('cryptic', splicing_event_class)) %>%
+  mutate(color = ifelse(is.na(delta), 'not seen', as.character(in_rna_studies))) %>%
+  mutate(delta = ifelse(is.na(delta), 0.001, delta))    %>%
+  ggplot(aes(x = in_rna_studies, y  = abs(delta),color = color)) +
+  geom_jitter(width =0.2, height = 0, size = 0.5, alpha =0.4) +
+  theme(strip.background = element_blank(), axis.text.x = element_text(angle = 45, hjust = 1), 
+        legend.position = 'none')+
+  ylab('\u0394-score') + xlab('') + scale_color_manual(values = c('black', 'grey', '#ae4631'))+
+  scale_y_log10() +
+  geom_hline(yintercept = 0.011562, linetype = 'dashed') + 
+  ggtitle('SpliceAI')+
+  theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm"))+
+  annotate("text", x = 1, y = 0.017, label = paste('TP =', labs_sai[grepl('cryptic', splicing_event_class) & 
+                                                                     !grepl('not', in_rna_studies) &
+                                                                     delta_above_thresh == 1 , n]), size = 3) +
+  annotate("text", x = 1, y = 0.008, label = paste('FN =', labs_sai[grepl('cryptic', splicing_event_class) & 
+                                                                     !grepl('not', in_rna_studies) &
+                                                                     delta_above_thresh == 0 , n]), size = 3)+
+  annotate("text", x = 2, y = 0.017, label = paste('FP =',labs_sai[grepl('cryptic', splicing_event_class) & 
+                                                                    grepl('not', in_rna_studies) &
+                                                                    delta_above_thresh == 1 , n]), size = 3)
+
+ca_sv <- jitter_data_sv %>%
+  filter(grepl('cryptic', splicing_event_class))%>%
+  ggplot(aes(x = factor(in_rna_studies), y = missplicing_event_rank_simple, color = in_rna_studies)) + 
+  geom_jitter(width =0.2, height = 0.1, size = 0.5, alpha =0.4) + 
+  scale_color_manual(values = c('#2e72af', 'grey')) +
+  scale_y_reverse(breaks = seq(1,25,2)) +
+  theme(strip.background = element_blank(),legend.position = 'none', 
+        axis.text.x = element_text(angle = 45, hjust = 1), axis.title.x = element_blank()) +
+  geom_hline(yintercept = 4.2, linetype = 'dashed') +
+  ggtitle('300K-RNA')  +
+  ylab('event rank')+
+  theme(plot.margin = margin(0.5,0.5,0.5,0.5, "cm"))+
+  annotate("text", x = 1, y = 2.5, label = paste('TP =', labs_sv[grepl('cryptic', splicing_event_class) & 
+                                                                     !grepl('not', in_rna_studies) &
+                                                                     rank_above_4 == 1 , n]), size = 3) +
+  annotate("text", x = 1, y = 5.5, label = paste('FN =', labs_sv[grepl('cryptic', splicing_event_class) & 
+                                                                     !grepl('not', in_rna_studies) &
+                                                                     rank_above_4 == 0 , n]), size = 3)+
+  annotate("text", x = 2, y = 2.5, label = paste('FP =',labs_sv[grepl('cryptic', splicing_event_class) & 
+                                                                    grepl('not', in_rna_studies) &
+                                                                    rank_above_4 == 1 , n]), size = 3)
+
+D <- ggarrange(ca_sv, ca_sai, nrow = 1) %>% annotate_figure(fig.lab = 'Cryptic Activation', fig.lab.size = 12)
+
+```
+
+
+
+# putting panels together
+```{r}
+top <- ggarrange(A,B, nrow  = 1, widths = c(1, 1.5))
+bottom <- ggarrange(C,D,nrow = 1)
+ggarrange(top,bottom, ncol = 1, heights = c(1, 1.2))
+ggsave('../figs/figure_two.pdf', height = 7, width = 9 , device=cairo_pdf)
+``` 
+

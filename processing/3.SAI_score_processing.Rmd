@@ -1,0 +1,242 @@
+---
+title: "R Notebook"
+output: 
+---
+
+```{r}
+library(data.table)
+library(plyr)
+library(tidyverse)
+betweenv <- Vectorize(between)
+theme_set(theme_classic())
+```
+
+
+```{r}
+vars_events <- fread('../src/vars_events.tsv', sep = '\t')
+
+scores_df <- fread('../ref/all_variants_spliceAI_5000nt.tsv.gz')
+# position for plotting
+scores_df[, spos := dist_from_variant + 5001]
+# get strand
+scores_df[, chrom := gsub('chr', '', chrom)]
+scores_df <- unique(vars_events[, .(chrom, pos, ref, alt, strand, curated_record_id, 
+                                    variant_type, 
+                                    dist_from_ess, tx_id)])[scores_df, on = .(chrom, pos, ref, alt)][!is.na(curated_record_id)]
+# translate dist_from_variant to gpos
+scores_df[, gpos := pos + dist_from_variant]
+
+# filter to scores with delta above threshold
+threshold = 0.001
+sai_preds <- scores_df[(abs(donor) >= threshold ) | (abs(acceptor) >= threshold)]
+sai_preds <- sai_preds[, c(6, 1:5, 8:9, 7, 10:16, 18)]
+```
+
+```{r}
+# if delta for acceptor and donor are both above threshold, make 2 rows for delta
+if (nrow(sai_preds[(abs(donor) >= threshold) & (abs(acceptor) >= threshold)]) > 0) {
+  sai_preds <- rbind(sai_preds[(abs(donor) < threshold) | (abs(acceptor) < threshold)],
+                     sai_preds[(abs(donor) >= threshold) & (abs(acceptor) >= threshold)] %>% mutate(donor = 0),
+                     sai_preds[(abs(donor) >= threshold) & (abs(acceptor) >= threshold)] %>% mutate(acceptor = 0))
+}
+
+```
+
+
+```{r}
+# checking which SAI preds correlate to annotated splice sites in any transcript - differentiate between same transcript and alternate transcript
+refseq <- fread('../ref/refseq_introns_exons.tsv.gz')
+refseq_introns <- refseq[region_type == 'intron']
+refseq_introns[, donor_pos := ifelse(strand == '+', region_start, region_end)]
+refseq_introns[, acceptor_pos := ifelse(strand == '+', region_end, region_start)]
+refseq_introns[, donor_pos_adj := ifelse(strand == '+', donor_pos - 1, donor_pos + 1)]
+refseq_introns[, acceptor_pos_adj := ifelse(strand == '+', acceptor_pos + 1, acceptor_pos - 1 )]
+sai_preds <- refseq_introns[, .(tx_id, chrom, 
+                                gpos = donor_pos_adj, 
+                                region_no, annotated_donor = 1)][sai_preds, on = .(tx_id, chrom, gpos)]
+sai_preds <- refseq_introns[, .(tx_id, chrom, 
+                                gpos = acceptor_pos_adj, 
+                                region_no, annotated_acceptor = 1)][sai_preds, on = .(tx_id, chrom, gpos)]
+sai_preds[is.na(region_no), region_no := i.region_no]
+sai_preds[, i.region_no := NULL]
+
+```
+
+```{r}
+# annotate splice sites annotated in alternate transcripts
+sai_preds <- distinct(refseq_introns[! tx_id %in% sai_preds$tx_id,
+                .(chrom, gpos = acceptor_pos_adj, annotated_acceptor_alt_tx = 1)])[sai_preds, on = .(chrom, gpos)]
+sai_preds <- distinct(refseq_introns[! tx_id %in% sai_preds$tx_id,
+                .(chrom, gpos = donor_pos_adj, annotated_donor_alt_tx = 1)])[sai_preds, on = .(chrom, gpos)]
+
+# annotate variant intron
+donors_acceptors <- rbind(refseq_introns[, .(tx_id, chrom, variant_type = 'donor', splice_site_pos = donor_pos, variant_intron_no = region_no)], 
+                          refseq_introns[, .(tx_id, chrom, variant_type = 'acceptor', splice_site_pos = acceptor_pos, variant_intron_no = region_no)])
+variant_introns <- donors_acceptors[distinct(vars_events[, .(curated_record_id, chrom, tx_id, variant_type, splice_site_pos)]), 
+                                    on = .(chrom, tx_id, variant_type, splice_site_pos)]
+sai_preds <- variant_introns[sai_preds, on = .(tx_id, chrom, variant_type, curated_record_id)]
+
+refseq_exons <- refseq[region_type == 'exon']
+refseq_exons[, donor_pos := ifelse(strand == '+', region_end + 1, region_start - 1)]
+refseq_exons[, acceptor_pos := ifelse(strand == '+', region_start - 1, region_end + 1)]
+
+# annotate mis-splicing predictions
+sai_preds[(donor < -threshold | acceptor < -threshold) & 
+            (splice_site_pos == gpos + 1 | splice_site_pos ==  gpos - 1) &
+            (annotated_donor== 1 | annotated_acceptor == 1),
+           splicing_event_class := 'mis-splicing']
+
+```
+
+
+# cryptic splicing predictions
+
+```{r}
+# first - annotate cryptic donor / acceptor - donor > threshold
+# get cryptic min / max gpos for exon-intron junction. delta > threshold beyond these limits = 'other' 
+intron_info <- refseq_introns[tx_id %in% sai_preds$tx_id & (donor_pos %in% sai_preds$splice_site_pos | acceptor_pos %in% sai_preds$splice_site_pos),
+              .(tx_id, donor_pos, acceptor_pos, variant_intron_no = region_no)]
+exon_info <- refseq_exons[tx_id %in% sai_preds$tx_id & 
+                (donor_pos %in% sai_preds$splice_site_pos | acceptor_pos %in% sai_preds$splice_site_pos),
+              .(tx_id, donor_pos, acceptor_pos, variant_intron_no = region_no)]
+
+# for donor variants want acceptor pos of same exon & acceptor pos of same intron
+sai_preds <- intron_info[, .(tx_id, splice_site_pos = donor_pos, variant_intron_no, same_intron_acceptor_pos = acceptor_pos)][sai_preds, 
+                                                                                                                 on = .(tx_id, splice_site_pos, variant_intron_no)]
+sai_preds <- exon_info[, .(tx_id, splice_site_pos = donor_pos, variant_intron_no, same_exon_acceptor_pos = acceptor_pos)][sai_preds, 
+                                                                                                                 on = .(tx_id, splice_site_pos, variant_intron_no)]
+
+
+sai_preds[donor >= threshold & is.na(annotated_donor) & 
+             ((strand == '+' & gpos >= same_exon_acceptor_pos & gpos <= same_intron_acceptor_pos) |
+               (strand == '-' & gpos >= same_intron_acceptor_pos & gpos <= same_exon_acceptor_pos)), splicing_event_class := 'cryptic donor']
+sai_preds[donor >= threshold & is.na(annotated_donor) &
+           (strand == '+' & (gpos < same_exon_acceptor_pos | gpos > same_intron_acceptor_pos) |
+               (strand == '-' & (gpos < same_intron_acceptor_pos | gpos > same_exon_acceptor_pos))), splicing_event_class := 'other']
+
+
+
+# for acceptor variants want donor of same intron & donor of next exon
+sai_preds <- intron_info[, .(tx_id, splice_site_pos = acceptor_pos, variant_intron_no, same_intron_donor_pos = donor_pos)][sai_preds, 
+                                                                                                                 on = .(tx_id, splice_site_pos, variant_intron_no)]
+sai_preds <- exon_info[, .(tx_id, splice_site_pos = acceptor_pos, variant_intron_no = variant_intron_no - 1, next_exon_donor_pos = donor_pos)][sai_preds, 
+                                                                                                                 on = .(tx_id, splice_site_pos, variant_intron_no)]
+
+sai_preds[acceptor >= threshold & is.na(annotated_acceptor) & 
+             ((strand == '+' & gpos >= same_intron_donor_pos & gpos <= next_exon_donor_pos) |
+               (strand == '-' & gpos >= next_exon_donor_pos & gpos <= same_intron_donor_pos)), splicing_event_class := 'cryptic acceptor']
+sai_preds[acceptor >= threshold & is.na(annotated_acceptor) &
+           (strand == '+' & (gpos < same_intron_donor_pos | gpos > next_exon_donor_pos) |
+               (strand == '-' & (gpos < next_exon_donor_pos | gpos > same_intron_donor_pos))), splicing_event_class := 'other']
+
+
+sai_preds[donor >= threshold & is.na(annotated_donor) & variant_type == 'acceptor', splicing_event_class := 'other']
+sai_preds[acceptor >= threshold & is.na(annotated_acceptor) & variant_type == 'donor', splicing_event_class := 'other']
+```
+
+# unannotated splice site hit predictions
+
+```{r}
+# second - unannotated splice site hit - delta < threshold & unannotated splice site in refseq
+sai_preds[donor <= -threshold & is.na(annotated_donor) & is.na(annotated_donor_alt_tx), splicing_event_class := 'unannotated splice site hit']
+sai_preds[acceptor <= -threshold & is.na(annotated_acceptor) & is.na(annotated_acceptor_alt_tx), splicing_event_class := 'unannotated splice site hit']
+```
+
+# intron retention predictions
+
+```{r}
+# third - intron retention - delta < threshold annotated splice site of different category & same intron
+sai_preds[donor <= -threshold & annotated_donor == 1 & variant_type == 'acceptor' & variant_intron_no == region_no, 
+           splicing_event_class := 'intron retention']
+sai_preds[acceptor <= -threshold & annotated_acceptor == 1 & variant_type == 'donor' & variant_intron_no == region_no, 
+           splicing_event_class := 'intron retention']
+# intron retention alternate transcript
+sai_preds[donor <= -threshold & is.na(annotated_donor) & annotated_donor_alt_tx == 1 & variant_type == 'acceptor' & variant_intron_no == region_no, 
+           splicing_event_class := 'intron retention (alternate transcript)']
+sai_preds[donor <= -threshold & is.na(annotated_acceptor) & annotated_acceptor_alt_tx == 1 & variant_type == 'donor' & variant_intron_no == region_no, 
+           splicing_event_class := 'intron retention (alternate transcript)']
+
+```
+
+# exon skipping predictions
+```{r}
+# fourth - exon skipping - delta < threshold & annotated splice site of same category as variant 
+# acceptor variants
+sai_preds[acceptor <= -threshold & annotated_acceptor == 1 & variant_type == 'acceptor'& variant_intron_no < region_no , 
+           `:=` (splicing_event_class = 'exon skipping', es_start = variant_intron_no + 1, es_end = region_no + 1)]
+sai_preds[acceptor <= -threshold & annotated_acceptor == 1 & variant_type == 'acceptor'& variant_intron_no > region_no , 
+           `:=` (splicing_event_class = 'exon skipping', es_start = region_no + 1, es_end = variant_intron_no + 1)]
+
+# donor variants
+sai_preds[donor <= -threshold & annotated_donor == 1 & variant_type == 'donor'& variant_intron_no < region_no , 
+           `:=` (splicing_event_class = 'exon skipping', es_start = variant_intron_no, es_end = region_no)]
+sai_preds[donor <= -threshold & annotated_donor == 1 & variant_type == 'donor'& variant_intron_no > region_no , 
+           `:=` (splicing_event_class = 'exon skipping', es_start = region_no, es_end = variant_intron_no)]
+
+# exon skipping - delta < threshold & OR annotated splice site of different category & different intron
+# acceptor variants
+sai_preds[donor <= -threshold & annotated_donor == 1 & variant_type == 'acceptor' & variant_intron_no < region_no , 
+           `:=` (splicing_event_class = 'exon skipping', es_start = variant_intron_no + 1, es_end = region_no)]
+sai_preds[donor <= -threshold & annotated_donor == 1 & variant_type == 'acceptor' & variant_intron_no > region_no , 
+           `:=` (splicing_event_class = 'exon skipping', es_start = region_no, es_end = variant_intron_no + 1)] 
+
+# donor variants
+sai_preds[acceptor <= -threshold & annotated_acceptor == 1 & variant_type == 'donor' & variant_intron_no < region_no,
+           `:=` (splicing_event_class = 'exon skipping', es_start = variant_intron_no, es_end = region_no + 1) ]
+sai_preds[acceptor <= -threshold & annotated_acceptor == 1 & variant_type == 'donor' & variant_intron_no > region_no,
+           `:=` (splicing_event_class = 'exon skipping', es_start = region_no + 1, es_end = variant_intron_no)]
+
+# getting skipped_exons_id column
+sai_preds[es_start == es_end, skipped_exons_id := as.character(es_start)]
+sai_preds[es_end > es_start , skipped_exons_id := paste0(as.character(es_start), '-', as.character(es_end))]
+
+# exon skipping alternate transcript
+sai_preds[acceptor <= -threshold & is.na(annotated_acceptor) & annotated_acceptor_alt_tx == 1,
+           `:=` (splicing_event_class = 'exon skipping', skipped_exons_id = 'alternate transcript')]
+sai_preds[donor <= -threshold & is.na(annotated_donor == 1) & annotated_donor_alt_tx == 1,
+           `:=` (splicing_event_class = 'exon skipping', skipped_exons_id = 'alternate transcript')]
+
+# annnotated donors improved
+sai_preds[annotated_donor == 1 & donor > threshold, splicing_event_class := 'annotated donor improved' ]
+sai_preds[annotated_acceptor == 1 & acceptor > threshold, splicing_event_class := 'annotated acceptor improved' ]
+```
+
+```{r}
+# get cryptic positions
+sai_preds[splicing_event_class == 'cryptic donor' & strand == '+', cryptic_pos := gpos + 1]
+sai_preds[splicing_event_class == 'cryptic donor' & strand == '-', cryptic_pos := gpos - 1]
+sai_preds[splicing_event_class == 'cryptic acceptor' & strand == '+', cryptic_pos := gpos - 1]
+sai_preds[splicing_event_class == 'cryptic acceptor' & strand == '-', cryptic_pos := gpos + 1]
+```
+
+```{r}
+# get relevant delta score
+sai_preds[abs(donor) >= 0.001, delta := donor]
+sai_preds[abs(acceptor) >= 0.001, delta := acceptor]
+
+sai_preds <- sai_preds[, .(chrom, pos, ref, alt, strand, 
+                     curated_record_id, variant_type, 
+                     dist_from_ess, tx_id, gpos,dist_from_variant, donor, acceptor,
+                     splicing_event_class, skipped_exons_id, cryptic_pos, delta)]
+
+
+# if both splice sites of skipped exons have delta above threshold there are 2 rows representing this event. delete one row and take highest magnitude delta
+es <- sai_preds[!is.na(skipped_exons_id)]
+es[, absdelta := abs(delta)]
+setorder(es, -absdelta)
+es <- es[-which(duplicated(es[, .(curated_record_id, splicing_event_class, skipped_exons_id)]))]
+es[, absdelta := NULL]
+
+sai_preds <- rbind(sai_preds[is.na(skipped_exons_id)], es)
+setorder(sai_preds, curated_record_id, dist_from_variant)
+```
+
+
+```{r}
+fwrite(sai_preds[, .(chrom, pos, ref, alt, strand, 
+                     curated_record_id, variant_type, 
+                     dist_from_ess, tx_id, gpos,dist_from_variant, donor, acceptor,
+                     splicing_event_class, skipped_exons_id, cryptic_pos, delta)], '../ref/sai_preds_complete.csv')
+```
+
+
