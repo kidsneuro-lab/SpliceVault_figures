@@ -62,7 +62,7 @@ msd_filt[curated_record_id == 252 & missplicing_event_rank_simple > 3,
                missplicing_event_rank = missplicing_event_rank - 1)]
 msd_filt <- msd_filt[!is.na(missplicing_event_rank)]
 
-fwrite(msd_filt, '../ref/300KRNA_filt.tsv.gz')
+fwrite(msd_filt, '../src/300KRNA_filt.tsv.gz')
 fwrite(msd_ns, '../ref/300KRNA_ns.tsv.gz')
 ```
 

@@ -16,7 +16,7 @@ sai_preds <- fread('../ref/sai_preds_complete.csv')
 sai_preds_filt <- sai_preds[!splicing_event_class %in% c('mis-splicing')]
 
 # 300K-RNA predictions
-splicevault <- fread('../ref/300KRNA_filt.tsv.gz')
+splicevault <- fread('../src/300KRNA_filt.tsv.gz')
 ```
 
 # joining datasets
