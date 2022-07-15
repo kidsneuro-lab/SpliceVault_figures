@@ -1,0 +1,154 @@
+---
+title: "R Notebook"
+output: 
+---
+
+```{r}
+library(data.table)
+library(stringr)
+library(ggplot2)
+```
+
+```{r}
+#Load protein coding gene coordinates from Ensembl(104) and Mendelian gene list
+Ensembl_Genes <- fread("../ref/ensembl_introns_exons.tsv", sep = "\t")
+Mendeliome_Genes <- fread("../ref/clinically_relevant_genes_Sep2021.tsv.txt", sep = "\t")
+
+
+#Initialise inverted %in% function
+`%nin%` <- Negate(`%in%`)
+```
+
+```{r}
+#Extract Ensembl(104) introns for Mendelian disease gene canonical transcripts
+Ensembl_Genes_Introns <- Ensembl_Genes[region_type == "intron" & canonical == 1]
+Mendeliome_Introns <- Ensembl_Genes_Introns[which(Ensembl_Genes_Introns$gene_id %in% Mendeliome_Genes$Ensembl.ID)]
+```
+
+```{r}
+#Convert chromosome coordinates to UCSC
+Mendeliome_Introns$chrom <- paste0("chr",Mendeliome_Introns$chrom)
+
+
+#Create bed file of all Mendeliome gene introns
+mend_intr_bed <- Mendeliome_Introns[,.(chrom, region_start-1, region_end, paste0(chrom,"_",region_start,"_",region_end,"_",strand), 0, strand)]
+
+
+#Extract all unique introns and export bed file
+mend_intr_bed_uniq <- unique(mend_intr_bed)
+fwrite(mend_intr_bed_uniq, "../src/mend_intron.bed", sep="\t", col.names = F)
+```
+
+```{bash}
+#Extract sequences for Mendeliome introns from Homo_sapiens_assembly38.fasta
+#Source: "https://storage.cloud.google.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta"
+
+bedtools getfasta -fi Homo_sapiens_assembly38.fasta -bed mend_intron.bed -fo all_mendelian_gene_introns_sequences.tsv -name -tab -s
+```
+
+```{r}
+#Read in mendeliome intron sequences
+mendelian_intron_sequences <- fread("../src/all_mendelian_gene_introns_sequences.tsv", header = F, sep = "\t")
+```
+
+```{r, warning = F}
+#Initialise empty variables
+frame <- c()
+intron_length <- c()
+window1ptc_pos <- c()
+window1ptc <- c()
+window1_no_ptcs <- c()
+window1_all_ptcs <- c()
+window2ptc_pos <- c()
+window2ptc <- c()
+window2_no_ptcs <- c()
+window2_all_ptcs <- c()
+window3ptc_pos <- c()
+window3ptc <- c()
+window3_no_ptcs <- c()
+window3_all_ptcs <- c()
+
+
+#Analyse each intron sequence for premature termination codons
+for(sequence in 1:nrow(mendelian_intron_sequences)){
+    
+    #Calculate intron length
+    intron_length[sequence] <- str_length(mendelian_intron_sequences[[sequence,2]])
+    
+    #Remove introns under 26bp (the smallest human introns)
+    if(intron_length[sequence] > 26){
+        #Identify PTC position and number in reading frame 1
+        window1ptc_pos <- which(substring(mendelian_intron_sequences[[sequence,2]],seq(1,str_length(mendelian_intron_sequences[[sequence,2]])-3,3),seq(3,str_length(mendelian_intron_sequences[[sequence,2]]),3)) %in% c("TAG","TAA","TGA"))*3
+        window1ptc[sequence] <- min(window1ptc_pos)
+        window1_no_ptcs[sequence] <- length(window1ptc_pos)
+        window1_all_ptcs[sequence] <- paste0(window1ptc_pos,collapse=",")
+        
+        #Identify PTC position and number in reading frame 2
+        window2ptc_pos <- which(substring(mendelian_intron_sequences[[sequence,2]],seq(2,str_length(mendelian_intron_sequences[[sequence,2]])-3,3),seq(4,str_length(mendelian_intron_sequences[[sequence,2]]),3)) %in% c("TAG","TAA","TGA"))*3
+        window2ptc[sequence] <- min(window2ptc_pos)
+        window2_no_ptcs[sequence] <- length(window2ptc_pos)
+        window2_all_ptcs[sequence] <- paste0(window2ptc_pos,collapse=",")
+        
+        #Identify PTC position and number in reading frame 3
+        window3ptc_pos <- which(substring(mendelian_intron_sequences[[sequence,2]],seq(3,str_length(mendelian_intron_sequences[[sequence,2]])-3,3),seq(5,str_length(mendelian_intron_sequences[[sequence,2]]),3)) %in% c("TAG","TAA","TGA"))*3
+        window3ptc[sequence] <- min(window3ptc_pos)
+        window3_no_ptcs[sequence] <- length(window3ptc_pos)
+        window3_all_ptcs[sequence] <- paste0(window3ptc_pos,collapse=",")
+    }
+}
+```
+
+```{r}
+#Combine results in data table
+mendelian_intron_sequences_results <- as.data.table(list(mendelian_intron_sequences[,1],intron_length,frame,window1ptc,window2ptc,window3ptc,window1_no_ptcs,window2_no_ptcs,window3_no_ptcs,window1_all_ptcs,window2_all_ptcs,window3_all_ptcs))
+names(mendelian_intron_sequences_results) <- c("intron","length","window1ptc","window2ptc","window3ptc","window1_no_ptcs","window2_no_ptcs","window3_no_ptcs","window1_all_ptcs","window2_all_ptcs","window3_all_ptcs")
+
+
+#Calculate reading frame preservation with intron retention
+mendelian_intron_sequences_results$frame <- mendelian_intron_sequences_results$length %% 3 == 0
+```
+
+```{r}
+#How many Mendelian gene introns were extracted from RefSeq
+total_IR <- nrow(mendelian_intron_sequences_results)
+
+#How many Mendelian gene introns are either out-of-frame or have at least 1 stop codon in every window?
+out_of_frame_IR <- nrow(mendelian_intron_sequences_results[frame == FALSE |
+                                                               (window1_no_ptcs != 0 &
+                                                                window2_no_ptcs != 0 &
+                                                                window3_no_ptcs != 0)])
+
+#How many Mendelian gene introns are in-frame and don't have a stop codon in any window?
+in_frame_IR <- nrow(mendelian_intron_sequences_results[frame == TRUE &
+                                                           (window1_no_ptcs == 0 |
+                                                            window2_no_ptcs == 0 |
+                                                            window3_no_ptcs == 0)])
+```
+
+```{r, warning = F}
+#Collate data for graphing
+results <- data.table("Legend" = c("PTC in each reading frame or IR causes a frameshift","No PTC in at least one reading frame and IR is in-frame"),
+                      "values" = c(out_of_frame_IR,in_frame_IR),
+                      "pct" = c(out_of_frame_IR/total_IR,
+                                in_frame_IR/total_IR))
+
+#Create figure S5
+results %>%
+    ggplot(aes(x="", y=values, fill=Legend)) +
+    geom_bar(stat="identity", width=1) +
+    coord_polar("y", start=0) +
+    scale_fill_manual(values = rev(c('#e84b35','grey'))) +
+    geom_text(aes(label = scales::percent(pct)),
+               position = position_stack(vjust = 0.5), color = c("white","transparent"), size = 6) +
+    scale_y_continuous(breaks = c(23500,48000), labels = scales::percent(results$pct)) +
+    theme(axis.ticks = element_blank(),
+          axis.title = element_blank(),
+          axis.text = element_text(size = 18, colour = c("transparent","black")),
+          panel.background = element_rect(fill = "white"),
+          legend.title = element_text()) + 
+    labs(fill=paste0("Intron Retention Consequence (n = ",total_IR,")"))
+
+ggsave('../figs/S5.pdf', width = 8, height = 3)
+```
+
+
