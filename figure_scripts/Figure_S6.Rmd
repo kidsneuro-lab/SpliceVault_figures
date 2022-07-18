@@ -112,8 +112,11 @@ mendelian_intron_sequences_results$frame <- mendelian_intron_sequences_results$l
 #How many Mendelian gene introns were extracted from RefSeq
 total_IR <- nrow(mendelian_intron_sequences_results)
 
-#How many Mendelian gene introns are either out-of-frame or have at least 1 stop codon in every window?
-out_of_frame_IR <- nrow(mendelian_intron_sequences_results[frame == FALSE |
+#How many Mendelian gene introns are out-of-frame and have at least 1 stop codon in every window?
+out_of_frame_IR <- nrow(mendelian_intron_sequences_results[frame == FALSE])
+
+#How many Mendelian gene introns are either in-frame and have at least 1 stop codon in every window?
+in_frame_ptc_IR <- nrow(mendelian_intron_sequences_results[frame == TRUE &
                                                                (window1_no_ptcs != 0 &
                                                                 window2_no_ptcs != 0 &
                                                                 window3_no_ptcs != 0)])
@@ -127,28 +130,31 @@ in_frame_IR <- nrow(mendelian_intron_sequences_results[frame == TRUE &
 
 ```{r, warning = F}
 #Collate data for graphing
-results <- data.table("Legend" = c("PTC in each reading frame or IR causes a frameshift","No PTC in at least one reading frame and IR is in-frame"),
-                      "values" = c(out_of_frame_IR,in_frame_IR),
+results <- data.table("Legend" = c("IR causes a frameshift",
+                                   "IR is in-frame with PTC in each reading frame",
+                                   "IR is in-frame with no PTC in at least one reading frame"),
+                      "values" = c(out_of_frame_IR,in_frame_ptc_IR,in_frame_IR),
                       "pct" = c(out_of_frame_IR/total_IR,
+                                in_frame_ptc_IR/total_IR,
                                 in_frame_IR/total_IR))
+
+results$Legend <- factor(results$Legend, levels = (as.character(results$Legend)))
 
 #Create figure S5
 results %>%
-    ggplot(aes(x="", y=values, fill=Legend)) +
+    ggplot(aes(x="", y=values, fill=as.factor(Legend))) +
     geom_bar(stat="identity", width=1) +
     coord_polar("y", start=0) +
-    scale_fill_manual(values = rev(c('#e84b35','grey'))) +
+    scale_fill_manual(values = c('#e84b35','#e6735c',"grey")) +
     geom_text(aes(label = scales::percent(pct)),
-               position = position_stack(vjust = 0.5), color = c("white","transparent"), size = 6) +
-    scale_y_continuous(breaks = c(23500,48000), labels = scales::percent(results$pct)) +
+               position = position_stack(vjust = 0.5), color = c("black","black","transparent"), size = 5) +
+    scale_y_continuous(breaks = c(10000,20000,900), labels = scales::percent(results$pct)) +
     theme(axis.ticks = element_blank(),
           axis.title = element_blank(),
-          axis.text = element_text(size = 18, colour = c("transparent","black")),
+          axis.text = element_text(size = 15, colour = c("transparent","transparent","black")),
           panel.background = element_rect(fill = "white"),
           legend.title = element_text()) + 
     labs(fill=paste0("Intron Retention Consequence (n = ",total_IR,")"))
 
 ggsave('../figs/S5.pdf', width = 8, height = 3)
 ```
-
-
