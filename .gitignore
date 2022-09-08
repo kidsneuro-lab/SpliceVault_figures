@@ -11,3 +11,10 @@ src/source_variants.xlsx
 src/multiExonSkippingInfo.xlsx
 src/Supplementary Table S1.xlsx
 src/300KRNA_refseq.tsv.gz
+src/AGRF_CHX_Fibs
+src/AGRF_DMSO_Fibs
+src/GTEX_SR_Fibs
+src/GTEX_LR_Fibs
+src/GTEX_SR_Monorail_Fibs
+src/GTEX_SR_Fibs_Sample1
+src/GTEX_SR_Fibs_Sample2
