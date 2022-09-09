@@ -3,6 +3,8 @@ library(jsonlite)
 library(UpSetR)
 library(ggplot2)
 library(ggpubr)
+library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+
 
 chr_with_prefix <- paste0("chr", c(as.character(seq(1,22)), "X", "Y"))
 chr_without_prefix <- c(as.character(seq(1,22)), "X", "Y")
@@ -85,15 +87,54 @@ GTEX_SR_Fibs_Sample2_oi <- tmp_GTEX_SR_Fibs[no_of_samples >= 3 & strand %in% c(1
 
 rm(tmp_GTEX_SR_Fibs)
 
+#### GTEX_LR_Fibs ####
+
+flair_txdb <- makeTxDbFromGFF("src/GTEX_LR_Fibs/flair_filter_transcripts.gtf")
+flair_counts <- fread("src/GTEX_LR_Fibs/quantification_flair_filter.counts.txt")
+gtex_v9_meta <- fread("src/GTEX_LR_Fibs/GTEx_v9_ONT_metadata.txt")
+
+#### Flair introns reference ####
+
+flair_introns <- as.data.table(intronsByTranscript(flair_txdb, use.names = T))
+
+flair_tx <- as.data.table(unlist(transcriptsBy(flair_txdb, by = 'gene')))
+flair_tx$gene_name <- names(unlist(transcriptsBy(flair_txdb, by = 'gene')))
+
+flair_tx[, tx_id := paste(tx_name, gene_name, sep = "_")]
+
+flair_introns <- flair_tx[,.(group_name = tx_name, tx_id)][flair_introns, on = .(group_name)]
+
+#### GTEx fibs samples ####
+
+gtex_fibs_samples <- gtex_v9_meta[tissue_site_detail == 'Cells - Cultured fibroblasts', sample_id]
+flair_counts_fibs <- flair_counts[, .SD, .SDcols = c('transcript', gtex_fibs_samples)]
+flair_counts_fibs[, min_count := apply(.SD, 1, min), .SDcols = gtex_fibs_samples]
+flair_counts_fibs[, max_count := apply(.SD, 1, max), .SDcols = gtex_fibs_samples]
+
+quantile(flair_counts_fibs$min_count)
+quantile(flair_counts_fibs$max_count)
+
+#### Supplant introns with raw counts ####
+
+flair_introns <- flair_counts_fibs[,.(tx_id = transcript, max_count)][flair_introns, on = .(tx_id)]
+
+flair_introns[, tx_id := NULL]
+flair_introns[, group_name := NULL]
+flair_introns[, group := NULL]
+
+flair_introns <- flair_introns[seqnames %in% chr_with_prefix & max_count > 0]
+flair_introns <- unique(flair_introns[,.(seqnames, start, end, strand)])
+
 #### PLOTS ####
 
 #### No. of samples ####
 
-samples_count <- data.table(`Source` = c('AGRF Fibs (CHX)', 'AGRF Fibs (DMSO)', 'GTEx Fibs Set 1', 'GTEx Fibs Set 2', 'GTEx Fibs', 'GTEx Fibs (Monorail)'),
+samples_count <- data.table(`Source` = c('AGRF Fibs (CHX)', 'AGRF Fibs (DMSO)', 'GTEx Fibs Set 1', 'GTEx Fibs Set 2', 'GTEx Fibs (Long read)', 'GTEx Fibs', 'GTEx Fibs (Monorail)'),
            `No. of samples` = c(max(AGRF_CHX_Fibs_all_oi$no_of_samples),
                                 max(AGRF_DMSO_Fibs_all_oi$no_of_samples),
                                 max(GTEX_SR_Fibs_Sample1_oi$no_of_samples),
                                 max(GTEX_SR_Fibs_Sample2_oi$no_of_samples),
+                                length(gtex_fibs_samples),
                                 max(GTEX_SR_Fibs_oi$no_of_samples),
                                 max(GTEX_SR_Fibs_MR_oi$sample_count)))
 
@@ -110,12 +151,13 @@ ggsave("figs/sj_sources_plot1.svg", plot1, width = 9, height = 7)
 sj_list <- list(`AGRF Fibs (CHX), n = 7` = AGRF_CHX_Fibs_all_oi[,paste(chr, sj_start, sj_end, sep = "-")],
                 `AGRF Fibs (DMSO), n = 7` = AGRF_DMSO_Fibs_all_oi[,paste(chr, sj_start, sj_end, sep = "-")],
                 `GTEx Fibs Set 1, n = 7` = GTEX_SR_Fibs_Sample1_oi[,paste(chr, sj_start, sj_end, sep = "-")],
-                `GTEx Fibs Set 2, n = 7` = GTEX_SR_Fibs_Sample2_oi[,paste(chr, sj_start, sj_end, sep = "-")])
+                `GTEx Fibs Set 2, n = 7` = GTEX_SR_Fibs_Sample2_oi[,paste(chr, sj_start, sj_end, sep = "-")],
+                `GTEx Fibs (Long read), n = 22` = flair_introns[,paste(seqnames, start, end, sep = "-")])
 
 plot2 <- upset(fromList(sj_list), order.by = "freq", point.size = 3.5, line.size = 2, text.scale = c(1.1, 1.1, 1, 1, 1.2, 1.1),
       mainbar.y.label = "Splice junctions intersection", sets.x.label = "Source of Splice junctions")
 
-svg("figs/sj_sources_plot2.svg", width = 10, height = 7)
+svg("figs/sj_sources_plot2.svg", width = 14, height = 7)
 plot2
 dev.off()
 
@@ -131,7 +173,8 @@ dev.off()
 
 sj_list3 <- list(`GTEx Fibs, n = 504` = GTEX_SR_Fibs_oi[,paste(chr, sj_start, sj_end, sep = "-")],
                  `GTEx Fibs Set 1, n = 7` = GTEX_SR_Fibs_Sample1_oi[,paste(chr, sj_start, sj_end, sep = "-")],
-                 `GTEx Fibs Set 2, n = 7` = GTEX_SR_Fibs_Sample2_oi[,paste(chr, sj_start, sj_end, sep = "-")])
+                 `GTEx Fibs Set 2, n = 7` = GTEX_SR_Fibs_Sample2_oi[,paste(chr, sj_start, sj_end, sep = "-")],
+                 `GTEx Fibs (Long read), n = 22` = flair_introns[,paste(seqnames, start, end, sep = "-")])
 
 plot_data <- data.table(`Source` = names(sj_list),
                         `No. of splice junctions` = unlist(lapply(sj_list, length)))
@@ -143,5 +186,5 @@ plot4 <- ggplot(plot_data) +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = 'Source', title = 'No. of splice junctions detected for Fibroblast samples')
 
-ggsave("figs/sj_sources_plot4.svg", plot4, width = 6, height = 7)
+ggsave("figs/sj_sources_plot4.svg", plot4, width = 8, height = 7)
 
