@@ -162,7 +162,7 @@ plot2
 dev.off()
 
 sj_list2 <- list(`GTEx Fibs, n = 504` = GTEX_SR_Fibs_oi[,paste(chr, sj_start, sj_end, sep = "-")],
-                 `GTEx Fibs (Monorail), n = 520` = GTEX_SR_Fibs_MR_oi[,paste(chromosome, sj_start, sj_end, sep = "-")])
+                 `GTEx Fibs (Monorail), n = 504` = GTEX_SR_Fibs_MR_oi[,paste(chromosome, sj_start, sj_end, sep = "-")])
  
 plot3 <- upset(fromList(sj_list2), order.by = "freq", point.size = 3.5, line.size = 2, text.scale = c(1.1, 1.1, 1, 1, 1.2, 1.1),
                mainbar.y.label = "Splice junctions intersection", sets.x.label = "Source of Splice junctions")
