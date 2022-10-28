@@ -146,7 +146,7 @@ plot1 <- ggplot(samples_count) +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = 'Source', title = 'No. of samples')
 
-ggsave("figs/sj_sources_plot1.svg", plot1, width = 9, height = 7)
+ggsave("figs/sj_sources_plot1.pdf", plot1, width = 9, height = 7, device = "pdf")
 
 sj_list <- list(`AGRF Fibs (CHX), n = 7` = AGRF_CHX_Fibs_all_oi[,paste(chr, sj_start, sj_end, sep = "-")],
                 `AGRF Fibs (DMSO), n = 7` = AGRF_DMSO_Fibs_all_oi[,paste(chr, sj_start, sj_end, sep = "-")],
@@ -157,7 +157,7 @@ sj_list <- list(`AGRF Fibs (CHX), n = 7` = AGRF_CHX_Fibs_all_oi[,paste(chr, sj_s
 plot2 <- upset(fromList(sj_list), order.by = "freq", point.size = 3.5, line.size = 2, text.scale = c(1.1, 1.1, 1, 1, 1.2, 1.1),
       mainbar.y.label = "Splice junctions intersection", sets.x.label = "Source of Splice junctions")
 
-svg("figs/sj_sources_plot2.svg", width = 14, height = 7)
+pdf("figs/sj_sources_plot2.pdf", width = 14, height = 7)
 plot2
 dev.off()
 
@@ -167,7 +167,7 @@ sj_list2 <- list(`GTEx Fibs, n = 504` = GTEX_SR_Fibs_oi[,paste(chr, sj_start, sj
 plot3 <- upset(fromList(sj_list2), order.by = "freq", point.size = 3.5, line.size = 2, text.scale = c(1.5, 1.5, 1.4, 1.4, 1.7, 1.6),
                mainbar.y.label = "Splice junctions intersection", sets.x.label = "Source of Splice junctions")
 
-svg("figs/sj_sources_plot3.svg", width = 10, height = 7)
+pdf("figs/sj_sources_plot3.pdf", width = 10, height = 7)
 plot3
 dev.off()
 
@@ -186,5 +186,5 @@ plot4 <- ggplot(plot_data) +
   theme(axis.text.x = element_text(angle = 45, vjust = 0.5), plot.title = element_text(hjust = 0.5)) +
   labs(x = 'Source', title = 'No. of splice junctions detected for Fibroblast samples')
 
-ggsave("figs/sj_sources_plot4.svg", plot4, width = 8, height = 7)
+ggsave("figs/sj_sources_plot4.pdf", plot4, width = 8, height = 7, device = "pdf")
 
