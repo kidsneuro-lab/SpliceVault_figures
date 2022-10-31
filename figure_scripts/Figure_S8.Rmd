@@ -11,8 +11,8 @@ library(ggplot2)
 
 ```{r}
 #Load protein coding gene coordinates from Ensembl(104) and Mendelian gene list
-Ensembl_Genes <- fread("../ref/ensembl_introns_exons.tsv", sep = "\t")
-Mendeliome_Genes <- fread("../ref/clinically_relevant_genes_Sep2021.tsv.txt", sep = "\t")
+Ensembl_Genes <- fread("../ref/ensembl_introns_exons_hg38.tsv.gz", sep = "\t")
+Mendeliome_Genes <- fread("../ref/clinically_relevant_genes_Sep2021.tsv", sep = "\t")
 
 
 #Initialise inverted %in% function
@@ -43,7 +43,7 @@ fwrite(mend_intr_bed_uniq, "../src/mend_intron.bed", sep="\t", col.names = F)
 #Extract sequences for Mendeliome introns from Homo_sapiens_assembly38.fasta
 #Source: "https://storage.cloud.google.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta"
 
-bedtools getfasta -fi Homo_sapiens_assembly38.fasta -bed mend_intron.bed -fo all_mendelian_gene_introns_sequences.tsv -name -tab -s
+bedtools getfasta -fi Homo_sapiens_assembly38.fasta -bed src/mend_intron.bed -fo src/all_mendelian_gene_introns_sequences.tsv -name -tab -s
 ```
 
 ```{r}
@@ -69,14 +69,25 @@ window3_no_ptcs <- c()
 window3_all_ptcs <- c()
 
 
+#Capture and exclude short introns under 26bp (the smallest human introns)
+short_introns <- c()
+short_introns_index <- 1
+
+
 #Analyse each intron sequence for premature termination codons
 for(sequence in 1:nrow(mendelian_intron_sequences)){
     
     #Calculate intron length
     intron_length[sequence] <- str_length(mendelian_intron_sequences[[sequence,2]])
     
-    #Remove introns under 26bp (the smallest human introns)
-    if(intron_length[sequence] > 26){
+    #Highlight introns under 26bp (the smallest human introns)
+    if(intron_length[sequence] < 26){
+        short_introns[short_introns_index] <- sequence
+        short_introns_index <- short_introns_index + 1
+    }
+    
+    #For introns >26bp (the smallest human introns)
+    if(intron_length[sequence] >= 26){
         #Identify PTC position and number in reading frame 1
         window1ptc_pos <- which(substring(mendelian_intron_sequences[[sequence,2]],seq(1,str_length(mendelian_intron_sequences[[sequence,2]])-3,3),seq(3,str_length(mendelian_intron_sequences[[sequence,2]]),3)) %in% c("TAG","TAA","TGA"))*3
         window1ptc[sequence] <- min(window1ptc_pos)
@@ -106,6 +117,10 @@ names(mendelian_intron_sequences_results) <- c("intron","length","window1ptc","w
 
 #Calculate reading frame preservation with intron retention
 mendelian_intron_sequences_results$frame <- mendelian_intron_sequences_results$length %% 3 == 0
+
+
+#Remove short-introns
+mendelian_intron_sequences_results <- mendelian_intron_sequences_results[!short_introns]
 ```
 
 ```{r}
@@ -140,7 +155,7 @@ results <- data.table("Legend" = c("IR causes a frameshift",
 
 results$Legend <- factor(results$Legend, levels = (as.character(results$Legend)))
 
-#Create figure S5
+#Create figure S8
 results %>%
     ggplot(aes(x="", y=values, fill=as.factor(Legend))) +
     geom_bar(stat="identity", width=1) +
@@ -156,5 +171,5 @@ results %>%
           legend.title = element_text()) + 
     labs(fill=paste0("Intron Retention Consequence (n = ",total_IR,")"))
 
-ggsave('../figs/S5.pdf', width = 8, height = 3)
+ggsave('../figs/S8.pdf', width = 8, height = 3)
 ```
