@@ -167,6 +167,15 @@ sj_list2 <- list(`GTEx Fibs, n = 504` = GTEX_SR_Fibs_oi[,paste(chr, sj_start, sj
 plot3 <- upset(fromList(sj_list2), order.by = "freq", point.size = 3.5, line.size = 2, text.scale = c(1.5, 1.5, 1.4, 1.4, 1.7, 1.6),
                mainbar.y.label = "Splice junctions intersection", sets.x.label = "Source of Splice junctions")
 
+plot3_data <- as.data.table(fromList(sj_list2))
+plot3_data_tbl <- as.data.table(table(plot3_data))
+setnames(plot3_data_tbl, "N", "No. of Splice Junctions")
+plot3_data_tbl[,`GTEx Fibs, n = 504` := ifelse(`GTEx Fibs, n = 504` == 0, "N", "Y")]
+plot3_data_tbl[,`GTEx Fibs (Monorail), n = 504` := ifelse(`GTEx Fibs (Monorail), n = 504` == 0, "N", "Y")]
+colnames(plot3_data_tbl)[1:2] <- paste0("In ", colnames(plot3_data_tbl)[1:2], "?")
+
+fwrite(plot3_data_tbl, "figs/sj_sources_plot3_data.tsv", sep = "\t", row.names = F)
+
 pdf("figs/sj_sources_plot3.pdf", width = 10, height = 7)
 plot3
 dev.off()
@@ -187,4 +196,6 @@ plot4 <- ggplot(plot_data) +
   labs(x = 'Source', title = 'No. of splice junctions detected for Fibroblast samples')
 
 ggsave("figs/sj_sources_plot4.pdf", plot4, width = 8, height = 7, device = "pdf")
+
+fwrite(plot_data, "figs/sj_sources_plot4_data.tsv", sep = "\t", row.names = F)
 
