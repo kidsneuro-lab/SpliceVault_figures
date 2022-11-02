@@ -8,266 +8,73 @@ output:
 library(data.table)
 library(tidyverse)
 theme_set(theme_classic())
-library(eulerr)
-#options(scipen=999)
-options(scipen=0, digits=7)
-library(ggsci)
-library(ggpubr)
-library(UpSetR)
-library(bigrquery)
-library(DBI)
-library(readxl)
-
+options(scipen=999)
+library(openxlsx)
+wb <- createWorkbook()
 ```
 
 
 ```{r}
-splicevault_ts_dg <- fread('../ref/300k_tissue_samples.tsv.gz')
-splicevault_ts_dg <- unique(splicevault_ts_dg)
-setnames(splicevault_ts_dg, old = 'TISSUE', new = 'tissue')
-splicevault_ts_dg <- splicevault_ts_dg[splicing_event_class != 'normal splicing']
-
-setorder(splicevault_ts_dg, splice_site_pos, tx_id, tissue, -tissue_sample_count)
-splicevault_ts_dg[(skipped_exons_count <= 2 |abs(cryptic_distance) <= 600),
-         missplicing_event_rank_simple_ts := rowid(splice_site_pos), by = list(tx_id, tissue)]
-
-setorder(splicevault_ts_dg, splice_site_pos, tx_id, tissue, -gtex_sample_count)
-splicevault_ts_dg[(skipped_exons_count <= 2 |abs(cryptic_distance) <= 600),
-         gtex_event_rank_simple := rowid(splice_site_pos), by = list(tx_id, tissue)]
-
-gtex_scounts <- fread('../ref/gtexv2_samples.tsv')
-
-#order factor by number of samples in each tissue
-splicevault_ts_dg <- splicevault_ts_dg[gtex_scounts, on = .(tissue)]
-splicevault_ts_dg[, tissue := factor(tissue, levels = gtex_scounts$tissue)]
-```
-
-
-# S4A: per tissue top 10 correlation all mendelian disease genes
-
-```{r}
-A <- splicevault_ts_dg %>%
-  filter(tissue_samples > 100 & !is.na(gtex_event_rank_simple)) %>%
-  group_by(gtex_event_rank_simple, tissue, missplicing_event_rank_simple_ts) %>% tally() %>%
-  ungroup() %>% dplyr::group_by(gtex_event_rank_simple, tissue) %>%
-  dplyr::mutate(sum = sum(n), perc = 100 * (n / sum)) %>%
-  filter(gtex_event_rank_simple <= 10 & gtex_event_rank_simple == missplicing_event_rank_simple_ts) %>%
-  ggplot(aes(x = factor(gtex_event_rank_simple), y = tissue, fill = perc)) +
-  geom_tile() +
-  scale_fill_gradientn(colours = colorspace::terrain_hcl(5, rev = 1)) +
-  xlab('Event Rank in GTEx overall') + ylab('Tissue')  +
-  labs(fill = '% of events\nwith same rank\nin this tissue') + 
-  scale_y_discrete(limits = rev(levels(droplevels(splicevault_ts_dg[tissue_samples > 100]$tissue))))+
-  annotate("text", x = 11.5, y = nrow(gtex_scounts[tissue_samples > 100]) + 1, 
-           label = 'samples (n)', size = 3)+
-  annotate("text", x = 11.5, y = 1:nrow(gtex_scounts[tissue_samples > 100]) , 
-           label = as.character(rev(gtex_scounts[tissue_samples > 100, tissue_samples])), size = 3) +
-  coord_cartesian(clip = 'off')+
-  theme(legend.position="right",
-        plot.margin = unit(c(1,3,1,1), "lines"))
-
-```
-
-
-
-# S4B: GTEx vs SRA top 10 correlation all mendelian disease genes
-
-
-
-```{r}
-splicevault_dg <- fread('../ref/splicevault_dg.tsv.gz')
-splicevault_dg <- splicevault_dg[splicing_event_class != 'normal splicing']
-setorder(splicevault_dg, splice_site_pos, tx_id, -sample_count)
-
-setDT(splicevault_dg)[(skipped_exons_count <= 2 |abs(cryptic_distance) <= 600), 
-                         gtex_rank_simple := frankv(gtex_sample_count, ties.method = "first", order = -1),
-                         by = .(splice_site_pos, tx_id)]
-setDT(splicevault_dg)[(skipped_exons_count <= 2 |abs(cryptic_distance) <= 600), 
-                         sra_rank_simple := frankv(sra_sample_count, ties.method = "first", order = -1),
-                         by = .(splice_site_pos, tx_id)]
-
-```
-
-```{r}
-conc_plot <- splicevault_dg %>%
-  group_by(sra_rank_simple, gtex_rank_simple) %>%
-  tally() %>%
-  ungroup() %>% 
-  dplyr::group_by(gtex_rank_simple) %>% 
-  dplyr::mutate(sum = sum(n), perc = n / sum(n)) %>%
-  filter(gtex_rank_simple <= 10 & sra_rank_simple <= 10)
-
-B <- ggplot(conc_plot, 
-            aes(as.factor(gtex_rank_simple), as.factor(sra_rank_simple), fill= perc)) + 
-  geom_tile() +
-  scale_fill_gradientn(colours = colorspace::terrain_hcl(5, rev = 1)) +
-  xlab('Event Rank in GTEx') + ylab('Event Rank in SRA') +
-  geom_segment(aes(x = 4.5, xend = 4.5,y = -Inf,  yend = 4.5), linetype = 'dashed') +
-  geom_segment(aes(x = -Inf, xend = 4.5,y = 4.5,  yend = 4.5), linetype = 'dashed')+
-  geom_text(data=subset(conc_plot, gtex_rank_simple == sra_rank_simple),
-            aes(as.factor(gtex_rank_simple), as.factor(sra_rank_simple),label= scales::percent(perc, accuracy = 1)))+
-  labs(fill = 'Proportion of Events') +
-  theme(plot.margin = margin(1.5,0,2,0.5, "cm"))
-
-
-```
-
-
-# S4C: GTEx vs SRA spearman correlation our 88 variants
-
-```{r}
-
 merged_data <- fread('../ref/vars_events_prediction.tsv')
-sv <- merged_data[!is.na(missplicing_event_rank_simple)& 
-                         variant_category == 'ours']
-
-C <- sv  %>%
-  filter(sra_sample_count > 0 & gtex_sample_count > 0) %>%
-  ggplot(aes(x = gtex_sample_count, y = sra_sample_count)) + 
-  geom_point(size = 0.8, alpha = 0.8, color = 'black',shape=16) +
-  scale_x_log10() + scale_y_log10() + 
-  stat_cor(method = 'spearman') +
-  xlab('GTEx sample count') + ylab('SRA sample count')+
-  theme(plot.margin = margin(1,1,1,1, "cm"))
-  
-# get spearman correlation for all mendelian disease genes
-# cor.test(splicevault_dg[gtex_sample_count > 0 & sra_sample_count > 0,gtex_sample_count],
-#          splicevault_dg[gtex_sample_count > 0 & sra_sample_count > 0,sra_sample_count], 
-#                                    method='spearman', exact = FALSE)
 ```
 
 
-# S4D: correlation: number of mis-splicing events seen vs number of samples in tissue type in GTEx
-```{r}
-# x axis number of samples
-# y axis number of (simple) mis-splicing events seenin total across mendelian disease genes
-scatter <- splicevault_ts_dg[!is.na(missplicing_event_rank_simple_ts), 
-                             .(n_events = .N), by = 
-                               .(tissue, tissue_samples)]
-D <- ggscatter(scatter,
-          x='tissue_samples',
-          y='n_events',
-          size = 1,
-          cor.coef = T, 
-          cor.method = 'spearman',
-          label = 'tissue',
-          font.label = c(9,'plain'),
-          repel = T,
-          xlab = "No. of samples in GTEx",
-          ylab = "No. of Missplicing events") +
-  scale_y_continuous(labels = scales::comma)+
-  theme(plot.margin= margin(0,2,0,1, "cm"))
-
-```
-
-# S4E: precision-recall curve on variants tested in muscle for GTEx muscle vs 300K-RNA
+# Figure S4: plot of # SAI predictions above 0.001 per variant
 
 ```{r}
-var_info <- read_excel('../src/source_variants.xlsx')
-setDT(var_info)
+case_numbers <- unique(merged_data[variant_category == 'ours', .(curated_record_id)]) %>%
+  mutate(case_number = 1:88)
 
-merged_data <- var_info[, .(curated_record_id = `Curated record ID`, tissue = Tissue)][merged_data, on = .(curated_record_id)]
-muscle_vars <- merged_data[grepl('Muscle', tissue), ]
+preds <- fread('../ref/sai_preds_complete.csv')
+preds <- unique(merged_data[, .(curated_record_id, variant_category)])[preds, on = .(curated_record_id)]
+preds <- case_numbers[preds, on = .(curated_record_id)]
+preds <- preds[variant_category == 'ours']
 
-# splicevault events
-muscle_vars <- muscle_vars[splicing_event_class != 'intron retention' & !is.na(missplicing_event_rank_simple)]
+convert <- data.frame(splicing_event_class = unique(preds$splicing_event_class),
+                      class_lab = c('other', 'other', 'exon skipping', 
+                                    'cryptic activation', 'mis-splicing', 
+                                    'intron retention', 'cryptic activation',
+                                   'other', 'other'))
 
 
-# add sample count and rank in GTEx muscle - 68 events in GTEx muslce
-splicevault_ts_fg <- fread('../ref/300k_var_tx_tissue_samples.tsv.gz')
-splicevault_ts_fg <- splicevault_ts_fg[splicing_event_class != 'normal splicing']
-setorder(splicevault_ts_fg, splice_site_pos, tx_id, TISSUE, -tissue_sample_count, -tissue_max_junc_count)
-setDT(splicevault_ts_fg)[(skipped_exons_count <= 2 |abs(cryptic_distance) <= 600), 
-                         missplicing_event_rank_simple_ts := frankv(tissue_sample_count, 
-                                                                    ties.method = "first", 
-                                                                    order = -1),
-                         by = .( splice_site_pos, tx_id, TISSUE)]
-setnames(splicevault_ts_fg, old = 'TISSUE', new = 'tissue')
+plotdat = preds %>% 
+  left_join(convert, by = 'splicing_event_class') %>%
+  filter(splicing_event_class != 'mis-splicing') %>%
+  group_by(case_number,class_lab) %>%
+  tally() %>% ungroup() %>% group_by(case_number) %>%
+  mutate(total_preds = sum(n)) %>% arrange(total_preds) %>% 
+  ungroup() %>%
+  mutate(class_lab = factor(class_lab, levels = c('other', 'intron retention', 'exon skipping', 'cryptic activation'))) 
 
-splicevault_vars_muscle <- splicevault_ts_fg[splice_site_pos %in% muscle_vars$splice_site_pos & 
-                                                    tissue == 'Muscle - Skeletal' & 
-                                                    !is.na(missplicing_event_rank_simple_ts), 
-                                                  .(splice_site_pos, tx_id, skipped_exons_id, cryptic_distance, 
-                                                    muscle_rank = missplicing_event_rank_simple_ts,
-                                                    muscle_sample_count = tissue_sample_count)]
+plotdat %>%
+  ggplot(aes(x = factor(case_number), y = n, fill = class_lab)) +
+  geom_bar(stat = 'identity', width = 0.5) +
+  scale_y_continuous(breaks = seq(0,110,10), expand = c(0,1)) +
+  scale_fill_manual(values = rev(c('#e84b35','#4cbbd5','#00a086', 'grey')))+
+  theme(panel.grid.major.y = element_line(colour = "lightgrey", size = 0.1),
+        panel.grid.minor.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = 'bottom') +
+  ylab('Number of SpliceAI \u0394-scores \u2265 0.001') + xlab('Case Number') + labs(fill = '') 
 
-# join
-muscle_vars <- splicevault_vars_muscle[muscle_vars, on = .(splice_site_pos, tx_id, skipped_exons_id, cryptic_distance)]
-muscle_vars[is.na(muscle_sample_count), muscle_sample_count := 0]
+ggsave('../figs/S4.pdf', height = 3, width = 13)
+
+addWorksheet(wb, "figure_E4")
+writeData(wb, "figure_E4", as.data.frame(plotdat), startRow = 1, startCol = 1)
+saveWorkbook(wb, file = "../figs/source_data/source_data_extended_data_fig_4.xlsx", overwrite = TRUE)
 ```
 
 ```{r}
-cutoffs <- data.table(splicevault_rank_cutoffs = 1:10)
+table(preds$splicing_event_class)
 
-# calculating sensitivity & PPV - 300K-RNA
-cutoffs[, sv_TP := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(muscle_vars[in_rna_studies == 1 & missplicing_event_rank_simple <= x])))]
-cutoffs[, sv_FP := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(muscle_vars[in_rna_studies == 0 & missplicing_event_rank_simple <= x])))]
-cutoffs[, sv_FN := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(muscle_vars[in_rna_studies == 1 & (missplicing_event_rank_simple > x |
-                                                                is.na(missplicing_event_rank_simple))])))]
-cutoffs[, sv_sens := sv_TP / (sv_TP + sv_FN)]
-cutoffs[, sv_ppv := sv_TP / (sv_TP + sv_FP)]
-
-# calculating sensitivity & PPV - GTEX
-cutoffs[, muscle_TP := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(muscle_vars[in_rna_studies == 1 & muscle_rank <= x])))]
-cutoffs[, muscle_FP := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(muscle_vars[in_rna_studies == 0 & muscle_rank <= x])))]
-cutoffs[, muscle_FN := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(muscle_vars[in_rna_studies == 1 & (muscle_rank > x |
-                                                                is.na(muscle_rank))])))]
-cutoffs[, muscle_sens := muscle_TP / (muscle_TP + muscle_FN)]
-cutoffs[, muscle_ppv := muscle_TP / (muscle_TP + muscle_FP)]
-
+plotdat %>%
+  filter(class_lab != 'other') %>%
+  group_by(case_number) %>%
+  mutate(total = sum(n)) %>% arrange(case_number) %>%
+  arrange(-total)
 ```
-
-
-```{r}
-# plot PR curve
-plot_df <- cutoffs %>%
-  dplyr::select(-contains('TP'), -contains('FP'), -contains('FN')) %>%
-  pivot_longer(cols = c(contains('sens'), contains('ppv')) )%>%
-  separate(name, into = c('alg', 'metric'), sep = '_') %>%
-  pivot_wider(names_from = metric, values_from = value)
-setDT(plot_df)
-E <- ggplot(plot_df, aes(x = sens, y = ppv, color = alg)) +
-  geom_point() + geom_path() +
-  coord_cartesian(xlim = c(0.3,1), y = c(0,1)) +
-  xlab('Sensitivity') + ylab('Positive Predictive Value') +
-  labs(color = '')+
-  scale_x_continuous(breaks = seq(0,1,0.1))+
-  scale_y_continuous(breaks = seq(0,1,0.1)) +
-  theme(panel.grid.major = element_line(colour = "lightgrey", size = 0.1)) +
-  scale_color_nejm(labels = c('GTEx Muscle', '300K-RNA'))+
-  geom_text(data=plot_df[alg == 'sv'][c(1:4)],aes(x=sens + 0.05,y=ppv + 0.05,label=splicevault_rank_cutoffs), color='#2e72af')+
-  geom_text(data=plot_df[alg == 'muscle'][c(1:4)],aes(x=sens - 0.05,y=ppv - 0.05,label=splicevault_rank_cutoffs), color='#ae4631') +
-  theme(plot.margin = margin(1,1,2,1, "cm"))
-```
-
-
-
-
-# arranging panels
-
-```{r}
-left <- ggarrange(A,D, ncol = 1, heights = c(2,1))
-right <- ggarrange(B,C,E, ncol =  1)
-ggarrange(left,right,nrow = 1, widths = c(1.5,1))
-ggsave('../figs/S4.pdf', width = 11, height = 11.5, device = cairo_pdf)
-```
-
-
-
-
-
-
-
-
-
-
-
 
 
 

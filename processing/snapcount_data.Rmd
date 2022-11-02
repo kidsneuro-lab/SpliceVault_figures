@@ -1,0 +1,151 @@
+---
+title: "R Notebook"
+output: 
+---
+
+```{r}
+library(data.table)
+library(tidyverse)
+library(snapcount)
+```
+
+```{r}
+splicevault <- fread('../src/300KRNA_filt.tsv.gz')
+
+merged_data <- fread('../ref/vars_events_prediction.tsv')
+
+df_2 <- merged_data[splicing_event_class != 'intron retention' & 
+                         variant_category == 'ours' &
+                         (in_rna_studies == 1 | missplicing_event_rank_simple <= 4)]
+
+df_2 = splicevault[df_2, on = c(intersect(names(df_2), names(splicevault)))]
+
+sra_juncs = c(df_2[in_sra == 1 & strand == '+', paste0('chr', chr, ':', donor_pos, '-', acceptor_pos)],
+              df_2[in_sra == 1 & strand == '-', paste0('chr', chr, ':', acceptor_pos, '-', donor_pos)])
+
+# qb <- QueryBuilder(compilation = "srav3h", regions = sra_juncs)
+# qb <- set_coordinate_modifier(qb, Coordinates$Exact)
+# sra_sampleinfo = query_jx(qb, return_rse = FALSE)
+# fwrite(sra_sampleinfo, '../ref/SRA_snapcount.tsv.gz')
+sra_sampleinfo = fread('../ref/SRA_snapcount.tsv.gz')
+
+
+# sra_samples_unnest = sra_sampleinfo %>%
+#   select(-left_annotated, -right_annotated) %>%
+#   mutate(samples = strsplit(samples, split = '\\,')) %>%
+#   unnest(samples) %>% filter(samples != '') %>%
+#   separate(samples, into = c('sample', 'reads'), sep = '\\:', convert = TRUE) %>%
+#   mutate(source = 'SRA')
+# 
+# fwrite(sra_samples_unnest, '../ref/SRA_snapcount_unnested.tsv.gz')
+sra_samples_unnest = fread('../ref/SRA_snapcount_unnested.tsv.gz')
+
+# normal splicing
+```
+
+
+
+```{r}
+
+# gtex_juncs = c(df_2[in_gtex == 1 & strand == '+', paste0('chr', chr, ':', donor_pos, '-', acceptor_pos)],
+#               df_2[in_gtex == 1 & strand == '-', paste0('chr', chr, ':', acceptor_pos, '-', donor_pos)])
+# 
+# qb <- QueryBuilder(compilation = "gtexv2", regions = gtex_juncs)
+# qb <- set_coordinate_modifier(qb, Coordinates$Exact)
+# gtex_sampleinfo = query_jx(qb, return_rse = FALSE)
+# fwrite(gtex_sampleinfo, '../ref/GTEx_snapcount.tsv.gz')
+gtex_sampleinfo = fread('../ref/GTEx_snapcount.tsv.gz')
+# 
+# gtex_samples_unnest = gtex_sampleinfo %>%
+#   select(-left_annotated, -right_annotated) %>%
+#   mutate(samples = strsplit(samples, split = '\\,')) %>%
+#   unnest(samples) %>% filter(samples != '') %>%
+#   separate(samples, into = c('sample', 'reads'), sep = '\\:', convert = TRUE) %>%
+#   mutate(source = 'GTEx')
+# fwrite(gtex_samples_unnest, '../ref/GTEx_snapcount_unnested.tsv.gz')
+gtex_samples_unnest = fread('../ref/GTEx_snapcount_unnested.tsv.gz')
+
+
+```
+
+
+```{r}
+all_samples_unnest = rbind(sra_samples_unnest, gtex_samples_unnest)
+setDT(all_samples_unnest)
+df_2[strand == '+', `:=` (start = donor_pos, end = acceptor_pos)]
+df_2[strand == '-', `:=` (start = acceptor_pos, end = donor_pos)]
+all_samples_unnest[, chr := gsub('chr', '', chromosome)]
+
+all_samples_unnest = all_samples_unnest[df_2, on = .(chr, start, end)]
+
+fwrite(all_samples_unnest, '../ref/allSamples_snapcount_unnested.tsv.gz')
+```
+
+
+```{r}
+# normal splicing
+splicevault_ns <- fread('../ref/300KRNA_ns.tsv.gz')
+splicevault_ns = splicevault_ns[, .(gene_name, tx_id, splice_site_pos, splicing_event_class, in_gtex, in_sra, 
+                   gtex_sample_count, sra_sample_count, ns_sample_count = sample_count, strand, chr, donor_pos, acceptor_pos, curated_record_id)]
+
+df_ns = distinct(df_2[, .(curated_record_id, ns_sample_count, gene_name, tx_id, splice_site_pos, strand, chr, variant_id)])
+df_ns = splicevault_ns[df_ns, on = intersect(names(df_ns), names(splicevault_ns))]
+
+# sra_juncs_ns = c(df_ns[in_sra == 1 & strand == '+', paste0('chr', chr, ':', donor_pos, '-', acceptor_pos)],
+#               df_ns[in_sra == 1 & strand == '-', paste0('chr', chr, ':', acceptor_pos, '-', donor_pos)])
+# 
+# qb <- QueryBuilder(compilation = "srav3h", regions = sra_juncs_ns)
+# qb <- set_coordinate_modifier(qb, Coordinates$Exact)
+# sra_sampleinfo_ns = query_jx(qb, return_rse = FALSE)
+# fwrite(sra_sampleinfo_ns, '../ref/SRA_snapcount_ns.tsv.gz')
+# sra_sampleinfo_ns = fread('../ref/SRA_snapcount_ns.tsv.gz')
+# 
+# sra_ns_samples_unnest = sra_sampleinfo_ns %>%
+#   select(-left_annotated, -right_annotated) %>%
+#   mutate(samples = strsplit(samples, split = '\\,')) %>%
+#   unnest(samples) %>% filter(samples != '') %>%
+#   separate(samples, into = c('sample', 'reads'), sep = '\\:', convert = TRUE) %>%
+#   mutate(source = 'SRA')
+# 
+# fwrite(sra_ns_samples_unnest, '../ref/SRA_snapcount_unnested_ns.tsv.gz')
+sra_ns_samples_unnest = fread('../ref/SRA_snapcount_unnested_ns.tsv.gz')
+```
+
+```{r}
+# gtex_juncs_ns = c(df_ns[in_gtex == 1 & strand == '+', paste0('chr', chr, ':', donor_pos, '-', acceptor_pos)],
+#               df_ns[in_gtex == 1 & strand == '-', paste0('chr', chr, ':', acceptor_pos, '-', donor_pos)])
+# 
+# qb <- QueryBuilder(compilation = "gtexv2", regions = gtex_juncs_ns)
+# qb <- set_coordinate_modifier(qb, Coordinates$Exact)
+# gtex_sampleinfo_ns = query_jx(qb, return_rse = FALSE)
+# fwrite(gtex_sampleinfo_ns, '../ref/GTEx_snapcount_ns.tsv.gz')
+# gtex_sampleinfo_ns = fread('../ref/GTEx_snapcount_ns.tsv.gz')
+# 
+# 
+# gtex_ns_samples_unnest = gtex_sampleinfo_ns %>%
+#   select(-left_annotated, -right_annotated) %>%
+#   mutate(samples = strsplit(samples, split = '\\,')) %>%
+#   unnest(samples) %>% filter(samples != '') %>%
+#   separate(samples, into = c('sample', 'reads'), sep = '\\:', convert = TRUE) %>%
+#   mutate(source = 'GTEx')
+# 
+# fwrite(gtex_ns_samples_unnest, '../ref/GTEx_snapcount_unnested_ns.tsv.gz')
+gtex_ns_samples_unnest = fread('../ref/GTEx_snapcount_unnested_ns.tsv.gz')
+```
+
+```{r}
+all_samples_ns_unnest = rbind(sra_ns_samples_unnest, gtex_ns_samples_unnest)
+setDT(all_samples_ns_unnest)
+df_ns[strand == '+', `:=` (start = donor_pos, end = acceptor_pos)]
+df_ns[strand == '-', `:=` (start = acceptor_pos, end = donor_pos)]
+all_samples_ns_unnest[, chr := gsub('chr', '', chromosome)]
+
+
+all_samples_ns_unnest = all_samples_ns_unnest[df_ns, on = .(chr, start, end)]
+
+```
+
+```{r}
+fwrite(all_samples_ns_unnest, '../ref/allSamples_snapcount_unnested_ns.tsv.gz')
+```
+

@@ -8,15 +8,12 @@ output:
 library(data.table)
 library(tidyverse)
 theme_set(theme_classic())
-library(eulerr)
 options(scipen=999)
-library(ggsci)
-library(ggpubr)
 library(UpSetR)
-library(bigrquery)
-library(DBI)
 library(cowplot)
-library(readxl)
+library(openxlsx)
+wb <- createWorkbook()
+library(ggpubr)
 ```
 
 ```{r}
@@ -55,12 +52,14 @@ splicevault_ts_fg[, tissue := factor(tissue, levels = gtex_scounts$tissue)]
 
 
 ```{r}
-A <- splicevault_ts_fg %>%
+plotdatA = splicevault_ts_fg %>%
   filter(tissue_samples > 100 & !is.na(gtex_event_rank_simple)) %>%
   dplyr::group_by(gtex_event_rank_simple, tissue, missplicing_event_rank_simple_ts) %>% dplyr::tally() %>%
   ungroup() %>% dplyr::group_by(gtex_event_rank_simple, tissue) %>%
   dplyr::mutate(sum = sum(n), perc = 100 * (n / sum)) %>%
-  filter(gtex_event_rank_simple <= 10 & gtex_event_rank_simple == missplicing_event_rank_simple_ts) %>%
+  filter(gtex_event_rank_simple <= 10 & gtex_event_rank_simple == missplicing_event_rank_simple_ts)
+
+A <- plotdatA %>%
   ggplot(aes(x = factor(gtex_event_rank_simple), y = tissue, fill = perc)) +
   geom_tile() +
   scale_fill_gradientn(colours = colorspace::terrain_hcl(5, rev = 1)) +
@@ -74,6 +73,10 @@ A <- splicevault_ts_fg %>%
   coord_cartesian(clip = 'off')+
   theme(legend.position="right",
         plot.margin = unit(c(1,3,1,1), "lines"))
+
+
+addWorksheet(wb, "figure_3A")
+writeData(wb, "figure_3A", as.data.frame(plotdatA), startRow = 1, startCol = 1)
 
 ```
 
@@ -109,6 +112,10 @@ B <- ggplot(conc_plot,
             aes(as.factor(gtex_rank), as.factor(sra_rank),label= scales::percent(perc, accuracy = 1)))+
   labs(fill = 'Proportion of Events') +
   theme(plot.margin = margin(1.5,0,1.5,1.5, "cm"))
+
+addWorksheet(wb, "figure_3B")
+writeData(wb, "figure_3B", as.data.frame(conc_plot), startRow = 1, startCol = 1)
+
 ```
 
 
@@ -116,15 +123,18 @@ B <- ggplot(conc_plot,
 
 ```{r}
 splicevault_ts_dg <- fread('../ref/300k_tissue_samples.tsv.gz')
+
 # spearman correlation of sample counts in each tissue - for all mendelian disease genes
-C <- splicevault_ts_dg[TISSUE!='', .(sj_pos_key, sj_event_key, TISSUE, tissue_sample_count, gtex_sample_count)] %>%
+plotdatC = splicevault_ts_dg[TISSUE!='', .(sj_pos_key, sj_event_key, TISSUE, tissue_sample_count, gtex_sample_count)] %>%
   dplyr::group_by(TISSUE) %>%
   dplyr::summarise(rank_corr = cor(gtex_sample_count, tissue_sample_count, 
                                    method='spearman')) %>%
   mutate(cat = ifelse(TISSUE %in% c('Muscle - Skeletal', 
                                     'Whole Blood', 
                                     'Cells - Cultured fibroblasts', 
-                                    'Cells - EBV-transformed lymphocytes'), 1, 0)) %>%
+                                    'Cells - EBV-transformed lymphocytes'), 1, 0)) 
+
+C <- plotdatC %>%
   ggplot(aes(x = rank_corr, y = TISSUE, color = factor(cat))) + geom_point(stat = 'identity')   +
   geom_segment(aes(xend=rank_corr, y = TISSUE, yend = TISSUE), x=0) +
     expand_limits(y=0) +
@@ -138,6 +148,11 @@ C <- splicevault_ts_dg[TISSUE!='', .(sj_pos_key, sj_event_key, TISSUE, tissue_sa
         panel.grid.major.y = element_blank(),
         panel.grid.minor.y = element_blank(),
         plot.margin = unit(c(1,1,4.5,0), "lines")) 
+
+
+addWorksheet(wb, "figure_3C")
+writeData(wb, "figure_3C", as.data.frame(plotdatC), startRow = 1, startCol = 1)
+
 ```
 
 
@@ -187,8 +202,16 @@ D <- cowplot::plot_grid(NULL, D$Main_bar, D$Sizes, D$Matrix,
                            rel_widths = c(2,3))
 
 
+
+addWorksheet(wb, "figure_3D")
+writeData(wb, "figure_3D", as.data.frame(fromList(listInput)), startRow = 1, startCol = 1)
+
 ```
 
+```{r}
+saveWorkbook(wb, file = "../figs/source_data/source_data_fig_3.xlsx", overwrite = TRUE)
+
+```
 
 # Putting figure 3 together
 

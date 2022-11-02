@@ -1,0 +1,423 @@
+---
+title: "R Notebook"
+output: 
+---
+
+```{r}
+library(data.table)
+library(tidyverse)
+theme_set(theme_classic())
+options(scipen=999)
+options(digits = 3, scipen = -2)
+library(ggpubr)
+
+library(openxlsx)
+wb <- createWorkbook()
+```
+
+
+```{r}
+merged_data <- fread('../ref/vars_events_prediction.tsv')
+
+df_2 <- merged_data[splicing_event_class != 'intron retention' & 
+                         variant_category == 'ours' &
+                         (in_rna_studies == 1 | missplicing_event_rank_simple <= 4)]
+```
+
+# S2A: false positives vs true positives sample count boxplot
+```{r}
+labs <- df_2 %>% 
+  mutate(in_rna_studies = ifelse(in_rna_studies == 1, 
+                                 'TP', 'FP')) %>%
+  group_by(in_rna_studies) %>% tally() %>%
+  unite(col = 'label', sep = '\nn=')
+
+
+A <- df_2 %>% 
+  mutate(in_rna_studies = ifelse(in_rna_studies == 1, 'TP', 'FP'))  %>% 
+   ggplot(aes(x = factor(in_rna_studies), y = sample_count)) + 
+  geom_boxplot(outlier.alpha = 0,  width = 0.4) + 
+  geom_jitter(size = 0.8, width = 0.2, aes(color = factor(in_rna_studies))) + 
+  scale_y_log10(breaks = c(1, 10, 100, 1000, 10000, 100000), 
+                labels = scales::comma) +
+  ylab('Sample Count') + xlab('')+ 
+  scale_color_manual(values = c('grey', '#2e72af')) +
+  labs(color = '')+
+  theme(plot.margin = unit(c(0.5,1.5,0.5,1.5), "lines"), legend.position = 'none')+
+  geom_signif(comparisons = list(c('TP', 'FP')),
+              test = "wilcox.test", 
+              map_signif_level=TRUE) + 
+  scale_x_discrete(labels = labs$label)
+
+addWorksheet(wb, "figure_E6A")
+writeData(wb, "figure_E6A", 
+          as.data.frame(df_2 %>% select(in_rna_studies, curated_record_id, missplicing_event_rank_simple, sample_count)), startRow = 1, startCol = 1)
+
+#wilcox.test(df_2[in_rna_studies == 1, sample_count], df_2[in_rna_studies == 0, sample_count], alternative = "two.sided")
+```
+# S2B: max reads false positives vs true positives
+
+```{r}
+all_samples_unnest <- fread('../ref/allSamples_snapcount_unnested.tsv.gz')
+```
+
+
+```{r}
+B_df = all_samples_unnest %>% 
+  group_by(curated_record_id, missplicing_event_rank_simple, in_rna_studies) %>%
+  dplyr::summarise(max_reads = max(reads), .groups = 'keep') %>% 
+  mutate(in_rna_studies = ifelse(in_rna_studies == 1, 'TP', 'FP')) 
+
+labs <- B_df %>%
+  group_by(in_rna_studies) %>% tally() %>%
+  unite(col = 'label', sep = '\nn=')
+
+B =  B_df%>% 
+   ggplot(aes(x = factor(in_rna_studies), y = max_reads)) + 
+  geom_boxplot(outlier.alpha = 0,  width = 0.4) + 
+  geom_jitter(size = 0.8, width = 0.2, aes(color = factor(in_rna_studies))) + 
+  scale_y_log10(breaks = c(1, 10, 100, 1000, 10000, 100000), 
+                labels = scales::comma) +
+  ylab('Max Reads') + xlab('')+ 
+  scale_color_manual(values = c('grey', '#2e72af')) +
+  labs(color = '')+
+  theme(plot.margin = unit(c(0.5,1.5,0.5,1.5), "lines"), legend.position = 'none')+
+  geom_signif(comparisons = list(c('TP', 'FP')),
+              test = "wilcox.test", 
+              map_signif_level=TRUE) + 
+  scale_x_discrete(labels = labs$label)
+
+
+
+addWorksheet(wb, "figure_E6B")
+writeData(wb, "figure_E6B", 
+          as.data.frame(B_df), startRow = 1, startCol = 1)
+
+setDT(B_df)
+# wilcox.test(B_df[in_rna_studies == 'TP', max_reads], B_df[in_rna_studies == 'FP', max_reads], alternative = "two.sided")
+```
+
+
+# S2C: mean reads false positives vs true positives
+```{r}
+C_df = all_samples_unnest %>% 
+  group_by(curated_record_id, missplicing_event_rank_simple, in_rna_studies) %>%
+  dplyr::summarise(mean_reads = mean(reads), .groups = 'keep') %>% 
+  mutate(in_rna_studies = ifelse(in_rna_studies == 1, 'TP', 'FP'))  
+
+labs <- C_df %>%
+  group_by(in_rna_studies) %>% tally() %>%
+  unite(col = 'label', sep = '\nn=')
+
+C = C_df %>% 
+  ggplot(aes(x = factor(in_rna_studies), y = mean_reads)) +
+  geom_boxplot(outlier.alpha = 0,  width = 0.4) + 
+  geom_jitter(size = 0.8, width = 0.2, aes(color = factor(in_rna_studies))) + 
+  scale_y_log10(breaks = c(1, 10, 100, 1000, 10000, 100000), 
+                labels = scales::comma) +
+  ylab('Mean Reads') + xlab('')+ 
+  scale_color_manual(values = c('grey', '#2e72af')) +
+  labs(color = '')+
+  theme(plot.margin = unit(c(0.5,1.5,0.5,1.5), "lines"), legend.position = 'none')+
+  geom_signif(comparisons = list(c('TP', 'FP')),
+              test = "wilcox.test", 
+              map_signif_level=TRUE) + 
+  scale_x_discrete(labels = labs$label)
+
+
+
+addWorksheet(wb, "figure_E6C")
+writeData(wb, "figure_E6C", 
+          as.data.frame(C_df), startRow = 1, startCol = 1)
+
+setDT(C_df)
+# wilcox.test(C_df[in_rna_studies == 'TP', mean_reads], C_df[in_rna_studies == 'FP', mean_reads], alternative = "two.sided")
+```
+
+
+
+# S2D: mean reads annotated splicing false positives vs true positives
+
+```{r}
+all_samples_ns_unnest <- fread('../ref/allSamples_snapcount_unnested_ns.tsv.gz')
+```
+
+```{r}
+# getting NS reads for samples where events are detected
+ms_samples = all_samples_unnest[, .(curated_record_id, missplicing_event_rank_simple, in_rna_studies, source, sample)]
+
+ns_reads = all_samples_ns_unnest[, .(curated_record_id, sample, ns_reads = reads)]
+
+D_df = ns_reads[ms_samples, on = .(curated_record_id, sample)] %>% 
+  filter(!is.na(ns_reads)) %>% 
+  group_by(curated_record_id, missplicing_event_rank_simple, in_rna_studies) %>%
+  dplyr::summarise(mean_ns_reads = mean(ns_reads), .groups = 'keep') %>% 
+  mutate(in_rna_studies = ifelse(in_rna_studies == 1, 'TP', 'FP')) 
+
+labs <- D_df %>%
+  group_by(in_rna_studies) %>% tally() %>%
+  unite(col = 'label', sep = '\nn=')
+
+D =  D_df%>% 
+  ggplot(aes(x = factor(in_rna_studies), y = mean_ns_reads)) + 
+  geom_boxplot(outlier.alpha = 0,  width = 0.4) + 
+  geom_jitter(size = 0.8, width = 0.2, aes(color = factor(in_rna_studies))) + 
+  scale_y_log10(breaks = c(1, 10, 100, 1000, 10000, 100000), 
+                labels = scales::comma) +
+  ylab('Mean Reads Annotated splicing') + xlab('')+ 
+  scale_color_manual(values = c('grey', '#2e72af')) +
+  labs(color = '')+
+  theme(plot.margin = unit(c(0.5,1.5,0.5,1.5), "lines"), legend.position = 'none')+
+  geom_signif(comparisons = list(c('TP', 'FP')),
+              test = "wilcox.test", 
+              map_signif_level=TRUE) + 
+  scale_x_discrete(labels = labs$label)
+
+
+addWorksheet(wb, "figure_E6D")
+writeData(wb, "figure_E6D", 
+          as.data.frame(D_df), startRow = 1, startCol = 1)
+
+setDT(D_df)
+# wilcox.test(D_df[in_rna_studies == 'TP', mean_ns_reads], D_df[in_rna_studies == 'FP', mean_ns_reads], alternative = "two.sided")
+```
+
+
+
+# S2E & F: max and mean ratio unannotated to annotated splicing false positives vs true positives
+
+```{r}
+
+ms_samples = all_samples_unnest[, .(curated_record_id, missplicing_event_rank_simple, 
+                                    in_rna_studies, source, sample, ms_reads = reads)]
+
+E_df = ns_reads[ms_samples, on = .(curated_record_id, sample)] %>% 
+  filter(!is.na(ns_reads)) %>% 
+  mutate(ms_ns_ratio = ms_reads / ns_reads) %>%
+  group_by(curated_record_id, missplicing_event_rank_simple, in_rna_studies) %>%
+  dplyr::summarise(max_ratio = max(ms_ns_ratio), mean_ratio = mean(ms_ns_ratio), .groups = 'keep') %>% 
+  mutate(in_rna_studies = ifelse(in_rna_studies == 1, 'TP', 'FP')) 
+
+labs <- E_df %>%
+  group_by(in_rna_studies) %>% tally() %>%
+  unite(col = 'label', sep = '\nn=')
+
+
+E =  E_df%>% 
+  ggplot(aes(x = factor(in_rna_studies), y = max_ratio)) + 
+  geom_boxplot(outlier.alpha = 0,  width = 0.4) + 
+  geom_jitter(size = 0.8, width = 0.2, aes(color = factor(in_rna_studies))) + 
+  scale_y_log10(labels = scales::comma) +
+  ylab('Max Ratio event\nover annotated splicing') + xlab('')+ 
+  scale_color_manual(values = c('grey', '#2e72af')) +
+  labs(color = '')+
+  theme(plot.margin = unit(c(0.5,1.5,0.5,1.5), "lines"), legend.position = 'none')+
+  geom_signif(comparisons = list(c('TP', 'FP')),
+              test = "wilcox.test", 
+              map_signif_level=TRUE) + 
+  scale_x_discrete(labels = labs$label)
+
+
+
+
+panelF =  E_df%>% 
+  ggplot(aes(x = factor(in_rna_studies), y = mean_ratio)) + 
+  geom_boxplot(outlier.alpha = 0,  width = 0.4) + 
+  geom_jitter(size = 0.8, width = 0.2, aes(color = factor(in_rna_studies))) + 
+  scale_y_log10(labels = scales::comma) +
+  ylab('Mean Ratio event\nover annotated splicing') + xlab('')+ 
+  scale_color_manual(values = c('grey', '#2e72af')) +
+  labs(color = '')+
+  theme(plot.margin = unit(c(0.5,1.5,0.5,1.5), "lines"), legend.position = 'none')+
+  geom_signif(comparisons = list(c('TP', 'FP')),
+              test = "wilcox.test", 
+              map_signif_level=TRUE) + 
+  scale_x_discrete(labels = labs$label)
+
+
+
+addWorksheet(wb, "figure_E6EF")
+writeData(wb, "figure_E6EF", 
+          as.data.frame(E_df), startRow = 1, startCol = 1)
+
+setDT(E_df)
+# wilcox.test(E_df[in_rna_studies == 'TP', max_ratio], E_df[in_rna_studies == 'FP', max_ratio], alternative = "two.sided")
+# 
+# wilcox.test(E_df[in_rna_studies == 'TP', mean_ratio], E_df[in_rna_studies == 'FP', mean_ratio], alternative = "two.sided")
+
+```
+
+
+# SG: single vs double exon skipping false positives vs true positives
+
+```{r}
+anno <- chisq.test(table(df_2[splicing_event_class == 'exon skipping']$in_rna_studies, 
+                 df_2[splicing_event_class == 'exon skipping']$skipped_exons_count))$p.value
+
+labs <- df_2[splicing_event_class == 'exon skipping'] %>%
+  mutate(skipped_exons_count = ifelse(skipped_exons_count == 1, 'single-exon\nskipping', 
+                                      'double-exon\nskipping')) %>%
+  group_by(skipped_exons_count) %>% tally() %>%
+  unite(col = 'label', sep = '\nn=')
+
+G_df = df_2[splicing_event_class == 'exon skipping'] %>% 
+  mutate(in_rna_studies = ifelse(in_rna_studies == 1, 
+                                 'TP', 
+                                 'FP')) %>%
+  group_by(skipped_exons_count, in_rna_studies) %>% tally() 
+
+G <- G_df %>%
+  ggplot(aes(x = factor(skipped_exons_count), y = n, fill = in_rna_studies)) +
+  geom_bar(position = 'fill', stat = 'identity', width = 0.4) +
+  ylab('proportion') + xlab('') +
+  labs(fill = '') + scale_fill_manual(values = c('grey', '#2e72af'))+
+  theme(plot.margin = unit(c(0.5,0,1.5,0), "lines"))+
+  geom_signif(annotation = ifelse(anno < 0.001, '***', '?'),
+              y_position = 1.1, xmin = 1, xmax = 2,
+              tip_length = c(0.0001, 0.0001), 
+              map_signif_level=FALSE) +
+  scale_x_discrete(labels = rev(labs$label))  +
+  geom_text(aes(x = skipped_exons_count, 
+                label = n), position = position_fill(vjust = 0.5))
+
+
+
+addWorksheet(wb, "figure_E6G")
+writeData(wb, "figure_E6G", 
+          as.data.frame(G_df), startRow = 1, startCol = 1)
+```
+
+# S2H: false positives vs true positives exon skipping: nts in spliced out region boxplot
+
+
+```{r}
+refseq <- fread('../ref/refseq_introns_exons.tsv.gz')
+refseq_exons <- refseq[region_type == 'exon']
+refseq_introns <- refseq[region_type == 'intron']
+```
+
+```{r}
+df_single <- df_2[splicing_event_class == 'exon skipping' & !grepl('-', skipped_exons_id), .(curated_record_id, tx_id, skipped_exons_id, in_rna_studies)] 
+
+df_single <- refseq_exons[, .(tx_id,skipped_exons_id = as.character(region_no), skipped_exons_width = region_width)][df_single, on = .(tx_id, skipped_exons_id)] 
+df_single <- refseq_introns[, .(tx_id,skipped_exons_id = as.character(region_no + 1), fiveprime_intron_width = region_width)][df_single, on = .(tx_id, skipped_exons_id)] 
+df_single <- refseq_introns[, .(tx_id,skipped_exons_id = as.character(region_no), threeprime_intron_width = region_width)][df_single, on = .(tx_id, skipped_exons_id)] 
+
+df_single[, skipped_nts := fiveprime_intron_width + skipped_exons_width + threeprime_intron_width]
+
+df_double <- df_2[splicing_event_class == 'exon skipping' & grepl('-', skipped_exons_id), .(curated_record_id, tx_id, skipped_exons_id, in_rna_studies)] 
+
+df_double[, first_exon := sapply(strsplit(skipped_exons_id, split = '-'), '[[', 1)]
+df_double[, second_exon := sapply(strsplit(skipped_exons_id, split = '-'), '[[', 2)]
+
+df_double <- refseq_exons[, .(tx_id,first_exon = as.character(region_no), first_exon_width = region_width)][df_double, on = .(tx_id, first_exon)] 
+df_double <- refseq_introns[, .(tx_id,first_exon = as.character(region_no + 1), firstexon_fiveprime_intron_width = region_width)][df_double, on = .(tx_id, first_exon)] 
+df_double <- refseq_introns[, .(tx_id,first_exon = as.character(region_no), firstexon_threeprime_intron_width = region_width)][df_double, on = .(tx_id, first_exon)] 
+
+df_double <- refseq_exons[, .(tx_id,second_exon = as.character(region_no), second_exon_width = region_width)][df_double, on = .(tx_id, second_exon)] 
+df_double <- refseq_introns[, .(tx_id,second_exon = as.character(region_no + 1), secondexon_fiveprime_intron_width = region_width)][df_double, on = .(tx_id, second_exon)] 
+df_double <- refseq_introns[, .(tx_id,second_exon = as.character(region_no), secondexon_threeprime_intron_width = region_width)][df_double, on = .(tx_id, second_exon)] 
+
+
+df_double[, skipped_nts := firstexon_fiveprime_intron_width + first_exon_width + firstexon_threeprime_intron_width +
+            second_exon_width + secondexon_threeprime_intron_width]
+
+```
+
+
+```{r}
+df_plot <- rbind(df_single, df_double, fill = TRUE)
+
+labs <- df_plot %>% 
+  mutate(in_rna_studies = ifelse(in_rna_studies == 1, 
+                                 'TP', 'FP')) %>%
+  group_by(in_rna_studies) %>% tally() %>%
+  unite(col = 'label', sep = '\nn=')
+
+
+H <- df_plot %>% 
+  mutate(in_rna_studies = ifelse(in_rna_studies == 1, 
+                                 'TP', 
+                                 'FP'))  %>%
+  ggplot(aes(x = factor(in_rna_studies), y = skipped_nts)) + 
+  geom_boxplot(outlier.alpha = 0, width = 0.4) + 
+  geom_jitter(size = 0.8, width = 0.2, aes(color = factor(in_rna_studies))) + 
+  scale_y_log10(labels = scales::comma) +
+  ylab('Number of nucleotides spliced out') + xlab('')+ 
+  scale_color_manual(values = c('grey', '#2e72af')) +
+  labs(color = '')+
+  theme(plot.margin = unit(c(0.5,1.5,0.5,1.5), "lines"), legend.position = 'none')+
+  geom_signif(comparisons = list(c('TP', 'FP')),
+              test = "wilcox.test", 
+              map_signif_level=TRUE) +
+  ggtitle('Exon-skipping events') + 
+  scale_x_discrete(labels = labs$label)
+
+
+addWorksheet(wb, "figure_E6H")
+writeData(wb, "figure_E6H", 
+          as.data.frame(df_plot %>% 
+                          select(tx_id, skipped_exons_id, curated_record_id, skipped_nts, in_rna_studies)), 
+          startRow = 1, startCol = 1)
+
+#wilcox.test(df_plot[in_rna_studies == 1, skipped_nts], df_plot[in_rna_studies == 0, skipped_nts], alternative = "two.sided")
+```
+
+
+# S2I: false positives vs true positives cryptic activation: cryptic distance boxplot
+```{r}
+
+labs <- df_2[grepl('cryptic', splicing_event_class)]  %>% 
+  mutate(in_rna_studies = ifelse(in_rna_studies == 1, 
+                                 'TP', 'FP')) %>%
+  group_by(in_rna_studies) %>% tally() %>%
+  unite(col = 'label', sep = '\nn=')
+
+I <- df_2[grepl('cryptic', splicing_event_class)] %>% 
+  mutate(in_rna_studies = ifelse(in_rna_studies == 1, 'TP', 'FP')) %>%
+  ggplot(aes(x = in_rna_studies, y = abs(cryptic_distance))) + 
+  geom_boxplot(outlier.alpha = 0, width = 0.4) + 
+  geom_jitter(size = 0.8, width = 0.2, aes(color = factor(in_rna_studies))) + 
+  scale_y_log10(labels = scales::comma) +
+  ylab('Cryptic Distance') + xlab('')+ 
+  scale_color_manual(values = c('grey', '#2e72af')) +
+  labs(color = '')+
+  theme(plot.margin = unit(c(0.5,1.5,0.5,1.5), "lines"), legend.position = 'none')+
+  geom_signif(comparisons = list(c('TP', 'FP')),
+              test = "wilcox.test", 
+              map_signif_level=TRUE) +
+  ggtitle('Cryptic-activation events') +
+  scale_x_discrete(labels = labs$label) 
+  
+
+
+addWorksheet(wb, "figure_E6I")
+writeData(wb, "figure_E6I", 
+          as.data.frame(df_2[grepl('cryptic', splicing_event_class)]  %>% 
+                          select(curated_record_id, missplicing_event_rank_simple, in_rna_studies, cryptic_distance)), 
+          startRow = 1, startCol = 1)
+
+
+# wilcox.test(df_2[grepl('cryptic', splicing_event_class) & in_rna_studies == 1,  abs(cryptic_distance)], 
+#             df_2[grepl('cryptic', splicing_event_class) & in_rna_studies == 0,  abs(cryptic_distance)], alternative = "two.sided")
+
+```
+
+```{r}
+saveWorkbook(wb, file = "../figs/source_data/source_data_extended_data_fig_6.xlsx", overwrite = TRUE)
+```
+
+
+
+
+# Figure S6
+
+```{r}
+top = ggarrange(A,B,C, nrow = 1)
+mid = ggarrange(D,E,panelF, nrow = 1)
+bot = ggarrange(G,H,I, nrow = 1)
+ggarrange(top, mid, bot, ncol = 1)
+
+ggsave('../figs/S6.pdf', width = 10, height = 10)
+```
+

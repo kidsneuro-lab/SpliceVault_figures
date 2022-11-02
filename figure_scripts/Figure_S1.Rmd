@@ -4,108 +4,20 @@ output:
 ---
 
 
-
-
 ```{r}
 library(data.table)
 library(tidyverse)
 theme_set(theme_classic())
-library(ggsci)
-library(ggpubr)
-library(Cairo)
+library(openxlsx)
+wb <- createWorkbook()
 ```
 
 ```{r}
 merged_data <- fread('../ref/vars_events_prediction.tsv')
 ```
 
-# Figure S1A: plot of # SAI predictions above 0.001 per variant
 
-```{r}
-case_numbers <- unique(merged_data[variant_category == 'ours', .(curated_record_id)]) %>%
-  mutate(case_number = 1:88)
-
-preds <- fread('../ref/sai_preds_complete.csv')
-preds <- unique(merged_data[, .(curated_record_id, variant_category)])[preds, on = .(curated_record_id)]
-preds <- case_numbers[preds, on = .(curated_record_id)]
-preds <- preds[variant_category == 'ours']
-
-convert <- data.frame(splicing_event_class = unique(preds$splicing_event_class),
-                      class_lab = c('other', 'other', 'exon skipping', 'cryptic activation', 'mis-splicing', 'intron retention',
-                                    'cryptic activation', 'other', 'other'))
-A <- preds %>% 
-  left_join(convert, by = 'splicing_event_class') %>%
-  filter(splicing_event_class != 'mis-splicing') %>%
-  group_by(case_number,class_lab) %>%
-  tally() %>% ungroup() %>% group_by(case_number) %>%
-  mutate(total_preds = sum(n)) %>% arrange(total_preds) %>% 
-  ungroup() %>%
-  mutate(class_lab = factor(class_lab, levels = c('other', 'intron retention', 'exon skipping', 'cryptic activation'))) %>% 
-  ggplot(aes(x = factor(case_number), y = n, fill = class_lab)) +
-  geom_bar(stat = 'identity', width = 0.5) +
-  scale_y_continuous(breaks = seq(0,110,10), expand = c(0,1)) +
-  scale_fill_manual(values = rev(c('#e84b35','#4cbbd5','#00a086', 'grey')))+
-  theme(panel.grid.major.y = element_line(colour = "lightgrey", size = 0.1),
-        panel.grid.minor.y = element_blank(),
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank(),
-        axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.position = 'bottom') +
-  ylab('Number of SpliceAI \u0394-scores \u2265 0.001') + xlab('Case Number') + labs(fill = '') 
-```
-
-
-
-# Figure S1B: 300k-rna event rank by variant with info on whether event was seen in RNA studies
-
-```{r}
-plot_dat <- merged_data[variant_category == 'ours' & 
-                          !is.na(missplicing_event_rank_simple) & 
-                          missplicing_event_rank_simple <= 10]%>%
-  rowwise() %>%
-  mutate(group = paste(rev(factor(missplicing_inframe)), factor(in_rna_studies))) %>%
-  mutate(group = ifelse(grepl('0', group), '0', group)) %>%
-  mutate(group = factor(group, levels = c('TRUE 1', 'FALSE 1', '0'))) %>%
-  left_join(case_numbers, by = 'curated_record_id')
-
-labs <- plot_dat %>%
-  group_by(missplicing_event_rank_simple, in_rna_studies) %>% tally()  %>%
-  ungroup() %>% dplyr::group_by(missplicing_event_rank_simple) %>%
-  rbind(data.frame(missplicing_event_rank_simple = 9, in_rna_studies = 1, n = 0)) %>%
-  dplyr::mutate(sum = sum(n), perc = n / sum(n)) %>%
-  filter(in_rna_studies == 1) %>% arrange(missplicing_event_rank_simple)
-
-
-B <- ggplot(plot_dat, aes(x = factor(curated_record_id), 
-             y = factor(missplicing_event_rank_simple), 
-             fill = group,
-             color = group)) + 
-  geom_tile(width = 0.5, height = 0.5, size=0.4) + 
-  scale_fill_manual(name = '',
-                    values = c('grey','black', 'white'), 
-                    labels = c('seen in\nRNA studies\nin-frame',
-                               'seen in\nRNA studies\nout of frame',
-                               'not seen in\nRNA studies')) +
-  scale_color_manual(name = '',
-                     values = c('black', 'black', 'lightgrey'), 
-                     labels = c('seen in\nRNA studies\nin-frame',
-                                'seen in\nRNA studies\nout of frame',
-                                'not seen in\nRNA studies'))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1),
-        legend.spacing.y = unit(1.0, 'cm'),
-        legend.position = 'bottom') +
-  scale_x_discrete(labels =unique(plot_dat$case_number)) +
-  xlab('Case Number') + ylab('300K-RNA event rank') +
-  scale_linetype_manual(values = c('dotted', 'solid'),
-                        labels = c('Out of frame', 'in frame')) +
-  annotate("text", x = 91, y = 11, label = '% seen in\nRNA studies', size = 3)+
-  annotate("text", x = 91, y = 1:10, label = scales::percent(labs$perc, accuracy = 1), size = 2)  +
-  coord_cartesian(clip = 'off', ylim = c(1, 11))+
-  guides(fill = guide_legend(byrow = TRUE))
-```
-
-
-# Figure S1C: PR curve of our 88 variants, 300K-RNA predictions with different ranking methods
+# Figure S1: PR curve of our 88 variants, 300K-RNA predictions with different ranking methods
 ```{r}
 pr_data_sv <- merged_data[variant_category == 'ours' & 
                             splicing_event_class != 'intron retention' &
@@ -124,6 +36,7 @@ cutoffs[, sv_FN := unlist(lapply(splicevault_rank_cutoffs,
                                                                 is.na(missplicing_event_rank_simple))])))]
 cutoffs[, sv_sens := sv_TP / (sv_TP + sv_FN)]
 cutoffs[, sv_ppv := sv_TP / (sv_TP + sv_FP)]
+
 
 
 # max single exon skipping, cryptics 250 nt away
@@ -170,7 +83,7 @@ plot_df <- cutoffs %>%
   mutate(alg = factor(alg, levels = c('sv', 'svbasic', 'svall10', 'svall')))
 setDT(plot_df)
 
-C <- ggplot(plot_df, aes(x = sens, y = ppv, color = alg)) +
+ggplot(plot_df, aes(x = sens, y = ppv, color = alg)) +
   geom_point() + geom_path() +
   coord_cartesian(xlim = c(0.4,1), y = c(0,1)) +
   xlab('Sensitivity') + ylab('Positive Predictive Value') +
@@ -187,257 +100,12 @@ C <- ggplot(plot_df, aes(x = sens, y = ppv, color = alg)) +
   geom_text(data=plot_df[alg == 'svall10'][c(1:4)],aes(x=sens,y=ppv + 0.05,label=splicevault_rank_cutoffs), color='#d68a3d')+
   geom_text(data=plot_df[alg == 'svbasic'][c(1:4)],aes(x=sens,y=ppv - 0.05,label=splicevault_rank_cutoffs), color='#2e76b3')
 
+ggsave('../figs/S1.pdf', height = 5, width = 8)
+
+addWorksheet(wb, "figure_E1")
+writeData(wb, "figure_E1", as.data.frame(plot_df), startRow = 1, startCol = 1)
+saveWorkbook(wb, file = "../figs/source_data/source_data_extended_data_fig_1.xlsx", overwrite = TRUE)
 
 ```
 
-# Figure S1D: 3 datasets mis-splicing event breakdown
-
-```{r}
-dict <- data.frame(category = c('exon skipping', 'cryptic', 'intron retention', 'multi exon skipping'),
-                   label = c('Exon Skipping', 'Cryptic', 'IR', 'Multi-Exon Skipping'))
-mini_n <- length(unique(merged_data[variant_category == 'minigene', curated_record_id]))
-pub_n <- length(unique(merged_data[variant_category == 'published', curated_record_id]))
-
-events <- merged_data[in_rna_studies == 1 & variant_category != 'ours']  %>%
-  mutate(category = ifelse(!is.na(skipped_exons_count) & skipped_exons_count > 1 , 
-                           'multi exon skipping', splicing_event_class)) %>%
-  mutate(category = ifelse(grepl('cryptic', splicing_event_class), 'cryptic', category)) %>%
-  dplyr::group_by(variant_category, category) %>% tally()  %>% 
-  dplyr::mutate(perc = n / sum(n)) %>%
-  arrange(variant_category, -n) %>%
-  left_join(dict, by = c('category'))  %>%
-  ungroup() %>%
-  mutate(plot_category = 'mis-splicing events', 
-         fill = c(1,4,2,3,1:4),
-         variant_label = ifelse(variant_category == 'minigene', 
-                                paste0('minigene assays\nn=',mini_n), 
-                                paste0('specimens\nn=',pub_n)))
-
-eventcounts <- merged_data[in_rna_studies == 1 & variant_category != 'ours'] %>% 
-  dplyr::group_by(variant_category, curated_record_id) %>%
-  tally(name = 'category') %>% dplyr::group_by(variant_category, category) %>% tally()%>%
-  dplyr::mutate(perc = n / sum(n),
-         plot_category = '# events per variant', label = paste(category, ' events'),
-         category = as.character(category), fill = as.integer(category),
-         variant_label = ifelse(variant_category == 'minigene', 
-                                paste0('minigene assays\nn=',mini_n), 
-                                paste0('specimens\nn=',pub_n)))
-
-D <- rbind(events, eventcounts) %>%
-  ggplot(aes(x = perc, y = plot_category, fill = factor(fill))) + 
-  geom_bar(stat = 'identity', position = position_stack(reverse=TRUE), width = 0.5) + 
-  theme(axis.title.y = element_blank(), axis.title.x = element_blank(), 
-        legend.position = 'none',
-  strip.background = element_blank()) +
-  scale_x_continuous(labels = scales::percent, expand = c(0,0)) +
-  geom_text(aes(label = paste0(label, ' \n(' ,  n, ')')),
-            position = position_stack(reverse = TRUE, vjust = 0.5), color = "white", size = 3) +
-  scale_fill_grey(start = 0) + facet_wrap(~variant_label, ncol = 1)
-```
-
-
-# Figure S1E: PR curve of 3 sets of variants overlaid, SpliceAI & 300K-RNA predictions of exon-skipping & cryptic-activation
-
-```{r}
-# remove insertion-deletion variants
-pr_data <- merged_data[!curated_record_id %in% c(871, 913, 927) & 
-                         splicing_event_class %in% c('cryptic acceptor', 'cryptic donor', 'exon skipping') & 
-                         variant_category == 'ours' &
-                         (spliceai == 1 | splicevault == 1 | in_rna_studies == 1)]
-
-pr_data_3sets <- merged_data[!curated_record_id %in% c(871, 913, 927) & 
-                         splicing_event_class %in% c('cryptic acceptor', 'cryptic donor', 'exon skipping')  &
-                         (spliceai == 1 | splicevault == 1 | in_rna_studies == 1)]
-
-sai_cutoffs <- fread('../ref/sai_cutoffs.csv')
-
-cutoffs <- data.table(splicevault_rank_cutoffs = 1:25)
-# keep thresholds found for our set of variants, compare on other 2 sets of variants
-cutoffs[, pred_count := sapply(splicevault_rank_cutoffs, 
-                               function(x) nrow(pr_data[variant_category == 'ours' & 
-                                                          missplicing_event_rank_simple <= x]))]
-cutoffs[pred_count <= nrow(pr_data[spliceai == 1]), 
-        sai_threshold := sapply(pred_count, function(x)  min(sai_cutoffs[pred_count == x,cutoffs]))]
-cutoffs[pred_count > nrow(pr_data[spliceai == 1]), 
-        sai_threshold := NA]
-```
-
-```{r}
-# calculating sensitivity & PPV - our variants
-cutoffs[, sv_ours_TP := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'ours' & 
-                                                                  in_rna_studies == 1 & 
-                                                                  missplicing_event_rank_simple <= x])))]
-cutoffs[, sv_ours_FP := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'ours' & 
-                                                                  in_rna_studies == 0 & 
-                                                                  missplicing_event_rank_simple <= x])))]
-cutoffs[, sv_ours_FN := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'ours' & 
-                                                                  in_rna_studies == 1 & 
-                                                                  (missplicing_event_rank_simple > x |
-                                                                is.na(missplicing_event_rank_simple))])))]
-cutoffs[, sv_ours_sens := sv_ours_TP / (sv_ours_TP + sv_ours_FN)]
-cutoffs[, sv_ours_ppv := sv_ours_TP / (sv_ours_TP + sv_ours_FP)]
-
-cutoffs[, sai_ours_TP := unlist(lapply(sai_threshold, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'ours' & 
-                                                                  in_rna_studies == 1 & 
-                                                                  abs(delta) >= x])))]
-cutoffs[, sai_ours_FP := unlist(lapply(sai_threshold, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'ours' & 
-                                                                  in_rna_studies == 0 &
-                                                                  abs(delta) >= x])))]
-cutoffs[, sai_ours_FN := unlist(lapply(sai_threshold, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'ours' & 
-                                                                  in_rna_studies == 1 & 
-                                                                  (abs(delta) < x | is.na(delta))])))]
-cutoffs[, sai_ours_sens := sai_ours_TP / (sai_ours_TP + sai_ours_FN)]
-cutoffs[, sai_ours_ppv := sai_ours_TP / (sai_ours_TP + sai_ours_FP)]
-```
-
-```{r}
-# calculating sensitivity & PPV - published variants
-cutoffs[, sv_pub_TP := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'published' &
-                                                                  in_rna_studies == 1 & 
-                                                                  missplicing_event_rank_simple <= x])))]
-cutoffs[, sv_pub_FP := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'published' &
-                                                                  in_rna_studies == 0 & 
-                                                                  missplicing_event_rank_simple <= x])))]
-cutoffs[, sv_pub_FN := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'published' &
-                                                                  in_rna_studies == 1 & 
-                                                                  (missplicing_event_rank_simple > x |
-                                                                is.na(missplicing_event_rank_simple))])))]
-cutoffs[, sv_pub_sens := sv_pub_TP / (sv_pub_TP + sv_pub_FN)]
-cutoffs[, sv_pub_ppv := sv_pub_TP / (sv_pub_TP + sv_pub_FP)]
-
-cutoffs[, sai_pub_TP := unlist(lapply(sai_threshold, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'published' &
-                                                                  in_rna_studies == 1 & 
-                                                                  abs(delta) >= x])))]
-cutoffs[, sai_pub_FP := unlist(lapply(sai_threshold, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'published' &
-                                                                  in_rna_studies == 0 & 
-                                                                  abs(delta) >= x])))]
-cutoffs[, sai_pub_FN := unlist(lapply(sai_threshold, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'published' &
-                                                                  in_rna_studies == 1 & 
-                                                                  (abs(delta) < x | is.na(delta))])))]
-cutoffs[, sai_pub_sens := sai_pub_TP / (sai_pub_TP + sai_pub_FN)]
-cutoffs[, sai_pub_ppv := sai_pub_TP / (sai_pub_TP + sai_pub_FP)]
-```
-
-
-
-```{r}
-# calculating sensitivity & PPV - minigene variants
-cutoffs[, sv_mini_TP := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'minigene' &
-                                                                  in_rna_studies == 1 & 
-                                                                  missplicing_event_rank_simple <= x])))]
-cutoffs[, sv_mini_FP := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'minigene' &
-                                                                  in_rna_studies == 0 & 
-                                                                  missplicing_event_rank_simple <= x])))]
-cutoffs[, sv_mini_FN := unlist(lapply(splicevault_rank_cutoffs, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'minigene' &
-                                                                  in_rna_studies == 1 & 
-                                                                  (missplicing_event_rank_simple > x |
-                                                                is.na(missplicing_event_rank_simple))])))]
-cutoffs[, sv_mini_sens := sv_mini_TP / (sv_mini_TP + sv_mini_FN)]
-cutoffs[, sv_mini_ppv := sv_mini_TP / (sv_mini_TP + sv_mini_FP)]
-
-cutoffs[, sai_mini_TP := unlist(lapply(sai_threshold, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'minigene' &
-                                                                  in_rna_studies == 1 & 
-                                                                  abs(delta) >= x])))]
-cutoffs[, sai_mini_FP := unlist(lapply(sai_threshold, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'minigene' &
-                                                                  in_rna_studies == 0 & 
-                                                                  abs(delta) >= x])))]
-cutoffs[, sai_mini_FN := unlist(lapply(sai_threshold, 
-                                 function(x) nrow(pr_data_3sets[variant_category == 'minigene' &
-                                                                  in_rna_studies == 1 & 
-                                                                  (abs(delta) < x | is.na(delta))])))]
-cutoffs[, sai_mini_sens := sai_mini_TP / (sai_mini_TP + sai_mini_FN)]
-cutoffs[, sai_mini_ppv := sai_mini_TP / (sai_mini_TP + sai_mini_FP)]
-```
-
-
-```{r}
-# plot PR curve
-dataset_rename <- data.frame(dataset = c('ours', 'pub', 'mini'), 
-                             label = factor(x = c('our cohort', 'specimens', 'minigene assay'),
-                                            levels = c('our cohort', 'specimens', 'minigene assay')))
-plot_df <- cutoffs %>%
-  filter(!is.na(sai_threshold)) %>%
-  dplyr::select(-contains('TP'), -contains('FP'), -contains('FN')) %>%
-  pivot_longer(cols = c(contains('sens'), contains('ppv'))) %>%
-  separate(name, into = c('alg', 'dataset', 'metric'), sep = '_') %>%
-  pivot_wider(names_from = metric, values_from = value) %>%
-  left_join(dataset_rename, by = 'dataset') 
-setDT(plot_df)
-
-plot_df_means <- plot_df %>%
-  dplyr::group_by(splicevault_rank_cutoffs, sai_threshold, alg) %>%
-  dplyr::summarise(sens = mean(sens),
-                   ppv = mean(ppv)) %>%
-  mutate(dataset = 'mean')
-setDT(plot_df_means)
-
-
-Ei <- ggplot(plot_df , aes(x = sens, y = ppv, color = alg)) +
-  geom_point() + geom_line() +
-  coord_cartesian(xlim = c(0,1), y = c(0,1)) +
-  xlab('Sensitivity') + ylab('Positive Predictive Value') +
-  labs(color = '')+
-  scale_color_manual(values = c('#edb0a4','#bde0ff'), labels = c('SpliceAI', '300K-RNA')) +
-  scale_x_continuous(breaks = seq(0,1,0.1))+
-  scale_y_continuous(breaks = seq(0,1,0.1)) +
-  geom_text(data=plot_df[alg == 'sv' & dataset == 'ours'][c(1:4)],
-            aes(x=sens,y=ppv+ 0.1,label=splicevault_rank_cutoffs), color='#bde0ff', size = 3)+
-  geom_text(data=plot_df[alg == 'sv' & dataset == 'pub'][c(1:4)],
-            aes(x=sens,y=ppv - 0.1,label=splicevault_rank_cutoffs), color='#bde0ff', size = 3)+
-  geom_text(data=plot_df[alg == 'sv' & dataset == 'mini'][c(1:4)],
-            aes(x=sens,y=ppv + 0.1,label=splicevault_rank_cutoffs), color='#bde0ff', size = 3)+
-  geom_text(data=plot_df[alg == 'sai' & dataset == 'ours'][c(1:4)],
-            aes(x=sens ,y=ppv - 0.1,label=round(sai_threshold,3)), color='#edb0a4', size = 3)+
-  geom_text(data=plot_df[alg == 'sai' & dataset == 'pub'][c(1:4)],
-            aes(x=sens ,y=ppv + 0.1,label=round(sai_threshold,3)), color='#edb0a4', size = 3)+
-  geom_text(data=plot_df[alg == 'sai' & dataset == 'mini'][c(1:4)],
-            aes(x=sens ,y=ppv - 0.1,label=round(sai_threshold,3)), color='#edb0a4', size = 3) +
-  theme(panel.grid.major = element_line(colour = "lightgrey", size = 0.1),
-        strip.background = element_blank(),
-        plot.margin = margin(0,1,0,1, "cm")) +
-  facet_wrap(~label, nrow = 3)
-
-Eii <- ggplot(plot_df_means , aes(x = sens, y = ppv, color = alg)) +
-  geom_point() + geom_line() +
-  coord_cartesian(xlim = c(0.5,1), y = c(0,1)) +
-  xlab('Sensitivity') + ylab('Positive Predictive Value') +
-  labs(color = '')+
-  scale_color_manual(values = c('#ae4631','#2e72af'), labels = c('SpliceAI', '300K-RNA')) +
-  geom_text(data=plot_df_means[alg == 'sv'][c(1:4)],aes(x=sens,y=ppv + 0.1,label=splicevault_rank_cutoffs), color='#2e72af')+
-  geom_text(data=plot_df_means[alg == 'sai'][c(1:4)],aes(x=sens,y=ppv - 0.1,label=round(sai_threshold,3)), color='#ae4631') +
-  scale_x_continuous(breaks = seq(0,1,0.1))+
-  scale_y_continuous(breaks = seq(0,1,0.1)) +
-  theme(panel.grid.major = element_line(colour = "lightgrey", size = 0.1),
-        plot.margin = margin(1,2,0,2, "cm")) +
-  ggtitle('Average metrics')
-
-E <- ggarrange(Ei, Eii, nrow = 1, widths = c(1, 1.3))
-
-```
-
-
-
-# putting figure S1 together
-```{r}
-mid <- ggarrange(C,D, nrow = 1, widths = c(1.3, 1))
-ggarrange(A,B,mid,E, ncol = 1, heights = c(1,1,1.2,1.5))
-ggsave('../figs/S1.pdf', width = 12, height = 12.5, device = cairo_pdf)
-```
 

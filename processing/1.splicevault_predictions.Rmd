@@ -22,6 +22,8 @@ msd_filt <- msd[splice_site_pos %in% vars_events$splice_site_pos & tx_id %in% va
 msd_filt[splicing_event_class != 'normal splicing', missplicing_event_rank := rowid(splice_site_pos), by = list(tx_id)]
 msd_filt[splicing_event_class != 'normal splicing' & (skipped_exons_count <= 2 |abs(cryptic_distance) <= 600),
     missplicing_event_rank_simple := rowid(splice_site_pos), by = list(tx_id)]
+msd_filt[splicing_event_class != 'normal splicing' & (skipped_exons_count <= 1 |abs(cryptic_distance) <= 600), 
+    missplicing_event_rank_single := rowid(splice_site_pos), by = list(tx_id)]
 msd_filt[splicing_event_class != 'normal splicing' & (skipped_exons_count <= 1 |abs(cryptic_distance) <= 250), 
     missplicing_event_rank_basic := rowid(splice_site_pos), by = list(tx_id)]
 
@@ -36,12 +38,15 @@ msd_filt[splicing_event_class_save == 'exon skipping (annotated)', splicing_even
 msd_filt[ss_type == 'donor' & splicing_event_class == 'cryptic donor', cryptic_pos := donor_pos]
 msd_filt[ss_type == 'acceptor' & splicing_event_class == 'cryptic acceptor', cryptic_pos := acceptor_pos]
 
+
 # select relevant columns
-msd_filt <- msd_filt[, .(tx_id, splice_site_pos, splicing_event_class, skipped_exons_id,
+msd_filt <-msd_filt[, .(gene_name, tx_id, splice_site_pos, splicing_event_class, skipped_exons_id,
                          cryptic_pos, event_rank, 
-                         missplicing_event_rank, missplicing_event_rank_simple,missplicing_event_rank_basic,
+                         missplicing_event_rank, missplicing_event_rank_simple,
+                         missplicing_event_rank_single,missplicing_event_rank_basic,
                          in_gtex, in_sra, missplicing_inframe,gtex_sample_count,
-                         sra_sample_count, sample_count, cryptic_distance,skipped_exons_count)]
+                         sra_sample_count, sample_count, cryptic_distance,skipped_exons_count,
+                         strand, chr, donor_pos, acceptor_pos)]
 
 # # filter to relevant events
 # msd_filt <- msd_filt[skipped_exons_count <= 2 | abs(cryptic_distance) <= 600]
@@ -53,16 +58,28 @@ vars_events <- fread('../src/vars_events.tsv', sep = '\t')
 crds <- unique(vars_events[, .(curated_record_id, tx_id, splice_site_pos)])
 msd_filt <- msd_filt[crds, on = .(tx_id, splice_site_pos), allow.cartesian = TRUE]
 msd_ns <- msd_ns[crds, on = .(tx_id, splice_site_pos), allow.cartesian = TRUE]
+```
 
+
+```{r}
+# % of normal splicing (by sample count)
+msd_filt <- msd_ns[, .(curated_record_id,ns_sample_count = sample_count)][msd_filt, on = .(curated_record_id)]
+msd_filt[, sample_count_perc := sample_count / ns_sample_count]
+```
+
+```{r}
 # variant 252 removes cryptic ranked 3 - readjust ranked events for this splice site
 msd_filt[curated_record_id == 252 & cryptic_distance == 5, 
-         `:=` (missplicing_event_rank = NA, missplicing_event_rank_simple = NA)]
+         `:=` (missplicing_event_rank = NA, missplicing_event_rank_simple = NA, 
+               missplicing_event_rank_single = NA)]
 msd_filt[curated_record_id == 252 & missplicing_event_rank_simple > 3, 
          `:=` (missplicing_event_rank_simple = missplicing_event_rank_simple - 1,
+               missplicing_event_rank_single = missplicing_event_rank_single - 1,
                missplicing_event_rank = missplicing_event_rank - 1)]
 msd_filt <- msd_filt[!is.na(missplicing_event_rank)]
 
 fwrite(msd_filt, '../src/300KRNA_filt.tsv.gz')
 fwrite(msd_ns, '../ref/300KRNA_ns.tsv.gz')
+
 ```
 

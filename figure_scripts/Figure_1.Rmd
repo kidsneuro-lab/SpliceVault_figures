@@ -8,10 +8,8 @@ output:
 library(data.table)
 library(tidyverse)
 theme_set(theme_classic())
-library(ggsci)
-library(ggpubr)
-library(xlsx)
-library(PRROC)
+library(openxlsx)
+wb <- createWorkbook()
 ```
 
 ```{r}
@@ -47,4 +45,10 @@ rbind(events, eventcounts) %>%
             position = position_stack(reverse = TRUE, vjust = 0.5), color = "white", size = 3) +
   scale_fill_grey(start = 0)
 ggsave('../figs/1C.pdf', width = 6, height = 2)
+
+addWorksheet(wb, "figure_1C")
+writeData(wb, "figure_1C", as.data.frame(rbind(events, eventcounts)), startRow = 1, startCol = 1)
+saveWorkbook(wb, file = "../figs/source_data/source_data_fig_1.xlsx", overwrite = TRUE)
+
+
 ```

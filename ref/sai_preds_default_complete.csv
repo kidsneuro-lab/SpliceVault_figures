@@ -1,0 +1,381 @@
+chrom,pos,ref,alt,strand,curated_record_id,variant_type,dist_from_ess,tx_id,gpos,dist_from_variant,score_type,splicing_event_class,skipped_exons_id,cryptic_pos,delta
+2,237359089,C,T,-,206,acceptor,-1,NM_004369,237359088,-1,acceptor_loss,mis-splicing,,,0.99
+2,237359089,C,T,-,206,acceptor,-1,NM_004369,237359087,-2,acceptor_gain,cryptic acceptor,,237359088,0.85
+2,237359089,C,T,-,206,acceptor,-1,NM_004369,237359118,29,donor_gain,other,,,0.01
+7,97853059,C,T,-,207,donor,1,NM_001673,97853060,1,donor_loss,mis-splicing,,,1
+7,97853059,C,T,-,207,donor,1,NM_001673,97853108,49,donor_gain,cryptic donor,,97853107,0.76
+13,76992276,G,A,+,228,donor,5,NM_006493,76992271,-5,donor_loss,mis-splicing,,,0.82
+13,76992276,G,A,+,228,donor,5,NM_006493,76992300,24,donor_gain,cryptic donor,,76992301,0.06
+7,87426747,T,A,-,229,donor,3,NM_000443,87426750,3,donor_loss,mis-splicing,,,0.84
+15,44622360,G,C,-,231,acceptor,-13,NM_025137,44622359,-1,acceptor_gain,cryptic acceptor,,44622360,0.01
+15,44622360,G,C,-,231,acceptor,-13,NM_025137,44622347,-13,acceptor_loss,mis-splicing,,,0.73
+6,135429877,C,T,-,232,donor,5,NM_001134831,135429842,-35,donor_gain,cryptic donor,,135429841,0.81
+6,135429877,C,T,-,232,donor,5,NM_001134831,135429882,5,donor_loss,mis-splicing,,,0.98
+X,32595757,C,T,-,233,donor,-1,NM_004006,32595757,0,donor_loss,mis-splicing,,,0.91
+X,154412214,G,C,+,234,donor,-1,NM_000116,154412214,0,donor_loss,mis-splicing,,,0.68
+X,154412214,G,C,+,234,donor,-1,NM_000116,154412250,36,donor_gain,cryptic donor,,154412251,0.32
+X,32386309,C,T,-,235,donor,1,NM_004006,32386259,-50,donor_gain,cryptic donor,,32386258,0.02
+X,32386309,C,T,-,235,donor,1,NM_004006,32386310,1,donor_loss,mis-splicing,,,0.96
+X,68212104,T,C,-,236,donor,4,NM_002547,68212108,4,donor_loss,mis-splicing,,,0.82
+11,1934920,G,A,+,239,donor,1,NM_006757,1934919,-1,donor_loss,mis-splicing,,,0.98
+11,1934920,G,A,+,239,donor,1,NM_006757,1934879,-41,donor_gain,cryptic donor,,1934880,0.01
+7,87454532,T,TAA,-,241,donor,2,NM_000443,87454535,3,donor_loss,mis-splicing,,,0.96
+7,87454532,T,TAA,-,241,donor,2,NM_000443,87454562,30,acceptor_loss,unannotated splice site hit,,,0.09
+17,80104542,T,G,+,246,acceptor,-13,NM_000152,80104555,13,acceptor_loss,mis-splicing,,,0.06
+2,151688291,C,T,-,250,donor,1,NM_001271208,151688292,1,donor_loss,mis-splicing,,,1
+2,151663543,C,T,-,251,donor,5,NM_001271208,151663553,10,donor_gain,cryptic donor,,151663552,0.02
+2,151663543,C,T,-,251,donor,5,NM_001271208,151663548,5,donor_loss,mis-splicing,,,0.85
+2,178581491,ATACT,A,-,252,donor,4,NM_001267550,178581480,-11,donor_gain,cryptic donor,,178581479,0.02
+2,178581491,ATACT,A,-,252,donor,4,NM_001267550,178581499,8,donor_loss,mis-splicing,,,0.91
+2,151682661,C,T,-,253,donor,1,NM_001271208,151682649,-12,donor_gain,cryptic donor,,151682648,0.02
+2,151682661,C,T,-,253,donor,1,NM_001271208,151682662,1,donor_loss,mis-splicing,,,0.99
+2,151533439,T,C,-,255,donor,3,NM_001271208,151533442,3,donor_loss,mis-splicing,,,0.71
+2,151533439,T,C,-,255,donor,3,NM_001271208,151533482,43,acceptor_gain,other,,,0.04
+2,151674586,T,C,-,257,acceptor,-2,NM_001271208,151674584,-2,acceptor_loss,mis-splicing,,,1
+2,151674586,T,C,-,257,acceptor,-2,NM_001271208,151674550,-36,acceptor_gain,cryptic acceptor,,151674551,0.5
+19,38442455,T,C,+,259,donor,2,NM_000540,38442453,-2,donor_loss,mis-splicing,,,0.23
+19,38442455,T,C,+,259,donor,2,NM_000540,38442472,17,donor_gain,cryptic donor,,38442473,0.37
+2,178529958,A,T,-,262,donor,2,NM_001267550,178529956,-2,donor_gain,cryptic donor,,178529955,0.02
+2,178529958,A,T,-,262,donor,2,NM_001267550,178529960,2,donor_loss,mis-splicing,,,0.96
+18,62143352,A,C,-,265,acceptor,-6,NM_176787,62143306,-46,donor_loss,exon skipping,11,,0.2
+18,62143352,A,C,-,265,acceptor,-6,NM_176787,62143346,-6,acceptor_loss,mis-splicing,,,0.53
+18,62143352,A,C,-,265,acceptor,-6,NM_176787,62143372,20,acceptor_gain,cryptic acceptor,,62143373,0.35
+21,46126476,T,TGGCCCAGCCCGGCCC,+,268,acceptor,-21,NM_001849,46126476,0,acceptor_gain,cryptic acceptor,,46126475,0.08
+21,46126476,T,TGGCCCAGCCCGGCCC,+,268,acceptor,-21,NM_001849,46126503,27,acceptor_loss,mis-splicing,,,0.42
+2,178622768,C,T,-,277,acceptor,-1,NM_001267550,178622767,-1,acceptor_loss,mis-splicing,,,1
+2,178622768,C,T,-,277,acceptor,-1,NM_001267550,178622745,-23,acceptor_gain,cryptic acceptor,,178622746,0.1
+2,178642237,C,G,-,278,donor,-1,NM_001267550,178642208,-29,donor_gain,cryptic donor,,178642207,0.27
+2,178642237,C,G,-,278,donor,-1,NM_001267550,178642237,0,donor_loss,mis-splicing,,,0.76
+1,46189457,C,A,-,282,donor,1,NM_017739,46189458,1,donor_loss,mis-splicing,,,0.94
+1,46189457,C,A,-,282,donor,1,NM_017739,46189484,27,donor_gain,cryptic donor,,46189483,0.25
+1,12362848,C,T,+,491,donor,-3,NM_015378,12362850,2,donor_loss,mis-splicing,,,0.32
+17,63483976,G,C,+,492,donor,5,NM_000789,63483971,-5,donor_loss,mis-splicing,,,0.84
+17,63483976,G,C,+,492,donor,5,NM_000789,63483978,2,donor_gain,cryptic donor,,63483979,0.55
+5,119506890,G,C,+,494,donor,1,NM_000414,119506889,-1,donor_loss,mis-splicing,,,0.93
+1,12257090,A,G,+,496,donor,3,NM_015378,12257087,-3,donor_loss,mis-splicing,,,0.23
+1,12257090,A,G,+,496,donor,3,NM_015378,12257043,-47,donor_gain,cryptic donor,,12257044,0.34
+7,24706179,C,T,-,530,donor,5,NM_004403,24706194,15,acceptor_gain,other,,,0.01
+7,24706179,C,T,-,530,donor,5,NM_004403,24706200,21,donor_gain,cryptic donor,,24706199,0.3
+7,24706179,C,T,-,530,donor,5,NM_004403,24706184,5,donor_loss,mis-splicing,,,0.05
+19,48970707,TACC,T,-,531,acceptor,-1,NM_002103,48970678,-29,acceptor_gain,cryptic acceptor,,48970679,0.53
+19,48970707,TACC,T,-,531,acceptor,-1,NM_002103,48970709,2,acceptor_loss,mis-splicing,,,1
+19,48970707,TACC,T,-,531,acceptor,-1,NM_002103,48970710,3,donor_loss,unannotated splice site hit,,,0.01
+9,34658683,G,A,+,532,donor,-1,NM_001142784,34658651,-32,acceptor_loss,unannotated splice site hit,,,0.01
+9,34658683,G,A,+,532,donor,-1,NM_001142784,34658683,0,donor_loss,mis-splicing,,,0.81
+9,34658683,G,A,+,532,donor,-1,NM_001142784,34658715,32,donor_gain,cryptic donor,,34658716,0.04
+2,214955362,C,G,-,534,acceptor,-1,NM_173076,214955361,-1,acceptor_loss,mis-splicing,,,1
+X,120442596,T,A,-,535,donor,3,NM_013995,120442599,3,donor_loss,mis-splicing,,,0.94
+10,27944217,C,G,-,569,donor,5,NM_018076,27944188,-29,acceptor_gain,other,,,0.02
+10,27944217,C,G,-,569,donor,5,NM_018076,27944236,19,donor_gain,cryptic donor,,27944235,0.03
+10,27944217,C,G,-,569,donor,5,NM_018076,27944222,5,donor_loss,mis-splicing,,,0.91
+9,74816662,A,C,-,571,donor,7,NM_017662,74816669,7,donor_loss,mis-splicing,,,0.21
+4,15502924,G,T,+,572,donor,1,NM_001080522,15502923,-1,donor_loss,mis-splicing,,,0.87
+4,15502924,G,T,+,572,donor,1,NM_001080522,15502888,-36,donor_gain,cryptic donor,,15502889,0.01
+13,32370556,A,G,+,635,donor,-2,NM_000059,32370527,-29,donor_gain,cryptic donor,,32370528,0.03
+13,32370556,A,G,+,635,donor,-2,NM_000059,32370557,1,donor_loss,mis-splicing,,,0.36
+17,43082398,A,G,-,655,donor,6,NM_007294,43082402,4,donor_gain,cryptic donor,,43082401,0.02
+17,43082398,A,G,-,655,donor,6,NM_007294,43082404,6,donor_loss,mis-splicing,,,0.04
+17,31200598,A,G,+,795,donor,3,NM_000267,31200595,-3,donor_loss,mis-splicing,,,0.54
+3,9442123,C,G,+,854,acceptor,-5,NM_001080517,9442107,-16,acceptor_gain,cryptic acceptor,,9442106,0.04
+3,9442123,C,G,+,854,acceptor,-5,NM_001080517,9442128,5,acceptor_loss,mis-splicing,,,0.65
+19,41968916,C,A,-,855,acceptor,-1,NM_152296,41968915,-1,acceptor_loss,mis-splicing,,,0.98
+19,41968916,C,A,-,855,acceptor,-1,NM_152296,41968903,-13,acceptor_gain,cryptic acceptor,,41968904,0.5
+14,21403664,C,G,-,856,acceptor,-1,NM_001170629,21403663,-1,acceptor_loss,mis-splicing,,,0.99
+14,21403664,C,G,-,856,acceptor,-1,NM_001170629,21403654,-10,acceptor_gain,cryptic acceptor,,21403655,0.5
+12,49188973,TC,T,-,857,donor,3,NM_006009,49188977,4,donor_loss,mis-splicing,,,0.35
+12,49188973,TC,T,-,857,donor,3,NM_006009,49188980,7,donor_gain,cryptic donor,,49188979,0.01
+12,89603041,A,C,-,858,donor,2,NM_001682,89603059,18,acceptor_loss,unannotated splice site hit,,,0.01
+12,89603041,A,C,-,858,donor,2,NM_001682,89603043,2,donor_loss,mis-splicing,,,0.99
+12,89603041,A,C,-,858,donor,2,NM_001682,89603049,8,donor_gain,cryptic donor,,89603048,0.02
+7,42076747,C,T,-,859,donor,5,NM_000168,42076752,5,donor_loss,mis-splicing,,,0.87
+15,25356056,C,G,-,861,acceptor,1,NM_130838,25356056,0,acceptor_loss,mis-splicing,,,0.41
+15,25356056,C,G,-,861,acceptor,1,NM_130838,25356094,38,acceptor_gain,cryptic acceptor,,25356095,0.69
+17,19347784,C,T,-,863,donor,-1,NM_015681,19347780,-4,donor_gain,cryptic donor,,19347779,0.01
+17,19347784,C,T,-,863,donor,-1,NM_015681,19347784,0,donor_loss,mis-splicing,,,0.32
+13,110170546,C,T,-,866,donor,1,NM_001845,110170547,1,donor_loss,mis-splicing,,,0.99
+5,112775743,T,A,+,867,donor,6,NM_000038,112775737,-6,donor_loss,mis-splicing,,,0.88
+10,71646458,G,A,+,870,acceptor,-1,NM_022124,71646459,1,acceptor_loss,mis-splicing,,,1
+10,71646458,G,A,+,870,acceptor,-1,NM_022124,71646474,16,acceptor_gain,cryptic acceptor,,71646473,0.48
+9,127675942,G,C,+,872,donor,-1,NM_003165,127675942,0,donor_loss,mis-splicing,,,0.92
+9,104796306,T,G,-,873,donor,3,NM_005502,104796309,3,donor_loss,mis-splicing,,,0.45
+9,104796306,T,G,-,873,donor,3,NM_005502,104796315,9,donor_gain,cryptic donor,,104796314,0.05
+X,49075359,C,G,-,875,donor,5,NM_007075,49075389,30,acceptor_loss,unannotated splice site hit,,,0.02
+X,49075359,C,G,-,875,donor,5,NM_007075,49075364,5,donor_loss,mis-splicing,,,0.97
+8,15650814,G,A,+,876,donor,-1,NM_001356429,15650810,-4,donor_gain,cryptic donor,,15650811,0.01
+8,15650814,G,A,+,876,donor,-1,NM_001356429,15650814,0,donor_loss,mis-splicing,,,0.81
+3,111577548,AGGTATGTAAATTGCTGCAG,A,+,878,donor,1,NM_198196,111577502,-46,acceptor_loss,exon skipping,4,,0.55
+3,111577548,AGGTATGTAAATTGCTGCAG,A,+,878,donor,1,NM_198196,111577549,1,donor_loss,mis-splicing,,,0.5
+1,19243708,C,T,-,881,acceptor,-1,NM_015047,19243707,-1,acceptor_loss,mis-splicing,,,1
+1,19243708,C,T,-,881,acceptor,-1,NM_015047,19243683,-25,acceptor_gain,cryptic acceptor,,19243684,0.22
+X,153783256,G,C,+,884,donor,5,NM_014370,153783226,-30,acceptor_loss,exon skipping,8,,0.57
+X,153783256,G,C,+,884,donor,5,NM_014370,153783251,-5,donor_loss,mis-splicing,,,0.72
+X,153783256,G,C,+,884,donor,5,NM_014370,153783298,42,acceptor_gain,other,,,0.04
+14,23414003,T,A,-,885,donor,4,NM_000257,23414040,37,donor_gain,cryptic donor,,23414039,0.13
+14,23414003,T,A,-,885,donor,4,NM_000257,23414007,4,donor_loss,mis-splicing,,,0.04
+14,23414002,C,G,-,889,donor,5,NM_000257,23414040,38,donor_gain,cryptic donor,,23414039,0.2
+14,23414002,C,G,-,889,donor,5,NM_000257,23414007,5,donor_loss,mis-splicing,,,0.43
+X,120442599,C,T,-,892,donor,-1,NM_002294,120442599,0,donor_loss,mis-splicing,,,0.81
+17,19347782,A,G,-,893,donor,2,NM_015681,19347780,-2,donor_gain,cryptic donor,,19347779,0.13
+17,19347782,A,G,-,893,donor,2,NM_015681,19347784,2,donor_loss,mis-splicing,,,0.99
+16,57248644,G,A,+,898,donor,1,NM_012106,57248643,-1,donor_loss,mis-splicing,,,1
+16,57248644,G,A,+,898,donor,1,NM_012106,57248674,30,donor_gain,cryptic donor,,57248675,0.11
+16,57250512,G,A,+,899,donor,5,NM_012106,57250507,-5,donor_loss,mis-splicing,,,0.94
+16,57250512,G,A,+,899,donor,5,NM_012106,57250534,22,acceptor_gain,other,,,0.01
+16,57250512,G,A,+,899,donor,5,NM_012106,57250561,49,donor_gain,cryptic donor,,57250562,0.12
+16,57248644,G,T,+,900,donor,1,NM_012106,57248643,-1,donor_loss,mis-splicing,,,1
+16,57248644,G,T,+,900,donor,1,NM_012106,57248674,30,donor_gain,cryptic donor,,57248675,0.08
+16,57248536,G,C,+,901,acceptor,-1,NM_012106,57248537,1,acceptor_loss,mis-splicing,,,0.99
+16,57248536,G,C,+,901,acceptor,-1,NM_012106,57248551,15,acceptor_gain,cryptic acceptor,,57248550,0.45
+16,70991397,C,A,-,902,acceptor,-1,NM_001270974,70991396,-1,acceptor_loss,mis-splicing,,,0.97
+16,70991397,C,A,-,902,acceptor,-1,NM_001270974,70991376,-21,acceptor_gain,cryptic acceptor,,70991377,0.03
+16,2090285,C,T,-,904,donor,-1,NM_001009944,2090281,-4,donor_gain,cryptic donor,,2090280,0.71
+16,2090285,C,T,-,904,donor,-1,NM_001009944,2090285,0,donor_loss,mis-splicing,,,0.12
+16,2090285,C,T,-,904,donor,-1,NM_001009944,2090321,36,acceptor_loss,unannotated splice site hit,,,0.01
+16,2090284,C,T,-,905,donor,1,NM_001009944,2090281,-3,donor_gain,cryptic donor,,2090280,0.72
+16,2090284,C,T,-,905,donor,1,NM_001009944,2090285,1,donor_loss,mis-splicing,,,1
+16,2090284,C,T,-,905,donor,1,NM_001009944,2090321,37,acceptor_loss,unannotated splice site hit,,,0.01
+14,92021558,G,A,-,907,donor,-3,NM_004239,92021556,-2,donor_loss,mis-splicing,,,0.1
+14,92011072,C,A,-,908,acceptor,1,NM_004239,92011072,0,acceptor_loss,mis-splicing,,,0.77
+3,38586046,G,T,-,912,acceptor,-5,NM_198056,38586041,-5,acceptor_loss,mis-splicing,,,0.01
+X,64921812,C,T,-,914,donor,5,NM_018684,64921772,-40,donor_gain,cryptic donor,,64921771,0.85
+X,64921812,C,T,-,914,donor,5,NM_018684,64921817,5,donor_loss,mis-splicing,,,0.05
+2,227284346,G,A,+,915,donor,1,NM_000091,227284345,-1,donor_loss,mis-splicing,,,0.72
+11,64757779,C,T,-,916,donor,-1,NM_005609,64757779,0,donor_loss,mis-splicing,,,0.05
+11,64757779,C,T,-,916,donor,-1,NM_005609,64757795,16,donor_gain,cryptic donor,,64757794,0.65
+19,42287241,G,T,+,917,donor,1,NM_015125,42287240,-1,donor_loss,mis-splicing,,,0.97
+19,42287241,G,T,+,917,donor,1,NM_015125,42287212,-29,donor_gain,cryptic donor,,42287213,0.05
+18,45876346,TAAAGA,T,-,920,acceptor,Option not available,NM_020964,45876342,-4,acceptor_loss,mis-splicing,,,0.79
+X,154380231,A,G,+,923,acceptor,-3,NM_000117,154380234,3,acceptor_loss,mis-splicing,,,0.11
+X,154380231,A,G,+,923,acceptor,-3,NM_000117,154380277,46,acceptor_gain,cryptic acceptor,,154380276,0.09
+9,69046380,T,G,+,924,acceptor,-5,NM_000144,69046385,5,acceptor_loss,mis-splicing,,,0.73
+16,89779855,GCAGCCCAGCCT,G,-,925,donor,Option not available,NM_000135,89779869,14,donor_loss,mis-splicing,,,0.79
+1,21861754,T,A,-,930,donor,3,NM_001291860,21861764,10,donor_gain,cryptic donor,,21861763,0.65
+1,21861754,T,A,-,930,donor,3,NM_001291860,21861757,3,donor_loss,mis-splicing,,,0.66
+X,31180365,C,A,-,939,donor,5,NM_004006,31180342,-23,donor_gain,cryptic donor,,31180341,0.02
+X,31180365,C,A,-,939,donor,5,NM_004006,31180370,5,donor_loss,mis-splicing,,,0.71
+4,102722870,C,T,-,941,donor,1,NM_005908,102722852,-18,donor_gain,cryptic donor,,102722851,0.22
+4,102722870,C,T,-,941,donor,1,NM_005908,102722871,1,donor_loss,mis-splicing,,,0.79
+X,32573525,C,T,-,943,donor,5,NM_004006,32573490,-35,donor_gain,cryptic donor,,32573489,0.06
+X,32573525,C,T,-,943,donor,5,NM_004006,32573530,5,donor_loss,mis-splicing,,,0.95
+2,27207256,A,G,-,945,donor,2,NM_021095,27207235,-21,donor_gain,cryptic donor,,27207234,0.34
+2,27207256,A,G,-,945,donor,2,NM_021095,27207258,2,donor_loss,mis-splicing,,,0.34
+7,87449963,C,T,-,947,donor,5,NM_000443,87449959,-4,donor_gain,cryptic donor,,87449958,0.24
+7,87449963,C,T,-,947,donor,5,NM_000443,87449968,5,donor_loss,mis-splicing,,,0.19
+16,3739724,C,A,-,948,acceptor,1,NM_004380,3739674,-50,acceptor_gain,cryptic acceptor,,3739675,0.02
+16,3739724,C,A,-,948,acceptor,1,NM_004380,3739724,0,acceptor_loss,mis-splicing,,,0.32
+16,3739724,C,A,-,948,acceptor,1,NM_004380,3739725,1,donor_loss,unannotated splice site hit,,,0.09
+17,31214586,G,GT,+,954,donor,2,NM_001042492,31214585,-1,donor_loss,mis-splicing,,,0.68
+17,31214586,G,GT,+,954,donor,2,NM_001042492,31214583,-3,donor_gain,cryptic donor,,31214584,0.02
+1,23694793,T,A,+,955,donor,2,NM_000975,23694791,-2,donor_loss,mis-splicing,,,0.99
+1,23694793,T,A,+,955,donor,2,NM_000975,23694821,28,donor_gain,cryptic donor,,23694822,0.01
+1,150558649,G,A,+,959,donor,-1,NM_019032,150558634,-15,acceptor_gain,other,,,0.09
+1,150558649,G,A,+,959,donor,-1,NM_019032,150558649,0,donor_loss,mis-splicing,,,0.61
+1,150558649,G,A,+,959,donor,-1,NM_019032,150558686,37,donor_gain,cryptic donor,,150558687,0.05
+X,130140644,A,C,-,960,acceptor,-27,NM_004208,130140617,-27,acceptor_loss,mis-splicing,,,0.15
+17,43115723,T,A,-,962,donor,3,NM_007294,43115726,3,donor_loss,mis-splicing,,,0.83
+17,43106456,C,A,-,963,donor,-1,NM_007294,43106456,0,donor_loss,mis-splicing,,,0.65
+17,43106456,C,A,-,963,donor,-1,NM_007294,43106478,22,donor_gain,cryptic donor,,43106477,0.05
+17,43104961,A,C,-,965,acceptor,-5,NM_007294,43104956,-5,acceptor_loss,mis-splicing,,,0.76
+17,43076640,CTACTT,C,-,967,acceptor,Option not available,NM_007294,43076611,-29,acceptor_loss,exon skipping,alternate transcript,,0.37
+17,43076640,CTACTT,C,-,967,acceptor,Option not available,NM_007294,43076597,-43,acceptor_gain,cryptic acceptor,,43076598,0.09
+17,43063869,C,G,-,969,donor,5,NM_007294,43063890,21,donor_gain,cryptic donor,,43063889,0.03
+17,43063869,C,G,-,969,donor,5,NM_007294,43063909,40,acceptor_loss,unannotated splice site hit,,,0.01
+17,43063869,C,G,-,969,donor,5,NM_007294,43063874,5,donor_loss,mis-splicing,,,0.9
+17,43063868,A,G,-,970,donor,6,NM_007294,43063909,41,acceptor_loss,unannotated splice site hit,,,0.01
+17,43063868,A,G,-,970,donor,6,NM_007294,43063874,6,donor_loss,mis-splicing,,,0.7
+17,43063399,T,C,-,971,acceptor,-26,NM_007294,43063398,-1,acceptor_gain,cryptic acceptor,,43063399,0.03
+17,43063399,T,C,-,971,acceptor,-26,NM_007294,43063373,-26,acceptor_loss,mis-splicing,,,0.23
+17,43063399,T,C,-,971,acceptor,-26,NM_007294,43063407,8,donor_gain,other,,,0.01
+13,32326153,AT,A,+,973,donor,4,NM_000059,32326150,-3,donor_loss,mis-splicing,,,0.42
+13,32329493,G,A,+,976,donor,1,NM_000059,32329492,-1,donor_loss,mis-splicing,,,1
+13,32329493,G,A,+,976,donor,1,NM_000059,32329443,-50,acceptor_loss,exon skipping,8,,0.6
+13,32329493,G,A,+,976,donor,1,NM_000059,32329496,3,donor_gain,cryptic donor,,32329497,0.54
+15,93002171,T,G,+,979,acceptor,-6,NM_001271,93002159,-12,acceptor_gain,cryptic acceptor,,93002158,0.01
+13,110212573,C,T,-,980,donor,1,NM_001845,110212570,-3,donor_gain,cryptic donor,,110212569,0.2
+13,110212573,C,T,-,980,donor,1,NM_001845,110212574,1,donor_loss,mis-splicing,,,0.97
+13,110212573,C,T,-,980,donor,1,NM_001845,110212618,45,acceptor_loss,exon skipping,5,,0.52
+14,95117622,C,T,-,981,donor,-1,NM_030621,95117607,-15,donor_gain,cryptic donor,,95117606,0.12
+14,95117622,C,T,-,981,donor,-1,NM_030621,95117622,0,donor_loss,mis-splicing,,,0.51
+6,131847776,G,T,+,983,acceptor,1,NM_006208,131847776,0,acceptor_loss,mis-splicing,,,0.34
+15,48600138,C,T,-,985,donor,1,NM_000138,48600139,1,donor_loss,mis-splicing,,,0.87
+15,48537611,C,T,-,986,donor,-1,NM_000138,48537611,0,donor_loss,mis-splicing,,,0.77
+15,48537611,C,T,-,986,donor,-1,NM_000138,48537635,24,donor_gain,cryptic donor,,48537634,0.01
+15,48520818,C,T,-,987,acceptor,-1,NM_000138,48520817,-1,acceptor_loss,mis-splicing,,,0.89
+15,48520818,C,T,-,987,acceptor,-1,NM_000138,48520805,-13,acceptor_gain,cryptic acceptor,,48520806,0.34
+15,48497266,C,T,-,989,donor,-1,NM_000138,48497266,0,donor_loss,mis-splicing,,,0.41
+15,48497266,C,T,-,989,donor,-1,NM_000138,48497270,4,donor_gain,cryptic donor,,48497269,0.88
+15,48481655,C,G,-,991,donor,-1,NM_000138,48481655,0,donor_loss,mis-splicing,,,0.97
+15,48481655,C,G,-,991,donor,-1,NM_000138,48481661,6,donor_gain,cryptic donor,,48481660,0.02
+15,48468412,C,A,-,992,donor,-1,NM_000138,48468412,0,donor_loss,mis-splicing,,,0.04
+15,48468412,C,A,-,992,donor,-1,NM_000138,48468416,4,donor_gain,cryptic donor,,48468415,0.13
+15,48468399,TTTAAGGTC,T,-,993,donor,Option not available,NM_000138,48468412,13,donor_loss,mis-splicing,,,0.11
+15,48468399,TTTAAGGTC,T,-,993,donor,Option not available,NM_000138,48468416,17,donor_gain,cryptic donor,,48468415,0.45
+15,48467933,C,T,-,994,donor,5,NM_000138,48467896,-37,acceptor_gain,other,,,0.02
+15,48467933,C,T,-,994,donor,5,NM_000138,48467974,41,donor_gain,cryptic donor,,48467973,0.03
+15,48467933,C,T,-,994,donor,5,NM_000138,48467938,5,donor_loss,mis-splicing,,,0.89
+15,48465558,GACCATTT,G,-,995,donor,Option not available,NM_000138,48465542,-16,donor_gain,cryptic donor,,48465541,0.35
+15,48465558,GACCATTT,G,-,995,donor,Option not available,NM_000138,48465568,10,donor_loss,mis-splicing,,,0.95
+15,48460246,C,T,-,996,donor,-1,NM_000138,48460246,0,donor_loss,mis-splicing,,,0.91
+15,48460246,C,T,-,996,donor,-1,NM_000138,48460250,4,donor_gain,cryptic donor,,48460249,0.01
+15,48446701,C,T,-,997,donor,5,NM_000138,48446673,-28,donor_gain,cryptic donor,,48446672,0.47
+15,48446701,C,T,-,997,donor,5,NM_000138,48446706,5,donor_loss,mis-splicing,,,0.35
+15,48437765,T,A,-,998,donor,3,NM_000138,48437729,-36,acceptor_gain,other,,,0.01
+15,48437765,T,A,-,998,donor,3,NM_000138,48437768,3,donor_loss,mis-splicing,,,0.85
+15,48427568,T,C,-,1001,donor,-2,NM_000138,48427567,-1,donor_loss,mis-splicing,,,0.08
+15,48427568,T,C,-,1001,donor,-2,NM_000138,48427571,3,donor_gain,cryptic donor,,48427570,0.02
+15,48427567,C,G,-,1002,donor,-1,NM_000138,48427567,0,donor_loss,mis-splicing,,,0.75
+15,48427567,C,G,-,1002,donor,-1,NM_000138,48427571,4,donor_gain,cryptic donor,,48427570,0.07
+15,48421950,A,C,-,1003,donor,2,NM_000138,48421919,-31,donor_gain,cryptic donor,,48421918,0.07
+15,48421950,A,C,-,1003,donor,2,NM_000138,48421952,2,donor_loss,mis-splicing,,,1
+3,41224951,C,A,+,1041,acceptor,-3,NM_001904,41224968,17,acceptor_gain,cryptic acceptor,,41224967,0.1
+3,41224951,C,A,+,1041,acceptor,-3,NM_001904,41224954,3,acceptor_loss,mis-splicing,,,0.27
+4,15596210,A,G,+,1042,donor,3,NM_001080522,15596209,-1,donor_gain,cryptic donor,,15596210,0.04
+4,15596210,A,G,+,1042,donor,3,NM_001080522,15596207,-3,donor_loss,mis-splicing,,,0.75
+9,132921360,T,C,-,1044,donor,3,NM_000368,132921363,3,donor_loss,mis-splicing,,,0.87
+7,21600934,A,C,+,1045,donor,4,NM_001277115,21600930,-4,donor_loss,mis-splicing,,,0.14
+11,71497476,T,A,+,1046,acceptor,-7,NM_018161,71497483,7,acceptor_loss,mis-splicing,,,0.73
+1,11794724,C,G,-,1050,donor,5,NM_005957,11794729,5,donor_loss,mis-splicing,,,0.92
+17,76733216,G,GT,+,1052,donor,Option not available,NM_001080510,76733215,-1,donor_loss,mis-splicing,,,0.77
+6,31861188,C,T,-,1053,donor,-1,NM_000434,31861188,0,donor_loss,mis-splicing,,,0.7
+6,31861188,C,T,-,1053,donor,-1,NM_000434,31861196,8,donor_gain,cryptic donor,,31861195,0.21
+3,169112783,T,A,-,1054,donor,4,NM_004991,169112787,4,donor_loss,mis-splicing,,,0.71
+5,37006354,C,T,+,1060,acceptor,-3,NM_133433,37006382,28,donor_loss,unannotated splice site hit,,,0.01
+5,37006354,C,T,+,1060,acceptor,-3,NM_133433,37006357,3,acceptor_loss,mis-splicing,,,0.07
+13,32326239,C,A,+,1078,acceptor,-3,NM_000059,32326242,3,acceptor_loss,mis-splicing,,,0.26
+13,32326239,C,A,+,1078,acceptor,-3,NM_000059,32326274,35,acceptor_gain,cryptic acceptor,,32326273,0.05
+13,32326239,C,A,+,1078,acceptor,-3,NM_000059,32326282,43,donor_loss,exon skipping,6,,0.31
+2,227253638,G,A,+,1100,donor,-1,NM_000091,227253638,0,donor_loss,mis-splicing,,,0.9
+2,227253638,G,A,+,1100,donor,-1,NM_000091,227253685,47,acceptor_gain,other,,,0.04
+15,48444542,T,C,-,1101,donor,-2,NM_000138,48444541,-1,donor_loss,mis-splicing,,,0.07
+15,48444542,T,C,-,1101,donor,-2,NM_000138,48444547,5,donor_gain,cryptic donor,,48444546,0.21
+7,98978324,G,A,+,1104,donor,1,NM_001375524,98978323,-1,donor_loss,mis-splicing,,,1
+7,98978324,G,A,+,1104,donor,1,NM_001375524,98978301,-23,acceptor_loss,unannotated splice site hit,,,0.01
+7,98978324,G,A,+,1104,donor,1,NM_001375524,98978360,36,donor_gain,cryptic donor,,98978361,0.54
+X,32644316,G,C,-,1109,acceptor,-3,NM_004006,32644291,-25,acceptor_gain,cryptic acceptor,,32644292,0.22
+X,32644316,G,C,-,1109,acceptor,-3,NM_004006,32644313,-3,acceptor_loss,mis-splicing,,,0.85
+5,36958236,G,C,+,1110,donor,5,NM_133433,36958231,-5,donor_loss,mis-splicing,,,0.98
+5,36953761,G,A,+,1111,donor,1,NM_133433,36953760,-1,donor_loss,mis-splicing,,,0.98
+5,36953761,G,A,+,1111,donor,1,NM_133433,36953764,3,donor_gain,cryptic donor,,36953765,0.01
+16,89562392,G,A,+,1112,donor,1,NM_000977,89562391,-1,donor_loss,mis-splicing,,,1
+16,89562392,G,A,+,1112,donor,1,NM_000977,89562433,41,donor_gain,cryptic donor,,89562434,0.36
+1,151028944,G,A,+,1113,donor,-1,NM_021222,151028944,0,donor_loss,mis-splicing,,,0.15
+1,151028944,G,A,+,1113,donor,-1,NM_021222,151028992,48,donor_gain,cryptic donor,,151028993,0.01
+7,100105544,G,A,+,1115,donor,5,NM_004722,100105520,-24,acceptor_gain,other,,,0.08
+7,100105544,G,A,+,1115,donor,5,NM_004722,100105539,-5,donor_loss,mis-splicing,,,0.81
+7,100105544,G,A,+,1115,donor,5,NM_004722,100105591,47,donor_gain,cryptic donor,,100105592,0.28
+2,27312255,A,C,-,1118,acceptor,-9,NM_002437,27312214,-41,donor_loss,exon skipping,6,,0.21
+2,27312255,A,C,-,1118,acceptor,-9,NM_002437,27312246,-9,acceptor_loss,mis-splicing,,,0.28
+7,100823645,T,A,-,1120,donor,-2,NM_004444,100823644,-1,donor_loss,mis-splicing,,,0.17
+7,100823645,T,A,-,1120,donor,-2,NM_004444,100823608,-37,donor_gain,cryptic donor,,100823607,0.88
+5,37022045,T,G,+,1132,acceptor,-6,NM_133433,37022051,6,acceptor_loss,mis-splicing,,,0.6
+13,32316528,G,T,+,1140,donor,1,NM_000059,32316527,-1,donor_loss,mis-splicing,,,0.98
+13,32316529,T,C,+,1141,donor,2,NM_000059,32316527,-2,donor_loss,mis-splicing,,,0.94
+13,32316530,A,G,+,1142,donor,3,NM_000059,32316527,-3,donor_loss,mis-splicing,,,0.56
+13,32319327,T,C,+,1145,donor,2,NM_000059,32319325,-2,donor_loss,mis-splicing,,,0.95
+13,32319327,T,C,+,1145,donor,2,NM_000059,32319291,-36,donor_gain,cryptic donor,,32319292,0.01
+13,32319327,TA,T,+,1146,donor,3,NM_000059,32319325,-2,donor_loss,mis-splicing,,,0.96
+13,32319327,TA,T,+,1146,donor,3,NM_000059,32319291,-36,donor_gain,cryptic donor,,32319292,0.01
+13,32319330,G,C,+,1147,donor,5,NM_000059,32319291,-39,donor_gain,cryptic donor,,32319292,0.01
+13,32319330,G,C,+,1147,donor,5,NM_000059,32319325,-5,donor_loss,mis-splicing,,,0.92
+13,32319331,T,C,+,1148,donor,6,NM_000059,32319325,-6,donor_loss,mis-splicing,,,0.2
+13,32326088,TGTTTT,T,+,1150,acceptor,-8,NM_000059,32326101,13,acceptor_loss,mis-splicing,,,0.3
+13,32326099,A,T,+,1151,acceptor,-2,NM_000059,32326101,2,acceptor_loss,mis-splicing,,,0.98
+13,32326099,A,T,+,1151,acceptor,-2,NM_000059,32326140,41,acceptor_gain,cryptic acceptor,,32326139,0.06
+13,32326144,AAGTCA,A,+,1155,donor,-2,NM_000059,32326101,-43,acceptor_loss,exon skipping,5,,0.19
+13,32326144,AAGTCA,A,+,1155,donor,-2,NM_000059,32326150,6,donor_loss,mis-splicing,,,0.38
+13,32326151,G,T,+,1156,donor,1,NM_000059,32326150,-1,donor_loss,mis-splicing,,,0.98
+13,32326151,G,T,+,1156,donor,1,NM_000059,32326101,-50,acceptor_loss,exon skipping,5,,0.93
+13,32326151,G,T,+,1156,donor,1,NM_000059,32326145,-6,donor_gain,cryptic donor,,32326146,0.02
+13,32326153,A,T,+,1157,donor,3,NM_000059,32326150,-3,donor_loss,mis-splicing,,,0.82
+13,32326240,A,G,+,1158,acceptor,-2,NM_000059,32326242,2,acceptor_loss,mis-splicing,,,0.98
+13,32326240,A,G,+,1158,acceptor,-2,NM_000059,32326274,34,acceptor_gain,cryptic acceptor,,32326273,0.4
+13,32326240,A,G,+,1158,acceptor,-2,NM_000059,32326282,42,donor_loss,exon skipping,6,,0.34
+13,32326283,G,T,+,1159,donor,1,NM_000059,32326282,-1,donor_loss,mis-splicing,,,0.98
+13,32326283,G,T,+,1159,donor,1,NM_000059,32326242,-41,acceptor_loss,exon skipping,6,,0.96
+13,32326284,T,C,+,1160,donor,2,NM_000059,32326282,-2,donor_loss,mis-splicing,,,0.97
+13,32326284,T,C,+,1160,donor,2,NM_000059,32326242,-42,acceptor_loss,exon skipping,6,,0.93
+13,32326285,AAA,A,+,1161,donor,4,NM_000059,32326282,-3,donor_loss,mis-splicing,,,0.47
+13,32326285,AAA,A,+,1161,donor,4,NM_000059,32326242,-43,acceptor_loss,exon skipping,6,,0.39
+13,32326497,A,G,+,1162,acceptor,-2,NM_000059,32326499,2,acceptor_loss,mis-splicing,,,0.78
+13,32326497,A,G,+,1162,acceptor,-2,NM_000059,32326543,46,donor_loss,unannotated splice site hit,,,0.01
+13,32326499,G,T,+,1164,acceptor,1,NM_000059,32326499,0,acceptor_loss,mis-splicing,,,0.4
+13,32326499,G,T,+,1164,acceptor,1,NM_000059,32326543,44,donor_loss,unannotated splice site hit,,,0.01
+13,32326613,G,A,+,1166,donor,-1,NM_000059,32326613,0,donor_loss,mis-splicing,,,0.81
+13,32326614,G,A,+,1167,donor,1,NM_000059,32326613,-1,donor_loss,mis-splicing,,,0.82
+13,32326614,G,A,+,1167,donor,1,NM_000059,32326655,41,donor_gain,cryptic donor,,32326656,0.01
+13,32326616,A,G,+,1168,donor,3,NM_000059,32326613,-3,donor_loss,mis-splicing,,,0.71
+13,32326616,A,G,+,1168,donor,3,NM_000059,32326655,39,donor_gain,cryptic donor,,32326656,0.01
+13,32330918,G,C,+,1172,acceptor,-1,NM_000059,32330919,1,acceptor_loss,mis-splicing,,,1
+13,32330918,G,C,+,1172,acceptor,-1,NM_000059,32330930,12,acceptor_gain,cryptic acceptor,,32330929,0.08
+13,32331031,G,T,+,1173,donor,1,NM_000059,32331030,-1,donor_loss,mis-splicing,,,1
+13,32331031,G,T,+,1173,donor,1,NM_000059,32331029,-2,donor_gain,cryptic donor,,32331030,0.01
+13,32331031,G,T,+,1173,donor,1,NM_000059,32330992,-39,acceptor_loss,unannotated splice site hit,,,0.05
+1,94112968,C,G,-,1174,donor,5,NM_000350,94112959,-9,donor_gain,cryptic donor,,94112958,0.09
+1,94112968,C,G,-,1174,donor,5,NM_000350,94112973,5,donor_loss,mis-splicing,,,0.84
+1,94111579,C,A,-,1175,acceptor,1,NM_000350,94111562,-17,acceptor_gain,cryptic acceptor,,94111563,0.1
+1,94111579,C,A,-,1175,acceptor,1,NM_000350,94111579,0,acceptor_loss,mis-splicing,,,0.01
+1,94111434,T,G,-,1176,donor,4,NM_000350,94111438,4,donor_loss,mis-splicing,,,0.02
+1,94098794,C,A,-,1178,donor,-1,NM_000350,94098759,-35,donor_gain,cryptic donor,,94098758,0.71
+1,94098794,C,A,-,1178,donor,-1,NM_000350,94098794,0,donor_loss,mis-splicing,,,0.42
+1,94080727,A,G,-,1179,acceptor,-9,NM_000350,94080718,-9,acceptor_loss,mis-splicing,,,0.11
+1,94056596,C,G,-,1182,donor,5,NM_000350,94056552,-44,donor_gain,cryptic donor,,94056551,0.29
+1,94056596,C,G,-,1182,donor,5,NM_000350,94056601,5,donor_loss,mis-splicing,,,0.86
+1,94044754,A,G,-,1184,acceptor,-10,NM_000350,94044744,-10,acceptor_loss,mis-splicing,,,0.03
+1,94044750,G,T,-,1185,acceptor,-6,NM_000350,94044744,-6,acceptor_loss,mis-splicing,,,0.04
+1,94044608,C,T,-,1186,donor,5,NM_000350,94044613,5,donor_loss,mis-splicing,,,0.89
+1,94041203,AC,A,-,1187,donor,5,NM_000350,94041214,11,donor_gain,cryptic donor,,94041213,0.01
+1,94041203,AC,A,-,1187,donor,5,NM_000350,94041209,6,donor_loss,mis-splicing,,,0.59
+1,94040043,C,T,-,1188,donor,-1,NM_000350,94040043,0,donor_loss,mis-splicing,,,0.35
+1,94040040,T,A,-,1189,donor,3,NM_000350,94040043,3,donor_loss,mis-splicing,,,0.92
+1,94037146,T,C,-,1190,donor,-2,NM_000350,94037145,-1,donor_loss,mis-splicing,,,0.47
+1,94037145,C,G,-,1191,donor,-1,NM_000350,94037145,0,donor_loss,mis-splicing,,,0.92
+1,94036737,T,C,-,1192,donor,3,NM_000350,94036740,3,donor_loss,mis-splicing,,,0.8
+1,94036737,T,C,-,1192,donor,3,NM_000350,94036777,40,donor_gain,cryptic donor,,94036776,0.01
+1,94031778,C,T,-,1193,donor,-1,NM_000350,94031766,-12,donor_gain,cryptic donor,,94031765,0.74
+1,94031778,C,T,-,1193,donor,-1,NM_000350,94031778,0,donor_loss,mis-splicing,,,0.4
+1,94030992,G,A,-,1194,donor,4,NM_000350,94030994,2,donor_gain,cryptic donor,,94030993,0.05
+1,94030992,G,A,-,1194,donor,4,NM_000350,94030996,4,donor_loss,mis-splicing,,,0.19
+1,94030991,C,T,-,1195,donor,5,NM_000350,94030965,-26,donor_gain,cryptic donor,,94030964,0.01
+1,94030991,C,T,-,1195,donor,5,NM_000350,94031012,21,acceptor_loss,unannotated splice site hit,,,0.01
+1,94030991,C,T,-,1195,donor,5,NM_000350,94030996,5,donor_loss,mis-splicing,,,0.44
+1,94030991,C,A,-,1196,donor,5,NM_000350,94030965,-26,donor_gain,cryptic donor,,94030964,0.01
+1,94030991,C,A,-,1196,donor,5,NM_000350,94031012,21,acceptor_loss,unannotated splice site hit,,,0.01
+1,94030991,C,A,-,1196,donor,5,NM_000350,94030996,5,donor_loss,mis-splicing,,,0.44
+1,94029446,T,C,-,1197,donor,-2,NM_000350,94029445,-1,donor_loss,mis-splicing,,,0.73
+1,94029446,T,C,-,1197,donor,-2,NM_000350,94029415,-31,donor_gain,cryptic donor,,94029414,0.04
+1,94029446,T,G,-,1198,donor,-2,NM_000350,94029445,-1,donor_loss,mis-splicing,,,0.7
+1,94029446,T,G,-,1198,donor,-2,NM_000350,94029415,-31,donor_gain,cryptic donor,,94029414,0.03
+1,94023386,C,G,-,1200,donor,-1,NM_000350,94023386,0,donor_loss,mis-splicing,,,0.62
+1,94023386,C,G,-,1200,donor,-1,NM_000350,94023418,32,acceptor_loss,exon skipping,32,,0.76
+1,94021846,C,G,-,1201,donor,-1,NM_000350,94021821,-25,donor_gain,cryptic donor,,94021820,0.55
+1,94021846,C,G,-,1201,donor,-1,NM_000350,94021846,0,donor_loss,mis-splicing,,,0.23
+1,94021843,T,C,-,1202,donor,3,NM_000350,94021821,-22,donor_gain,cryptic donor,,94021820,0.31
+1,94021843,T,C,-,1202,donor,3,NM_000350,94021846,3,donor_loss,mis-splicing,,,0.23
+1,94021841,C,T,-,1203,donor,5,NM_000350,94021855,14,donor_gain,cryptic donor,,94021854,0.33
+1,94021841,C,T,-,1203,donor,5,NM_000350,94021846,5,donor_loss,mis-splicing,,,0.65
+1,94019575,CACTT,C,-,1204,donor,3,NM_000350,94019580,5,donor_gain,cryptic donor,,94019579,0.17
+1,94019575,CACTT,C,-,1204,donor,3,NM_000350,94019582,7,donor_loss,mis-splicing,,,0.99
+1,94015736,T,A,-,1206,donor,3,NM_000350,94015739,3,donor_loss,mis-splicing,,,0.89
+1,94015736,T,A,-,1206,donor,3,NM_000350,94015745,9,donor_gain,cryptic donor,,94015744,0.01
+1,94014538,C,T,-,1208,donor,5,NM_000350,94014543,5,donor_loss,mis-splicing,,,0.88
+1,94011395,A,G,-,1209,acceptor,-10,NM_000350,94011385,-10,acceptor_loss,mis-splicing,,,0.02
+1,94011395,A,G,-,1209,acceptor,-10,NM_000350,94011404,9,acceptor_gain,cryptic acceptor,,94011405,0.01
+1,94011393,A,C,-,1210,acceptor,-8,NM_000350,94011385,-8,acceptor_loss,mis-splicing,,,0.03
+1,94011393,A,C,-,1210,acceptor,-8,NM_000350,94011404,11,acceptor_gain,cryptic acceptor,,94011405,0.01
+1,94011262,C,G,-,1211,donor,-1,NM_000350,94011258,-4,donor_gain,cryptic donor,,94011257,0.18
+1,94011262,C,G,-,1211,donor,-1,NM_000350,94011262,0,donor_loss,mis-splicing,,,0.78
+1,94011257,C,T,-,1212,donor,5,NM_000350,94011255,-2,donor_gain,cryptic donor,,94011254,0.74
+1,94011257,C,T,-,1212,donor,5,NM_000350,94011262,5,donor_loss,mis-splicing,,,0.91
+1,94011256,A,G,-,1213,donor,6,NM_000350,94011267,11,donor_gain,cryptic donor,,94011266,0.21
+1,94011256,A,G,-,1213,donor,6,NM_000350,94011262,6,donor_loss,mis-splicing,,,0.45
+1,94010795,C,T,-,1215,donor,5,NM_000350,94010800,5,donor_loss,mis-splicing,,,0.31
+1,94008300,G,T,-,1216,acceptor,-3,NM_000350,94008297,-3,acceptor_loss,mis-splicing,,,0.53
+1,94008300,G,T,-,1216,acceptor,-3,NM_000350,94008327,27,acceptor_gain,cryptic acceptor,,94008328,0.85
+1,94008229,AC,A,-,1217,donor,5,NM_000350,94008232,3,donor_gain,cryptic donor,,94008231,0.1
+1,94008229,AC,A,-,1217,donor,5,NM_000350,94008235,6,donor_loss,mis-splicing,,,0.84
+1,94000837,T,C,-,1218,donor,-2,NM_000350,94000836,-1,donor_loss,mis-splicing,,,0.07
+1,94000837,T,C,-,1218,donor,-2,NM_000350,94000886,49,donor_gain,cryptic donor,,94000885,0.08
+1,94000832,T,C,-,1219,donor,4,NM_000350,94000867,35,donor_gain,cryptic donor,,94000866,0.02
+1,94000832,T,C,-,1219,donor,4,NM_000350,94000836,4,donor_loss,mis-splicing,,,0.56
+1,93997841,GTGCCCCAGGGCCAAC,G,-,1220,donor,5,NM_000350,93997805,-36,donor_gain,cryptic donor,,93997804,0.4
+1,93997841,GTGCCCCAGGGCCAAC,G,-,1220,donor,5,NM_000350,93997861,20,donor_loss,mis-splicing,,,0.96
