@@ -1,10 +1,10 @@
 # SpliceVault Figures  
 
-Code used to create figures in Dawes et al. 2022(?). Developed in R version 3.6
+Code used to create figures in Dawes et al. 2022. Developed in R version 4.2.1
 
 # Source files  
 
-`src/` contains 300K-RNA as well as information on variants analysed (`fg_vars_events.tsv`).  
+`src/` contains 300K-RNA as well as information on variants analysed (`vars_events.tsv`).  
   
 `src/300KRNA_filt.tsv.gz` is a filtered version of 300K-RNA for variants analysed in the paper. To gain access to the full version use [SpliceVault](https://kidsneuro.shinyapps.io/splicevault/) or see data availability statement in the paper for full details.
   
