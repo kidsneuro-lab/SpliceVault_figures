@@ -52,20 +52,21 @@ vars_events <- fread('../src/vars_events.tsv', sep = '\t')
 vars <- unique(vars_events[, .(chrom, pos, ref, alt)])
 ```
 
+
 ```{r}
-url <- "http://127.0.0.1:5000/spliceai/api/get_variant_assessment"
+# note this URL only works on USYD wifi, but code used for the API is available publicly here: https://gitlab.com/kidsneuro/SpliceAIAPI
+url <- "http://knropw00000.srv.sydney.edu.au/spliceai/api/v1/get_delta_scores/"
 
 scores_df <- data.frame()
 
 for (row in 1:nrow(vars)) {
-
   chrom = paste0('chr',vars[row, chrom])
   pos = vars[row, pos]
   ref = vars[row, ref]
   alt = vars[row, alt]
   body <- list(chrom = chrom, pos = pos, ref = ref, alt = alt, assembly = 'grch38', distance = 5000, mask = 0)
 
-  r <- POST(url, body = body, encode = "form")
+  r <- POST(url, body = body, encode = "json")
   
   if (status_code(r) == 200) {
     scores = content(r, type = 'application/json')
