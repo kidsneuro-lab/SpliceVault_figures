@@ -35,10 +35,6 @@ preds <- unique(merged_data[, .(curated_record_id, variant_category)])[preds, on
 preds <- case_numbers[preds, on = .(curated_record_id)]
 preds <- preds[variant_category == 'ours']
 
-merged_data[in_rna_studies == 1, .(curated_record_id, splicing_event_class, 
-                                cryptic_pos, skipped_exons_id, 
-                                in_rna_studies)]
-
 preds <- unique(merged_data[, .(curated_record_id, splicing_event_class, 
                                 cryptic_pos, skipped_exons_id, 
                                 in_rna_studies)])[preds, on = .(curated_record_id, splicing_event_class, 
@@ -48,7 +44,6 @@ preds[splicing_event_class == 'mis-splicing', in_rna_studies := 2]
 preds[, in_rna_studies := factor(in_rna_studies, levels = c(0,1,2))]
 
 ```
-
 
 ```{r}
 plot_dist = 150
@@ -153,21 +148,24 @@ E <- ggplot(plot_df[!is.na(sai_threshold)], aes(x = sens, y = ppv, color = alg))
   coord_cartesian(xlim = c(0.5,1), y = c(0,1)) +
   xlab('Sensitivity') + ylab('Positive Predictive Value') +
   labs(color = '')+
-  scale_color_nejm(labels = c("SpliceAI", "300K-RNA"))+
-  geom_text(data=plot_df[alg == 'sv'][c(1:4)],aes(x=sens,y=ppv + 0.08,label=splicevault_rank_cutoffs), color='#2e72af', size = 3)+
-  geom_text(data=plot_df[alg == 'sai'][c(1:4)],aes(x=sens - 0.04,y=ppv - 0.05,label=round(sai_threshold,3)), color='#ae4631', size = 3) +
+  scale_color_nejm(labels = c("SpliceAI delta-score threshold", "300K-RNA event rank threshold"))+
+  geom_text(data=plot_df[!is.na(sai_threshold) & alg == 'sv'],
+            aes(x=sens,y=ppv + 0.08,label=paste0('\u2265',splicevault_rank_cutoffs)), 
+            color='#2e72af', size = 3)+
+  geom_text(data=plot_df[!is.na(sai_threshold) & alg == 'sai'],
+            aes(x=sens - 0.04,y=ppv - 0.05,label=paste0('\u2265',round(sai_threshold,3))),
+            color='#ae4631', size = 3) +
   scale_x_continuous(breaks = seq(0,1,0.1))+
   scale_y_continuous(breaks = seq(0,1,0.1)) +
   theme(panel.grid.major = element_line(colour = "lightgrey", size = 0.1))+
-  theme(plot.margin = margin(1,2,1.5,2, "cm"))
+  theme(plot.margin = margin(1,0,1.5,0.5, "cm"))
 
+E
 
-
-addWorksheet(wb, "figure_4E")
-writeData(wb, "figure_4E", as.data.frame(plot_df[!is.na(sai_threshold)]), startRow = 1, startCol = 1)
+# addWorksheet(wb, "figure_4E")
+# writeData(wb, "figure_4E", as.data.frame(plot_df[!is.na(sai_threshold)]), startRow = 1, startCol = 1)
 
 ```
-
 
 # Figure 2F: TP / FP dot plots for exon skipping
 
