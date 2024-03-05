@@ -9,8 +9,9 @@ library(plyr)
 library(tidyverse)
 library(httr)
 library(BSgenome.Hsapiens.UCSC.hg38)
-seqlevelsStyle(BSgenome.Hsapiens.UCSC.hg38) <- "NCBI"
+# seqlevelsStyle(BSgenome.Hsapiens.UCSC.hg38) <- "NCBI"
 library(stringi)
+library(jsonlite)
 ```
 
 
@@ -49,13 +50,15 @@ library(stringi)
 
 ```{r}
 vars_events <- fread('../src/vars_events.tsv', sep = '\t')
-vars <- unique(vars_events[, .(chrom, pos, ref, alt)])
+vars <- unique(vars_events[, .(curated_record_id, chrom, pos, ref, alt)])
+
+vars <- vars[curated_record_id==232]
 ```
 
 
 ```{r}
 # note this URL only works on USYD wifi, but code used for the API is available publicly here: https://gitlab.com/kidsneuro/SpliceAIAPI
-url <- "http://knropw00000.srv.sydney.edu.au/spliceai/api/v1/get_delta_scores/"
+url <- "http://genipw00000.srv.sydney.edu.au/spliceai/api/v1/get_delta_scores/"
 
 scores_df <- data.frame()
 
@@ -64,9 +67,22 @@ for (row in 1:nrow(vars)) {
   pos = vars[row, pos]
   ref = vars[row, ref]
   alt = vars[row, alt]
-  body <- list(chrom = chrom, pos = pos, ref = ref, alt = alt, assembly = 'grch38', distance = 5000, mask = 0)
-
-  r <- POST(url, body = body, encode = "json")
+  
+  body <- list(
+    ref = ref,
+    distance = 5000,
+    chrom = as.character(chrom),
+    alt = alt,
+    mask = 0,
+    annotation = "grch38",
+    pos = pos
+  )
+  
+  message(paste(chrom, pos, ref, alt, sep='-'))
+  
+  r <- POST(url, body = toJSON(body, auto_unbox = T), content_type("application/json"), accept("application/json"), timeout(120))
+  
+  message(status_code(r))
   
   if (status_code(r) == 200) {
     scores = content(r, type = 'application/json')
@@ -86,7 +102,13 @@ for (row in 1:nrow(vars)) {
   
   scores_df <- rbind(scores_df, df)
 }
+```
 
+
+
+
+
+```{r}
 fwrite(scores_df, '../ref/all_variants_spliceAI_5000nt.tsv', sep = '\t')
 ```
 

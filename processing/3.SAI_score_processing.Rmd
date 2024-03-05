@@ -3,7 +3,7 @@ title: "R Notebook"
 output: 
 ---
 
-```{r}
+```{r message=FALSE}
 library(data.table)
 library(plyr)
 library(tidyverse)
@@ -14,8 +14,11 @@ theme_set(theme_classic())
 
 ```{r}
 vars_events <- fread('../src/vars_events.tsv', sep = '\t')
+vars_events <- vars_events[curated_record_id==232]
 
-scores_df <- fread('../ref/all_variants_spliceAI_5000nt.tsv.gz')
+vars_events$chrom <- as.character(vars_events$chrom) # This is normally not reqd if the data contains 'X', 'Y' or 'chrNN' formatted chromosomes, However if there are numeric ones only, they get coerced to integer format
+
+scores_df <- fread('../ref/all_variants_spliceAI_5000nt.tsv')
 # position for plotting
 scores_df[, spos := dist_from_variant + 5001]
 # get strand
